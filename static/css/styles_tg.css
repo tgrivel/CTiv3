@@ -1,0 +1,11 @@
+html {
+  font-family: Calibri;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+}
+bgimage {
+    background-image: url('../plaatjes/100_4736.JPG');
+    background-position: center center;
+    background-size: cover;
+    height: 200px;
+}
