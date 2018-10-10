@@ -1,0 +1,16 @@
+Click==7.0
+Django==1.10.2
+django-chartit==0.2.9
+Flask==1.0.2
+gunicorn==19.9.0
+itsdangerous==0.24
+Jinja2==2.10
+MarkupSafe==1.0
+mysql-connector-python==2.1.7
+numpy==1.14.5
+pytz==2017.3
+pyusb==1.0.2
+pywws==17.11.0
+tzlocal==1.4
+virtualenv==16.0.0
+Werkzeug==0.14.1
