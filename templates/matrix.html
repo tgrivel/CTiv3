@@ -8,10 +8,15 @@
             <div class="container">
                 <p> hier moet het eerste tabelletje komen</p>
                  <table>
-                  <tr>
-                    <td>Cell A</td>
-                    <td>Cell B</td>
-                  </tr>
+                    {% for group in x %}
+                         {% for row in group %}
+                         <tr>
+                           <td>{{ row[0] }}</td>
+                           <td>{{ row[1] }}</td>
+                         </tr>
+                        {% endfor %}
+                    {% endfor %}
+
                 </table>
             </div>
         </main>
