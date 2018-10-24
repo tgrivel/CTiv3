@@ -3,17 +3,6 @@ from collections import OrderedDict
 #from Verwerking.maak_matrix import ItemTable
 from flask_table import Table, Col
 
-# Declare your table
-class ItemTable(Table):
-    name = Col('Name')
-    description = Col('Description')
-
-
-class Item(object):
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-
 
 def ophalen_file(bestand):
     print (bestand.filename)
@@ -24,26 +13,14 @@ def ophalen_file(bestand):
     except:
         data = json.loads(newfile.decode('cp1251'), object_pairs_hook=OrderedDict)
         print('verwerken als cp1251')
-    verwerken(data)
-
-    items = [Item('Name1', 'Description1'),
-             Item('Name2', 'Description2'),
-             Item('Name3', 'Description3')]
-    table = ItemTable(items)
-    print (table.__html__())
-
-    # newfiel = bestand.read()
-    # data = json.load(newfiel, object_pairs_hook=OrderedDict)
-    # verwerken(data)
-
-    #
-    # with open(newfiel) as bron:
-    #     data = json.load(bron, object_pairs_hook=OrderedDict)
-    #     verwerken(data)
+    metadata = verwerken(data)
+    return metadata
 
 def verwerken(data):
-    aantal = 0
-    for row in data:
-        aantal += 1
-    print('totaal ' + str(aantal) + ' ingelezen')
+    meta = data["metadata"]
+    # aantal = 0
+    # for row in data:
+    #     aantal += 1
+    # print('totaal ' + str(aantal) + ' ingelezen')
+    return meta
 

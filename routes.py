@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from Verwerking.maak_matrix import data
+from Verwerking.maak_matrix import data, header
 from Verwerking.inlezen import ophalen_file
 
 import os
@@ -11,8 +11,8 @@ def index():
     if request.method == 'POST':
         file = request.files['file']
         if file:
-            ophalen_file(file)
-        return render_template("matrix.html", x = data)
+            meta = ophalen_file(file)
+        return render_template("matrix.html", x = data, h = header, meta = meta)
     elif request.method == 'GET':
         return render_template("index.html")
 

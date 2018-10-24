@@ -4,10 +4,36 @@
 <body>
     <body bgcolor="#0080FF">
     <font color="#FFFFFF">
+    <div>nr: {{ meta['overheidsnummer']}} {{ meta['overheidsnaam'] }}</div>
+    <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
         <main class="matrix overzicht lasten">
             <div class="container">
-                <p> hier moet het eerste tabelletje komen</p>
-                 <table>
+                <p>Lasten</p>
+
+                 <table border="1">
+                     <thead> <tr> <th> </th>
+                     {% for kol_nr in range(h['kolkop']|count) %}
+                       <th>{{h['kolkop'][kol_nr]}}</th>
+                     {% endfor %}
+                     </tr></thead>
+                     <tbody>
+                     {% for rij in x['regels'] %}
+                        <tr>
+                            {% for kol  in rij %}
+                                <td>{{ kol }} </td>
+                            {% endfor%}
+                        </tr>
+                     {% endfor %}
+                     <!--
+                     {% for row_index in range(x['date']|count) %}
+                        <tr>
+                          <td>{{ x['date'][row_index]|tojson|safe }}</td>
+                          <td>{{ x['users'][row_index] }}</td>
+                        </tr>
+                    {% endfor %}
+                     </tbody>
+                    -->
+                     <!--
                     {% for group in x %}
                          {% for row in group %}
                          <tr>
@@ -16,7 +42,7 @@
                          </tr>
                         {% endfor %}
                     {% endfor %}
-
+                    -->
                 </table>
             </div>
         </main>
