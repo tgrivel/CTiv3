@@ -6,6 +6,7 @@
     <font color="#FFFFFF">
     <div>nr: {{ meta['overheidsnummer']}} {{ meta['overheidsnaam'] }}</div>
     <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
+    <div>sjabloon: {{ sjabloon['Type'] }}</div>
         <main class="matrix overzicht lasten">
             <div class="container">
                 <p>Lasten</p>
@@ -24,6 +25,8 @@
                             {% endfor%}
                         </tr>
                      {% endfor %}
+
+
                      <!--
                      {% for row_index in range(x['date']|count) %}
                         <tr>
