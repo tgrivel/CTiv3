@@ -1,15 +1,23 @@
-Click==7.0
-Django==1.10.2
-django-chartit==0.2.9
-Flask==1.0.2
-gunicorn==19.9.0
-itsdangerous==0.24
-Jinja2==2.10
-MarkupSafe==1.0
-numpy==1.14.5
-pytz==2017.3
-pyusb==1.0.2
-pywws==17.11.0
-tzlocal==1.4
-virtualenv==16.0.0
-Werkzeug==0.14.1
+name: ctiv3
+channels:
+  - anaconda-fusion
+  - defaults
+dependencies:
+  - ca-certificates=2018.03.07=0
+  - certifi=2018.10.15=py37_0
+  - click=7.0=py37_0
+  - flask=1.0.2=py37_1
+  - itsdangerous=1.1.0=py37_0
+  - jinja2=2.10=py37_0
+  - markupsafe=1.1.0=py37he774522_0
+  - openssl=1.1.1a=he774522_0
+  - pip=18.1=py37_0
+  - python=3.7.1=he44a216_5
+  - setuptools=40.6.2=py37_0
+  - vc=14.1=h0510ff6_4
+  - vs2015_runtime=14.15.26706=h3a45250_0
+  - werkzeug=0.14.1=py37_0
+  - wheel=0.32.3=py37_0
+  - wincertstore=0.2=py37_0
+prefix: C:\Users\Laurent\Anaconda3\envs\ctiv3
+
