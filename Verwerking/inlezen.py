@@ -6,13 +6,30 @@ import urllib.request
 from flask_table import Table, Col
 
 
+def laad_json_bestand(bestand):
+    """Laad een json bestand.
+
+    Het bestand kan gecodeerd zijn als utf-8 of als cp1252.
+    """
+
+    print ('opening', bestand.filename)
+    newfile = bestand.read()
+    try:
+        data = json.loads(newfile.decode('utf-8'), object_pairs_hook=OrderedDict)
+        print('verwerken als utf8')
+    except UnicodeDecodeError:
+        data = json.loads(newfile.decode('cp1251'), object_pairs_hook=OrderedDict)
+        print('verwerken als cp1251')
+    return data
+
+
 def ophalen_file(bestand):
     print (bestand.filename)
     newfile = bestand.read()
     try:
         data = json.loads(newfile.decode('utf-8'), object_pairs_hook=OrderedDict)
         print('verwerken als utf8')
-    except:
+    except UnicodeDecodeError:
         data = json.loads(newfile.decode('cp1251'), object_pairs_hook=OrderedDict)
         print('verwerken als cp1251')
     metadata = verwerken(data)
