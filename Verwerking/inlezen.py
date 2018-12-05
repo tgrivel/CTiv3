@@ -1,9 +1,10 @@
 import json
 from collections import OrderedDict
-import os
 import urllib.request
-#from Verwerking.maak_matrix import ItemTable
 from flask_table import Table, Col
+
+
+HTTP_OKAY = 200
 
 
 def laad_json_bestand(bestand):
@@ -12,7 +13,6 @@ def laad_json_bestand(bestand):
     Het bestand kan gecodeerd zijn als utf-8 of als cp1252.
     """
 
-    print ('opening', bestand.filename)
     newfile = bestand.read()
     try:
         data = json.loads(newfile.decode('utf-8'), object_pairs_hook=OrderedDict)
