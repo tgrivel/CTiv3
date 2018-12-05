@@ -2,6 +2,9 @@
 
 {% block content %}
 <body>
+    <script>
+        var data = {{ data | tojson }};
+    </script>
     <body bgcolor="#0080FF">
     <font color="#FFFFFF">
     <div>nr: {{ meta['overheidsnummer']}} {{ meta['overheidsnaam'] }}</div>
