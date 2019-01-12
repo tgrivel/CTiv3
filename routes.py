@@ -19,11 +19,12 @@ def matrix(bestandsnaam):
         data2 = laad_json_bestand(bestandsnaam)
         metadata = data2['metadata']
         sjabloon = ophalen_sjabloon(metadata)
+        data1 = data # dit is nep-data, niet ingelezen
 
         # TODO Dit moet nog wat mooier
         params = {
             'data': data2,
-            'x': data2,
+            'x': data1,
             'h': header,
             'meta': metadata,
             'sjabloon': sjabloon,
