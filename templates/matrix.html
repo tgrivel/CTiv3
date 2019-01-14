@@ -53,19 +53,22 @@ table {
     <font color="#FFFFFF">
     <div>nr: {{ meta['overheidsnummer']}} {{ meta['overheidsnaam'] }}</div>
     <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
-    <div>sjabloon: {{ sjabloon['Type'] }}</div>
+    <div>Datum : {{ meta['datum_aanmaak']}} </div>
+    <div>Sjabloon: {{ sjabloon['Type'] }} , {{ sjabloon['Overheidslaag'] }} , {{ sjabloon['boekjaar'] }}   </div>
 
              <!-- Tab links -->
                 <div class="tab">
-                  <button class="tablinks" onclick="openTab(event, 'Lasten')">Lasten</button>
-                  <button class="tablinks" onclick="openTab(event, 'Baten')">Baten</button>
-                  <button class="tablinks" onclick="openTab(event, 'Balans')">Balans</button>
+                    <button class="tablinks" onclick="openTab(event, 'LastenLR')">Lasten lopende rekening</button>
+                    <button class="tablinks" onclick="openTab(event, 'BatenLR')">Baten Lopende Rekening</button>
+                    <button class="tablinks" onclick="openTab(event, 'LastenBM')">Lasten Balansmutaties</button>
+                    <button class="tablinks" onclick="openTab(event, 'BatenBK')">Baten Balansmutaties</button>
+                    <button class="tablinks" onclick="openTab(event, 'Balans')">Balans</button>
                     <button class="tablinks" onclick="openTab(event, 'Controles')">Controles</button>
                 </div>
 
                 <!-- Tab content -->
-                <div id="Lasten" class="tabcontent">
-                  <h3>Lasten</h3>
+                <div id="LastenLR" class="tabcontent">
+                  <h3>Lasten lopende rekening</h3>
                    <div class="container">
 
 
@@ -89,10 +92,22 @@ table {
                     </div>
                 </div>
 
-                <div id="Baten" class="tabcontent">
-                  <h3>Baten</h3>
+                <div id="BatenLR" class="tabcontent">
+                  <h3>Baten lopende rekening</h3>
                   <p>Tja... komt nog.</p>
                 </div>
+
+                <div id="LastenBM" class="tabcontent">
+                  <h3>Balansmutaties lasten</h3>
+                  <p>onttrekkingen en zo</p>
+                </div>
+
+                <div id="BatenBM" class="tabcontent">
+                  <h3>Balansmutaties baten</h3>
+                  <p>Extra toevoegingen aan de balans.</p>
+                </div>
+
+
 
                 <div id="Balans" class="tabcontent">
                   <h3>Balans</h3>
@@ -114,7 +129,7 @@ table {
     </font>
     <script>
 
-    function openTab(evt, cityName) {
+    function openTab(evt, tabnaam) {
       // Declare all variables
       var i, tabcontent, tablinks;
 
@@ -131,7 +146,7 @@ table {
       }
 
       // Show the current tab, and add an "active" class to the button that opened the tab
-      document.getElementById(cityName).style.display = "block";
+      document.getElementById(tabnaam).style.display = "block";
       evt.currentTarget.className += " active";
     }
     </script>
