@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-from Verwerking.inlezen import laad_json_bestand, ophalen_sjabloon
+from Verwerking.inlezen import laad_json_bestand, ophalen_sjabloon,selecteer_subsets_matrix
 from Verwerking.maak_matrix import data, header
 
 app = Flask(__name__)
@@ -8,7 +8,10 @@ app = Flask(__name__)
 @app.route("/", methods = ['GET','POST'])
 def index():
     if request.method == 'POST':
-        return matrix(bestandsnaam=request.files['file'])
+        try:
+            return matrix(bestandsnaam=request.files['file'])
+        except:
+            return render_template("index.html")
     elif request.method == 'GET':
         return render_template("index.html")
 
@@ -19,6 +22,7 @@ def matrix(bestandsnaam):
         data2 = laad_json_bestand(bestandsnaam)
         metadata = data2['metadata']
         sjabloon = ophalen_sjabloon(metadata)
+        subsets = selecteer_subsets_matrix(data2)
         data1 = data # dit is nep-data, niet ingelezen
 
         # TODO Dit moet nog wat mooier

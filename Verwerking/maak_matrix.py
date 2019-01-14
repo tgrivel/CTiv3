@@ -14,6 +14,18 @@ data = {'regels':[['tv 1.0','','12','','123'],
         ['tv 6.6','4','','','13']]
         }
 
+# def bouw_matrix_LR(subset_data):
+#         kolkop = []
+#         rijkop = []
+#         bedrag =
+#         for rec in subset_data:
+#                 if rec["categorie"] not in kolkop:
+#                         kolkop.append(rec["categorie"])
+#                 if rec["taakveld"] not in rijkop:
+#                         rijkop.append(rec["taakveld"])
+#         for rec in
+#         header = {'kolkop':kolkop}
+
 
 # data = {
 #     'category1': {
