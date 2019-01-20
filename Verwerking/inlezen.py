@@ -31,7 +31,9 @@ def ophalen_sjabloon(meta):
         # bestand = webUrl.read()
         inhoud_bestand = laad_json_bestand(webUrl)
         meta_data = inhoud_bestand['metadata']
+
     return inhoud_bestand
+
 
 
 def verwerken(data):
@@ -46,6 +48,7 @@ def verwerken(data):
     #     aantal += 1
     # print('totaal ' + str(aantal) + ' ingelezen')
     return meta
+
 
 def indikken_data(data):
     global datalastenbaten
@@ -80,4 +83,5 @@ def indikken_data(data):
     # for k, v in datalastenbaten.items():
     #     print(k,v)
     return datalastenbaten
+
 

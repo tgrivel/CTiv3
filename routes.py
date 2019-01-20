@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request
 
+
 from Verwerking.inlezen import laad_json_bestand, ophalen_sjabloon, indikken_data
 from Verwerking.maak_matrix import maak_tabel, maak_lijst_koppen
+
 
 app = Flask(__name__)
 
@@ -9,7 +11,6 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
         try:
-            print("proberen naar matrix te gaan")
             return matrix(bestandsnaam=request.files['file'])
         except:
             return render_template("index.html")
@@ -23,6 +24,7 @@ def matrix(bestandsnaam):
         complete_upload = laad_json_bestand(bestandsnaam)
         metadata = complete_upload['metadata']
         sjabloon = ophalen_sjabloon(metadata)
+
         sjabloon_meta = sjabloon['metadata']
         compacte_data = indikken_data(complete_upload['waarden'])
         print('stap 1')
@@ -39,6 +41,7 @@ def matrix(bestandsnaam):
         balans_standen_tabel = maak_tabel(compacte_data, 'balans_standen', balans_header, balans_rijen)
         # data1 = data # dit is nep-data, niet ingelezen
         print('stap 3')
+
 
         params = {
             'lasten_header': lasten_header,

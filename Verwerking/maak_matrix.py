@@ -32,6 +32,18 @@ def maak_tabel(compacte_data, afdeling, header, rijen):
     # print(data)
     return data
 
+# def bouw_matrix_LR(subset_data):
+#         kolkop = []
+#         rijkop = []
+#         bedrag =
+#         for rec in subset_data:
+#                 if rec["categorie"] not in kolkop:
+#                         kolkop.append(rec["categorie"])
+#                 if rec["taakveld"] not in rijkop:
+#                         rijkop.append(rec["taakveld"])
+#         for rec in
+#         header = {'kolkop':kolkop}
+
 
 def maak_lijst_koppen(sjabloon, kop_soort ):
     lijst_koppen = []
