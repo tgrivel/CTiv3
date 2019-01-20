@@ -47,9 +47,10 @@ table {
 </style>
 <body>
     <script>
+        /* is dit stukje nog nodig??? TG*/
         var data = {{ data | tojson }};
     </script>
-    <body bgcolor="#0080FF">
+    <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
     <div>nr: {{ meta['overheidsnummer']}} {{ meta['overheidsnaam'] }}</div>
     <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
@@ -61,7 +62,7 @@ table {
                     <button class="tablinks" onclick="openTab(event, 'LastenLR')">Lasten lopende rekening</button>
                     <button class="tablinks" onclick="openTab(event, 'BatenLR')">Baten Lopende Rekening</button>
                     <button class="tablinks" onclick="openTab(event, 'LastenBM')">Lasten Balansmutaties</button>
-                    <button class="tablinks" onclick="openTab(event, 'BatenBK')">Baten Balansmutaties</button>
+                    <button class="tablinks" onclick="openTab(event, 'BatenBM')">Baten Balansmutaties</button>
                     <button class="tablinks" onclick="openTab(event, 'Balans')">Balans</button>
                     <button class="tablinks" onclick="openTab(event, 'Controles')">Controles</button>
                 </div>
@@ -71,16 +72,14 @@ table {
                   <h3>Lasten lopende rekening</h3>
                    <div class="container">
 
-
-
                      <table border="1">
                          <thead> <tr> <th> </th>
-                         {% for kol_nr in range(h['kolkop']|count) %}
-                           <th>{{h['kolkop'][kol_nr]}}</th>
+                         {% for kol_nr in range(lasten_header['kolkop']|count) %}
+                           <th>{{' ' + lasten_header['kolkop'][kol_nr] + ' '}}</th>
                          {% endfor %}
                          </tr></thead>
                          <tbody>
-                         {% for rij in x['regels'] %}
+                         {% for rij in lasten_tabel['regels'] %}
                             <tr>
                                 {% for kol  in rij %}
                                     <td>{{ kol }} </td>
@@ -94,24 +93,96 @@ table {
 
                 <div id="BatenLR" class="tabcontent">
                   <h3>Baten lopende rekening</h3>
-                  <p>Tja... komt nog.</p>
+                    <div class="container">
+
+                     <table border="1">
+                         <thead> <tr> <th> </th>
+                         {% for kol_nr in range(baten_header['kolkop']|count) %}
+                           <th>{{baten_header['kolkop'][kol_nr]}}</th>
+                         {% endfor %}
+                         </tr></thead>
+                         <tbody>
+                         {% for rij in baten_tabel['regels'] %}
+                            <tr>
+                                {% for kol  in rij %}
+                                    <td>{{ kol }} </td>
+                                {% endfor%}
+                            </tr>
+                         {% endfor %}
+
+                    </table>
+                    </div>
                 </div>
 
                 <div id="LastenBM" class="tabcontent">
                   <h3>Balansmutaties lasten</h3>
-                  <p>onttrekkingen en zo</p>
+                  <div class="container">
+
+                     <table border="1">
+                         <thead> <tr> <th> </th>
+                         {% for kol_nr in range(lasten_header['kolkop']|count) %}
+                           <th>{{lasten_header['kolkop'][kol_nr]}}</th>
+                         {% endfor %}
+                         </tr></thead>
+                         <tbody>
+                         {% for rij in balans_lasten_tabel['regels'] %}
+                            <tr>
+                                {% for kol  in rij %}
+                                    <td>{{ kol }} </td>
+                                {% endfor%}
+                            </tr>
+                         {% endfor %}
+
+                    </table>
+                    </div>
                 </div>
 
                 <div id="BatenBM" class="tabcontent">
                   <h3>Balansmutaties baten</h3>
-                  <p>Extra toevoegingen aan de balans.</p>
+                  <div class="container">
+
+                     <table border="1">
+                         <thead> <tr> <th> </th>
+                         {% for kol_nr in range(baten_header['kolkop']|count) %}
+                           <th>{{baten_header['kolkop'][kol_nr]}}</th>
+                         {% endfor %}
+                         </tr></thead>
+                         <tbody>
+                         {% for rij in balans_baten_tabel['regels'] %}
+                            <tr>
+                                {% for kol  in rij %}
+                                    <td>{{ kol }} </td>
+                                {% endfor%}
+                            </tr>
+                         {% endfor %}
+
+                    </table>
+                    </div>
                 </div>
 
 
 
                 <div id="Balans" class="tabcontent">
                   <h3>Balans</h3>
-                  <p>De balans is in evenwicht.</p>
+                  <div class="container">
+
+                     <table border="1">
+                         <thead> <tr> <th> </th>
+                         {% for kol_nr in range(balans_header['kolkop']|count) %}
+                           <th>{{balans_header['kolkop'][kol_nr]}}</th>
+                         {% endfor %}
+                         </tr></thead>
+                         <tbody>
+                         {% for rij in balans_standen_tabel['regels'] %}
+                            <tr>
+                                {% for kol  in rij %}
+                                    <td>{{ kol }} </td>
+                                {% endfor%}
+                            </tr>
+                         {% endfor %}
+
+                    </table>
+                    </div>
                 </div>
 
                 <div id="Controles" class="tabcontent">
