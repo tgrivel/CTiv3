@@ -3,6 +3,7 @@ from collections import OrderedDict
 import urllib.request
 from flask_table import Table, Col
 
+datalastenbaten = {}
 
 HTTP_OKAY = 200
 
@@ -30,7 +31,9 @@ def ophalen_sjabloon(meta):
         # bestand = webUrl.read()
         inhoud_bestand = laad_json_bestand(webUrl)
         meta_data = inhoud_bestand['metadata']
-    return meta_data
+
+    return inhoud_bestand
+
 
 
 def verwerken(data):
@@ -46,26 +49,39 @@ def verwerken(data):
     # print('totaal ' + str(aantal) + ' ingelezen')
     return meta
 
-def selecteer_subsets_matrix(data):
-    LastenLR= []
-    LastenBM = []
-    BatenLR = []
-    BatenBM = []
-    Balans = []
-    records = data["waarden"]
-    for record in records:
-        if record["rekeningkant"] == "lasten":
-            if "taakveld" in record:
-                LastenLR.append(record)
-        if record["rekeningkant"] == "baten":
-            if "taakveld" in record:
-                BatenLR.append(record)
-        if record["rekeningkant"] == "lasten":
-            if "balanscode" in record:
-                LastenBM.append(record)
-        if record["rekeningkant"] == "baten":
-            if "balanscode" in record:
-                BatenBM.append(record)
-        if record["rekeningkant"] == "balans":
-            Balans.append(record)
-    return LastenBM, LastenLR, BatenLR, BatenBM, Balans
+
+def indikken_data(data):
+    global datalastenbaten
+    print('in indikken')
+    for rec in data:
+        try:
+            kant = rec['rekeningkant']
+            bedrag = rec['bedrag']
+            # bedrag = float(rec['bedrag'].replace(',', '.'))
+            if kant == 'lasten' or kant == 'baten':
+                cat = rec['categorie']
+                taakv = rec['taakveld']
+                code = (kant, taakv, cat)
+            elif kant == 'balans_baten' or kant == 'balans_lasten':
+                cat = rec['categorie']
+                bal_code = rec['balanscode']
+                code = (kant, bal_code, cat)
+            else:
+                 stand_per = rec['standper']
+                 bal_code = rec['balanscode']
+                 code = ('balans_standen', bal_code, stand_per)
+
+            if code in datalastenbaten:
+                datalastenbaten[code] += bedrag
+            else:
+                datalastenbaten[code] = bedrag
+        except:
+            print('Fout in indikken ')
+            for k,v in rec.items():
+                print (k,v)
+    # print('export: ')
+    # for k, v in datalastenbaten.items():
+    #     print(k,v)
+    return datalastenbaten
+
+

@@ -37,3 +37,35 @@ class iv3balanscodes(object):
         self.bal_omschr = bal_omschr
         self.bal_children = bal_children # type: list
 
+# hieronder staan enkele probeersels.
+# indien deze gebruikt gaan worden, graag verplaatsen naar boven deze opmerking
+
+
+
+class LayoutLastenBaten(object):
+    def __init__(self,rijnr, rij,rijniv,kolnr, kol,kolniv,bedr):
+        self.rijnr = rijnr          # tbv volgorde in scherm, rijnummering
+        self.rij = rij              # taakvelden en balansposten
+        self.rijniv = rijniv        # diepte, subtotalen en totalen
+        self.kolnr = kolnr          # kolomnummer
+        self.kol = kol              # categorien
+        self.kolniv = kolniv        # diepte
+
+
+class DataLastenBaten(object):
+    def __init__(self,code_combi,bedr):
+        self.code_combi = code_combi
+        self.bedr = bedr
+
+
+class TotalenLastenBaten(object):
+    def __init__(self,code_combi,bedr):
+        self.code_combi = code_combi
+        self.bedr = bedr
+
+
+class PaginaDefinities(object):
+    def __init__(self,rekeningkant, kolomgroep, rijgroep):
+        self.rekeningkant = rekeningkant
+        self.kolomgroep = kolomgroep
+        self.rijgroep = rijgroep

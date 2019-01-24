@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request
 
-from Verwerking.inlezen import laad_json_bestand, ophalen_sjabloon,selecteer_subsets_matrix
-from Verwerking.maak_matrix import data, header
+
+from Verwerking.inlezen import laad_json_bestand, ophalen_sjabloon, indikken_data
+from Verwerking.maak_matrix import maak_tabel, maak_lijst_koppen
+
 
 app = Flask(__name__)
 
@@ -19,20 +21,41 @@ def index():
 def matrix(bestandsnaam):
     """Laad de pagina met een overzicht."""
     if bestandsnaam:
-        data2 = laad_json_bestand(bestandsnaam)
-        metadata = data2['metadata']
+        complete_upload = laad_json_bestand(bestandsnaam)
+        metadata = complete_upload['metadata']
         sjabloon = ophalen_sjabloon(metadata)
-        subsets = selecteer_subsets_matrix(data2)
-        data1 = data # dit is nep-data, niet ingelezen
 
-        # TODO Dit moet nog wat mooier
+        sjabloon_meta = sjabloon['metadata']
+        compacte_data = indikken_data(complete_upload['waarden'])
+        print('stap 1')
+        lasten_header = {'kolkop': maak_lijst_koppen(sjabloon,"LastenCategorien")}
+        baten_header = {'kolkop': maak_lijst_koppen(sjabloon,"BatenCategorien")}
+        balans_header = {'kolkop': maak_lijst_koppen(sjabloon,"BalansDatums")}
+        rekening_rijen = {'rijkop': maak_lijst_koppen(sjabloon,'Taakvelden')}
+        balans_rijen = {'rijkop': maak_lijst_koppen(sjabloon,'Balanscodes')}
+        print('stap 2')
+        lasten_tabel = maak_tabel(compacte_data, 'lasten',lasten_header, rekening_rijen)
+        baten_tabel = maak_tabel(compacte_data, 'baten', baten_header, rekening_rijen)
+        balans_lasten_tabel = maak_tabel(compacte_data, 'balans_lasten', lasten_header, balans_rijen)
+        balans_baten_tabel = maak_tabel(compacte_data, 'balans_baten', baten_header, balans_rijen)
+        balans_standen_tabel = maak_tabel(compacte_data, 'balans_standen', balans_header, balans_rijen)
+        # data1 = data # dit is nep-data, niet ingelezen
+        print('stap 3')
+
+
         params = {
-            'data': data2,
-            'x': data1,
-            'h': header,
+            'lasten_header': lasten_header,
+            'baten_header': baten_header,
+            'balans_header': balans_header,
+            'lasten_tabel':lasten_tabel,
+            'baten_tabel': baten_tabel,
+            'balans_lasten_tabel': balans_lasten_tabel,
+            'balans_baten_tabel': balans_baten_tabel,
+            'balans_standen_tabel': balans_standen_tabel,
+            'data': complete_upload,
             'meta': metadata,
-            'sjabloon': sjabloon,
-            # 'taakvelden': hoofdtaakvelden
+            'sjabloon': sjabloon_meta,
+
         }
 
     return render_template("matrix.html", **params)
