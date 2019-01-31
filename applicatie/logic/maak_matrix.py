@@ -1,16 +1,4 @@
 # import things
-from flask_table import Table, Col
-from Verwerking.inlezen import verwerken
-
-
-# header = {'kolkop':['1.0', '3.1','6.1','7.0']}
-#
-# data = {'regels':[['tv 1.0','','12','','123'],
-#         ['tv 1.1','3','2','1','0'],
-#         ['tv 2.0','','43','',''],
-#         ['tv 6.6','4','','','13']]
-#         }
-
 
 def maak_tabel(compacte_data, afdeling, header, rijen):
     kolommen = header['kolkop']

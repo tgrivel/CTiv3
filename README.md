@@ -14,6 +14,6 @@ conda env --file requirements.txt
 
 ```
 conda activate ctiv3
-python routes.py
+flask run
 ```
 
