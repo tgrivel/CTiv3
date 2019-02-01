@@ -7,19 +7,21 @@ from applicatie.main import bp
 @bp.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        try:
-            return matrix(bestandsnaam=request.files['file'])
-        except:
+        if not request.files.get('file', None):
             return render_template("index.html")
+        else:
+            jsonfile = request.files['file']
+            jsonfilename = jsonfile.name
+            return matrix(bestand=jsonfile)
     elif request.method == 'GET':
         return render_template("index.html")
 
 
 @bp.route("/matrix", methods=['GET', 'POST'])
-def matrix(bestandsnaam):
+def matrix(bestand):
     """Laad de pagina met een overzicht."""
-    if bestandsnaam:
-        complete_upload = laad_json_bestand(bestandsnaam)
+    if bestand:
+        complete_upload = laad_json_bestand(bestand)
         metadata = complete_upload['metadata']
         sjabloon = ophalen_sjabloon(metadata)
 
@@ -32,8 +34,8 @@ def matrix(bestandsnaam):
         rekening_rijen = {'rijkop': maak_lijst_koppen(sjabloon, 'Taakvelden')}
         balans_rijen = {'rijkop': maak_lijst_koppen(sjabloon, 'Balanscodes')}
         print('stap 2')
-        lasten_tabel = maak_tabel(compacte_data, 'lasten', lasten_header, rekening_rijen)
-        baten_tabel = maak_tabel(compacte_data, 'baten', baten_header, rekening_rijen)
+        lasten_tabel = maak_tabel(compacte_data, 'Lasten', lasten_header, rekening_rijen)
+        baten_tabel = maak_tabel(compacte_data, 'Baten', baten_header, rekening_rijen)
         balans_lasten_tabel = maak_tabel(compacte_data, 'balans_lasten', lasten_header, balans_rijen)
         balans_baten_tabel = maak_tabel(compacte_data, 'balans_baten', baten_header, balans_rijen)
         balans_standen_tabel = maak_tabel(compacte_data, 'balans_standen', balans_header, balans_rijen)

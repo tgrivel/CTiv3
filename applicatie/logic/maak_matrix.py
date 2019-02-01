@@ -2,7 +2,7 @@
 
 def maak_tabel(compacte_data, afdeling, header, rijen):
     kolommen = header['kolkop']
-    print(afdeling,kolommen)
+    #print(afdeling,kolommen)
     rijen = rijen['rijkop']
     data_tot = []
     for rij in rijen:
@@ -14,10 +14,11 @@ def maak_tabel(compacte_data, afdeling, header, rijen):
                 data_rij.append(compacte_data[combi_code])
             else:
                 data_rij.append('')
-        print(data_rij)
+        #print(data_rij)
         data_tot.append(data_rij)
     data = {'regels':data_tot}
-    # print(data)
+    if afdeling == 'Lasten':
+        print(data)
     return data
 
 # def bouw_matrix_LR(subset_data):

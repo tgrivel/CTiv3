@@ -11,7 +11,7 @@ _logger = logging.getLogger(__file__)
 
 
 def laad_json_bestand(bestand):
-    """Laad een json bestand. Het bestand kan gecodeerd zijn als utf-8 of als cp1252. """
+    """Laad een json bestand. Het bestand kan gecodeerd zijn als utf-8 of als cp1252."""
     newfile = bestand.read()
     try:
         data = json.loads(newfile.decode('utf-8'), object_pairs_hook=OrderedDict)
@@ -29,7 +29,7 @@ def ophalen_sjabloon(meta):
     url = "https://raw.github.com/tgrivel/iv3_modellen/master/" + "iv3Codes" + ovlaag + boekjaar + ".json"
     _logger.info("Sjabloon opgehaald van %s", url)
     webUrl = urllib.request.urlopen(url)
-    if (webUrl.getcode() == http.HTTPStatus.OK):
+    if webUrl.getcode() == http.HTTPStatus.OK:
         inhoud_bestand = laad_json_bestand(webUrl)
 
     return inhoud_bestand
@@ -61,6 +61,7 @@ def indikken_data(data):
     data zijn alleen de waarden
     """
     datalastenbaten = {}
+    num_fouten = 0
 
     _logger.info('in indikken')
     for rec in data:
@@ -68,7 +69,7 @@ def indikken_data(data):
             kant = rec['rekeningkant']
             bedrag = rec['bedrag']
             # bedrag = float(rec['bedrag'].replace(',', '.'))
-            if kant == 'lasten' or kant == 'baten':
+            if kant == 'Lasten' or kant == 'Baten':
                 cat = rec['categorie']
                 taakv = rec['taakveld']
                 code = (kant, taakv, cat)
@@ -86,9 +87,11 @@ def indikken_data(data):
             else:
                 datalastenbaten[code] = bedrag
         except:
-            print('Fout in indikken ')
+            num_fouten = num_fouten + 1
+            print('Fout {} in indikken'.format(num_fouten))
             for k,v in rec.items():
-                print (k,v)
+                pass
+                #print (k,v)
     # print('export: ')
     # for k, v in datalastenbaten.items():
     #     print(k,v)
