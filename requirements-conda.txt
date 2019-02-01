@@ -1,8 +1,6 @@
 babel=2.6.0=py_1
 ca-certificates=2018.11.29=ha4d7672_0
 certifi=2018.11.29=py37_1000
-flask-babel=0.11.2=py_1
-flask_table=0.5.0=py_0
 openssl=1.0.2p=hfa6e2cd_1001
 python=3.7.1=hc182675_1000
 pytz=2018.7=py_0

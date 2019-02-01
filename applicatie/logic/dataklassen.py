@@ -1,4 +1,4 @@
-
+# nog niet bekend of deze nodig zijn
 
 class GrijzeCellen(object):
     def __init__(self, rek_kant,taakv,cat):
