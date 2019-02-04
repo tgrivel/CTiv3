@@ -1,22 +1,24 @@
+import http
 import json
 from collections import OrderedDict
 import urllib.request
+import logging
 from flask_table import Table, Col
 
 datalastenbaten = {}
 
-HTTP_OKAY = 200
+_logger = logging.getLogger(__file__)
 
 
 def laad_json_bestand(bestand):
-    """Laad een json bestand. Het bestand kan gecodeerd zijn als utf-8 of als cp1252. """
+    """Laad een json bestand. Het bestand kan gecodeerd zijn als utf-8 of als cp1252."""
     newfile = bestand.read()
     try:
         data = json.loads(newfile.decode('utf-8'), object_pairs_hook=OrderedDict)
-        print('verwerken als utf8')
+        _logger.info('verwerken als utf8')
     except UnicodeDecodeError:
         data = json.loads(newfile.decode('cp1251'), object_pairs_hook=OrderedDict)
-        print('verwerken als cp1251')
+        _logger.info('verwerken als cp1251')
     return data
 
 
@@ -25,24 +27,27 @@ def ophalen_sjabloon(meta):
     ovlaag = meta['overheidslaag']
     boekjaar = meta['boekjaar']
     url = "https://raw.github.com/tgrivel/iv3_modellen/master/" + "iv3Codes" + ovlaag + boekjaar + ".json"
-    print(url)
+    _logger.info("Sjabloon opgehaald van %s", url)
     webUrl = urllib.request.urlopen(url)
-    if (webUrl.getcode() == HTTP_OKAY):
-        # bestand = webUrl.read()
+    if webUrl.getcode() == http.HTTPStatus.OK:
         inhoud_bestand = laad_json_bestand(webUrl)
-        meta_data = inhoud_bestand['metadata']
 
     return inhoud_bestand
 
 
 
 def verwerken(data):
+    """Wat doet deze functie?
+
+    Iets optellen en meta teruggeven?
+
+    """
     meta = data["metadata"]
     records  = data["waarden"]
     totaal = 0
     for record in records:
         totaal += int(record['bedrag'])
-    print(totaal)
+    _logger.info("Aantal records %d", totaal)
     # aantal = 0
     # for row in data:
     #     aantal += 1
@@ -51,14 +56,20 @@ def verwerken(data):
 
 
 def indikken_data(data):
-    global datalastenbaten
-    print('in indikken')
+    """"Wat is indikken??
+
+    data zijn alleen de waarden
+    """
+    datalastenbaten = {}
+    num_fouten = 0
+
+    _logger.info('in indikken')
     for rec in data:
         try:
             kant = rec['rekeningkant']
             bedrag = rec['bedrag']
             # bedrag = float(rec['bedrag'].replace(',', '.'))
-            if kant == 'lasten' or kant == 'baten':
+            if kant == 'Lasten' or kant == 'Baten':
                 cat = rec['categorie']
                 taakv = rec['taakveld']
                 code = (kant, taakv, cat)
@@ -76,9 +87,11 @@ def indikken_data(data):
             else:
                 datalastenbaten[code] = bedrag
         except:
-            print('Fout in indikken ')
+            num_fouten = num_fouten + 1
+            print('Fout {} in indikken'.format(num_fouten))
             for k,v in rec.items():
-                print (k,v)
+                pass
+                #print (k,v)
     # print('export: ')
     # for k, v in datalastenbaten.items():
     #     print(k,v)
