@@ -2,16 +2,15 @@ import os
 from flask import Flask
 
 
-def create_app(test_config=None):
+def create_app(config=None):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-    )
 
-    if test_config is None:
+    if config is None:
+        # read config file from the instance folder
         app.config.from_pyfile('config.py', silent=True)
     else:
-        app.config.from_mapping(test_config)
+        # load config object passed on start-up
+        app.config.from_object(config)
 
     try:
         os.makedirs(app.instance_path)
@@ -21,4 +20,5 @@ def create_app(test_config=None):
     from applicatie.main import bp as main_bp
     app.register_blueprint(main_bp)
 
+    print('Running with configuration: ' + app.config['APP_ENV'])
     return app

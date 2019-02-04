@@ -8,7 +8,7 @@ with io.open('DESCRIPTION.rst', 'rt', encoding='utf8') as f:
     readme = f.read()
 
 setup(
-    name='Ctiv3 applicatie',
+    name='Controletool Iv3 (CTiv3)',
     version='1.0.0',
     url='http://blabla.nl',
     license='BSD',
