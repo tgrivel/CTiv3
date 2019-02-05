@@ -72,19 +72,36 @@ table {
                   <h3>Lasten lopende rekening</h3>
                    <div class="container">
 
-                     <table border="1">
-                         <thead> <tr> <th> </th>
-                         {% for kol_nr in range(lasten_header['kolkop']|count) %}
-                           <th>{{' ' + lasten_header['kolkop'][kol_nr] + ' '}}</th>
-                         {% endfor %}
-                         </tr></thead>
+                     <table border="1" class="pvtTable" style="opacity: 1">
+                         <thead>
+                         <tr>
+                             <th colspan="1" rowspan="1"></th>
+                             <th class="pvtAxisLabel">Categorie</th>
+
+                             {% for categorie in lasten.kolommen %}
+                             <th class="pvtTable pvtColLabel" colspan="1" rowspan="2">
+                                 {{' ' + categorie + ' '}}
+                             </th>
+                             {% endfor %}
+                             <th class="pvtTotalLabel" rowspan="2">Totaal</th>
+                         </tr>
+                         <tr>
+                             <th class="pvtAxisLabel">Taakveld</th>
+                         </tr>
+                         </thead>
                          <tbody>
-                         {% for rij in lasten_tabel['regels'] %}
-                            <tr>
-                                {% for kol  in rij %}
-                                    <td>{{ kol }} </td>
-                                {% endfor%}
-                            </tr>
+
+                         {% for taakveld in lasten.rijen %}
+                         <tr>
+                             <th class="pvtRowLabel" rowspan="1" colspan="2">
+                                 {{ taakveld }}
+                             </th>
+                             {% for kolom in lasten.kolommen %}
+                             <td class="pvtVal" taakveld="{{ taakveld }}" categorie="{{ kolom }}">
+                                 {{ lasten[taakveld, kolom] }}
+                             </td>
+                             {% endfor %}
+                         </tr>
                          {% endfor %}
 
                     </table>
