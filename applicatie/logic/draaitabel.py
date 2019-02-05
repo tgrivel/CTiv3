@@ -9,6 +9,6 @@ class DraaiTabel:
        self.rijen, self.kolommen = indices
 
    def __getitem__(self, args):
-       print("args = {!r}".format(args))
+       """Geef een specifieke waarde uit de draaitabel terug."""
        return self.tabel[args]
 
