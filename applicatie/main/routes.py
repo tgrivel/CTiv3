@@ -1,6 +1,6 @@
 from flask import render_template, request
 from applicatie.logic.inlezen import laad_json_bestand, ophalen_sjabloon, indikken_data
-from applicatie.logic.maak_matrix import maak_tabel, maak_lijst_koppen
+from applicatie.logic.maak_matrix import maak_tabel, maak_lijst_koppen, pivot_table
 from applicatie.main import bp
 
 
@@ -42,7 +42,20 @@ def matrix(bestand):
         # data1 = data # dit is nep-data, niet ingelezen
         print('stap 3')
 
+        lasten_indices, lasten_waarden = pivot_table(complete_upload['waarden'],
+                                                     aggregeer_kolommen=['taakveld', 'categorie'],
+                                                     waarde_kolom='bedrag')
+        lasten_rijen, lasten_kolommen = lasten_indices
+
+        # Laurent zegt: dit is het handigste om mee te werken
+        print("lasten_rijen = {!r}".format(lasten_rijen))
+        print("lasten_kolommen = {!r}".format(lasten_kolommen))
+        print("lasten_waarden = {!r}".format(lasten_waarden))
+
         params = {
+            'lasten_rijen': lasten_rijen,
+            'lasten_kolommen': lasten_kolommen,
+            'lasten_waarden': lasten_waarden,
             'lasten_header': lasten_header,
             'baten_header': baten_header,
             'balans_header': balans_header,

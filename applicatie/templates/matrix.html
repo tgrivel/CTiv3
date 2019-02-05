@@ -78,10 +78,9 @@ table {
                              <th colspan="1" rowspan="1"></th>
                              <th class="pvtAxisLabel">Categorie</th>
 
-                             <!-- TODO ik wil de taakvelden en categorien in html tags -->
-                             {% for kol_nr in range(lasten_header['kolkop']|count) %}
+                             {% for categorie in lasten_kolommen %}
                              <th class="pvtTable pvtColLabel" colspan="1" rowspan="2">
-                                 {{' ' + lasten_header['kolkop'][kol_nr] + ' '}}
+                                 {{' ' + categorie + ' '}}
                              </th>
                              {% endfor %}
                              <th class="pvtTotalLabel" rowspan="2">Totaal</th>
@@ -91,14 +90,18 @@ table {
                          </tr>
                          </thead>
                          <tbody>
-                         {% for rij in lasten_tabel['regels'] %}
-                            <tr>
-                                <th class="pvtRowLabel" rowspan="1" colspan="2">TV</th>
-                                {% for kol  in rij %}
-                                    <td class="pvtVal">{{ kol }} </td>
-                                {% endfor%}
-                                <td class="pvtTotal">TODO optellen</td>
-                            </tr>
+
+                         {% for taakveld in lasten_rijen %}
+                         <tr>
+                             <th class="pvtRowLabel" rowspan="1" colspan="2">
+                                 {{ taakveld }}
+                             </th>
+                             {% for kolom in lasten_kolommen %}
+                             <td class="pvtVal" taakveld="{{ taakveld }}" categorie="{{ kolom }}">
+                                 {{ lasten_waarden[taakveld, kolom] }}
+                             </td>
+                             {% endfor %}
+                         </tr>
                          {% endfor %}
 
                     </table>
