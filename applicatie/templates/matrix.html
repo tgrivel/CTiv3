@@ -72,18 +72,32 @@ table {
                   <h3>Lasten lopende rekening</h3>
                    <div class="container">
 
-                     <table border="1">
-                         <thead> <tr> <th> </th>
-                         {% for kol_nr in range(lasten_header['kolkop']|count) %}
-                           <th>{{' ' + lasten_header['kolkop'][kol_nr] + ' '}}</th>
-                         {% endfor %}
-                         </tr></thead>
+                     <table border="1" class="pvtTable" style="opacity: 1">
+                         <thead>
+                         <tr>
+                             <th colspan="1" rowspan="1"></th>
+                             <th class="pvtAxisLabel">Categorie</th>
+
+                             <!-- TODO ik wil de taakvelden en categorien in html tags -->
+                             {% for kol_nr in range(lasten_header['kolkop']|count) %}
+                             <th class="pvtTable pvtColLabel" colspan="1" rowspan="2">
+                                 {{' ' + lasten_header['kolkop'][kol_nr] + ' '}}
+                             </th>
+                             {% endfor %}
+                             <th class="pvtTotalLabel" rowspan="2">Totaal</th>
+                         </tr>
+                         <tr>
+                             <th class="pvtAxisLabel">Taakveld</th>
+                         </tr>
+                         </thead>
                          <tbody>
                          {% for rij in lasten_tabel['regels'] %}
                             <tr>
+                                <th class="pvtRowLabel" rowspan="1" colspan="2">TV</th>
                                 {% for kol  in rij %}
-                                    <td>{{ kol }} </td>
+                                    <td class="pvtVal">{{ kol }} </td>
                                 {% endfor%}
+                                <td class="pvtTotal">TODO optellen</td>
                             </tr>
                          {% endfor %}
 
