@@ -8,6 +8,7 @@ https://www.anaconda.com/download/
 
 ```
 conda env --file requirements.txt
+pip install python-dotenv
 ```
 
 # Running
@@ -15,5 +16,10 @@ conda env --file requirements.txt
 ```
 conda activate ctiv3
 flask run
+```
+
+Alternatief:
+```
+python applicatie.py
 ```
 
