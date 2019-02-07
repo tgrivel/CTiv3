@@ -12,7 +12,6 @@ def index():
             return render_template("index.html")
         else:
             jsonfile = request.files['file']
-            jsonfilename = jsonfile.name
             return matrix(bestand=jsonfile)
     elif request.method == 'GET':
         return render_template("index.html")
