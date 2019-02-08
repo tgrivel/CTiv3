@@ -2,6 +2,7 @@ import http
 import json
 from collections import OrderedDict
 import urllib.request
+from urllib.error import URLError, HTTPError
 import logging
 from flask_table import Table, Col
 
@@ -22,15 +23,26 @@ def laad_json_bestand(bestand):
     return data
 
 
-def ophalen_sjabloon(meta):
-    metadata = []
+def ophalen_definitiebestand(meta):
     ovlaag = meta['overheidslaag']
     boekjaar = meta['boekjaar']
-    url = "https://raw.github.com/tgrivel/iv3_modellen/master/" + "iv3Codes" + ovlaag + boekjaar + ".json"
-    _logger.info("Sjabloon opgehaald van %s", url)
-    webUrl = urllib.request.urlopen(url)
-    if webUrl.getcode() == http.HTTPStatus.OK:
-        inhoud_bestand = laad_json_bestand(webUrl)
+    # tijdelijke oplossing:
+    boekjaar = '2017'
+    url = "https://raw.github.com/tgrivel/iv3_modellen/master/" + "iv3_definities_" + ovlaag + "_" + boekjaar + ".json"
+    errorcode = 0
+    try:
+        webUrl = urllib.request.urlopen(url)
+    except HTTPError as e:
+        errorcode = e.code
+    except URLError as e:
+        errorcode = e.code
+    if errorcode == 0:
+        if webUrl.getcode() == http.HTTPStatus.OK:
+            inhoud_bestand = laad_json_bestand(webUrl)
+            _logger.info("Sjabloon opgehaald van %s", url)
+    else:
+        inhoud_bestand = 'Fout bij ophalen Iv3 definitiebestand (foutcode #{0})'.format(errorcode)
+        _logger.info("Fout bij ophalen Iv3 definitiebestand")
 
     return inhoud_bestand
 

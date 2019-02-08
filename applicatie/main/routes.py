@@ -1,5 +1,5 @@
 from flask import render_template, request
-from applicatie.logic.inlezen import laad_json_bestand, ophalen_sjabloon, indikken_data
+from applicatie.logic.inlezen import laad_json_bestand, ophalen_definitiebestand, indikken_data
 from applicatie.logic.maak_matrix import maak_tabel, maak_lijst_koppen, pivot_table
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.main import bp
@@ -9,30 +9,38 @@ from applicatie.main import bp
 def index():
     if request.method == 'POST':
         if not request.files.get('file', None):
-            return render_template("index.html")
+            return render_template("index.html", errormessage='Geen json bestand geselecteerd')
         else:
             jsonfile = request.files['file']
-            return matrix(bestand=jsonfile)
+            return matrix(jsonbestand=jsonfile)
     elif request.method == 'GET':
-        return render_template("index.html")
+        return render_template("index.html", errormessage='')
 
 
 @bp.route("/matrix", methods=['GET', 'POST'])
-def matrix(bestand):
+def matrix(jsonbestand):
     """Laad de pagina met een overzicht."""
-    if bestand:
-        complete_upload = laad_json_bestand(bestand)
+    if jsonbestand:
+        # json bestand inlezen
+        complete_upload = laad_json_bestand(jsonbestand)
         metadata = complete_upload['metadata']
-        sjabloon = ophalen_sjabloon(metadata)
 
-        sjabloon_meta = sjabloon['metadata']
+        # definitiebestand ophalen
+        errormessage = ''
+        definitiebestand = ophalen_definitiebestand(metadata)
+        if isinstance(definitiebestand, str):
+            errormessage = definitiebestand
+            return render_template("index.html", errormessage=errormessage)
+        else:
+            sjabloon_meta = definitiebestand['metadata']
+
         compacte_data = indikken_data(complete_upload['waarden'])
         print('stap 1')
-        lasten_header = {'kolkop': maak_lijst_koppen(sjabloon, "LastenCategorien")}
-        baten_header = {'kolkop': maak_lijst_koppen(sjabloon, "BatenCategorien")}
-        balans_header = {'kolkop': maak_lijst_koppen(sjabloon, "BalansDatums")}
-        rekening_rijen = {'rijkop': maak_lijst_koppen(sjabloon, 'Taakvelden')}
-        balans_rijen = {'rijkop': maak_lijst_koppen(sjabloon, 'Balanscodes')}
+        lasten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "LastenCategorien")}
+        baten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BatenCategorien")}
+        balans_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BalansDatums")}
+        rekening_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Taakvelden')}
+        balans_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Balanscodes')}
         print('stap 2')
         lasten_tabel = maak_tabel(compacte_data, 'Lasten', lasten_header, rekening_rijen)
         baten_tabel = maak_tabel(compacte_data, 'Baten', baten_header, rekening_rijen)
@@ -57,6 +65,7 @@ def matrix(bestand):
             'data': complete_upload,
             'meta': metadata,
             'sjabloon': sjabloon_meta,
+            'errormessage': errormessage,
         }
 
     return render_template("matrix.html", **params)
