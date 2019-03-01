@@ -36,11 +36,11 @@ def matrix(jsonbestand):
 
         compacte_data = indikken_data(complete_upload['waarden'])
         print('stap 1')
-        lasten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "LastenCategorien")}
-        baten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BatenCategorien")}
-        balans_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BalansDatums")}
-        rekening_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Taakvelden')}
-        balans_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Balanscodes')}
+        lasten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "LastenCategorie")}
+        baten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BatenCategorie")}
+        balans_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BalansDatum")}
+        rekening_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Taakveld')}
+        balans_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Balanscode')}
         print('stap 2')
         lasten_tabel = maak_tabel(compacte_data, 'Lasten', lasten_header, rekening_rijen)
         baten_tabel = maak_tabel(compacte_data, 'Baten', baten_header, rekening_rijen)
