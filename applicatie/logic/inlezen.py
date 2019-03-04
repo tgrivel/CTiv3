@@ -26,7 +26,7 @@ def ophalen_sjabloon(meta):
     metadata = []
     ovlaag = meta['overheidslaag']
     boekjaar = meta['boekjaar']
-    url = "https://raw.github.com/tgrivel/iv3_modellen/master/" + "iv3Codes" + ovlaag + boekjaar + ".json"
+    url = "https://raw.github.com/tgrivel/iv3_modellen/master/" + "iv3_definities_" + ovlaag + '_' + boekjaar + ".json"
     _logger.info("Sjabloon opgehaald van %s", url)
     webUrl = urllib.request.urlopen(url)
     if webUrl.getcode() == http.HTTPStatus.OK:
@@ -69,7 +69,7 @@ def indikken_data(data):
             kant = rec['rekeningkant']
             bedrag = rec['bedrag']
             # bedrag = float(rec['bedrag'].replace(',', '.'))
-            if kant == 'Lasten' or kant == 'Baten':
+            if kant == 'lasten' or kant == 'baten':
                 cat = rec['categorie']
                 taakv = rec['taakveld']
                 code = (kant, taakv, cat)

@@ -9,7 +9,7 @@
 {"categorie":"6.1","balanscode":"A1331b","bedrag":321},
 {"categorie":"7.2","balanscode":"P12","bedrag":1188}
 ],
-"baten"
+"baten": [
 {"categorie":"3.8","taakveld":"0.1","bedrag":68},
 {"categorie":"3.5.2","taakveld":"0.63","bedrag":21},
 {"categorie":"3.8","taakveld":"2.1","bedrag":167}

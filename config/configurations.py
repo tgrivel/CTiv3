@@ -10,6 +10,11 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 # define several configurations
 # default, development, test, production
+class Config_Master(object):
+    APP_ENV = 'master'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'master_key'
+
+
 class Config_Default(object):
     APP_ENV = 'default'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'default_key'

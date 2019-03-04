@@ -61,7 +61,7 @@ def pivot_table(data, aggregeer_kolommen, waarde_kolom):
 def maak_lijst_koppen(sjabloon, kop_soort ):
     lijst_koppen = []
     selectie = sjabloon[kop_soort]
-    if kop_soort == 'BalansDatums':
+    if kop_soort == 'BalansDatum':
         for rec in selectie:
             lijst_koppen.append(rec['code'])
     else:

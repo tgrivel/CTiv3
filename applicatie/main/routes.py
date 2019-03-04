@@ -29,14 +29,14 @@ def matrix(bestand):
         sjabloon_meta = sjabloon['metadata']
         compacte_data = indikken_data(complete_upload['waarden'])
         print('stap 1')
-        lasten_header = {'kolkop': maak_lijst_koppen(sjabloon, "LastenCategorien")}
-        baten_header = {'kolkop': maak_lijst_koppen(sjabloon, "BatenCategorien")}
-        balans_header = {'kolkop': maak_lijst_koppen(sjabloon, "BalansDatums")}
-        rekening_rijen = {'rijkop': maak_lijst_koppen(sjabloon, 'Taakvelden')}
-        balans_rijen = {'rijkop': maak_lijst_koppen(sjabloon, 'Balanscodes')}
+        lasten_header = {'kolkop': maak_lijst_koppen(sjabloon, "LastenCategorie")}
+        baten_header = {'kolkop': maak_lijst_koppen(sjabloon, "BatenCategorie")}
+        balans_header = {'kolkop': maak_lijst_koppen(sjabloon, "BalansDatum")}
+        rekening_rijen = {'rijkop': maak_lijst_koppen(sjabloon, 'Taakveld')}
+        balans_rijen = {'rijkop': maak_lijst_koppen(sjabloon, 'Balanscode')}
         print('stap 2')
-        lasten_tabel = maak_tabel(compacte_data, 'Lasten', lasten_header, rekening_rijen)
-        baten_tabel = maak_tabel(compacte_data, 'Baten', baten_header, rekening_rijen)
+        lasten_tabel = maak_tabel(compacte_data, 'lasten', lasten_header, rekening_rijen)
+        baten_tabel = maak_tabel(compacte_data, 'baten', baten_header, rekening_rijen)
         balans_lasten_tabel = maak_tabel(compacte_data, 'balans_lasten', lasten_header, balans_rijen)
         balans_baten_tabel = maak_tabel(compacte_data, 'balans_baten', baten_header, balans_rijen)
         balans_standen_tabel = maak_tabel(compacte_data, 'balans_standen', balans_header, balans_rijen)
