@@ -20,5 +20,5 @@ def create_app(config=None):
     from applicatie.main import bp as main_bp
     app.register_blueprint(main_bp)
 
-    print('Running with configuration: ' + app.config['APP_ENV'])
+    #print('Running with configuration: ' + app.config['APP_ENV'])
     return app
