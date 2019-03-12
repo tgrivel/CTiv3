@@ -50,7 +50,30 @@ def matrix(jsonbestand):
         # data1 = data # dit is nep-data, niet ingelezen
         print('stap 3')
 
-        lasten = DraaiTabel(complete_upload['data']['lasten'])
+        lasten = DraaiTabel(
+            complete_upload['data']['lasten'],
+            aggregeer_kolommen=['taakveld', 'categorie'])
+        balans_lasten = DraaiTabel(
+            complete_upload['data']['balans_lasten'],
+            aggregeer_kolommen=['balanscode', 'categorie'])
+        baten = DraaiTabel(
+            complete_upload['data']['baten'],
+            aggregeer_kolommen=['taakveld', 'categorie'])
+        balans_baten = DraaiTabel(
+            complete_upload['data']['balans_baten'],
+            aggregeer_kolommen=['balanscode', 'categorie'])
+        balans_stand = DraaiTabel(
+            complete_upload['data']['balans_stand'],
+            aggregeer_kolommen=['balanscode', 'standper'])
+
+        tabellen = {
+            'lasten': lasten,
+            'balans_lasten': balans_lasten,
+            'baten': baten,
+            'balans_baten': balans_baten,
+            'balans_stand': balans_stand,
+        }
+
         # lasten_header = lasten.kolommen
 
         sjabloon_meta = {

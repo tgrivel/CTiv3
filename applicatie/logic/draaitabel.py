@@ -2,9 +2,10 @@ from applicatie.logic.maak_matrix import pivot_table
 
 
 class DraaiTabel:
-   def __init__(self, data):
+   def __init__(self, data, aggregeer_kolommen):
        self._data = data
-       indices, self.tabel = pivot_table(data, aggregeer_kolommen=['taakveld', 'categorie'],
+       self.aggregeer_kolommen = aggregeer_kolommen
+       indices, self.tabel = pivot_table(data, aggregeer_kolommen=aggregeer_kolommen,
                                          waarde_kolom='bedrag')
        self.rijen, self.kolommen = indices
 
