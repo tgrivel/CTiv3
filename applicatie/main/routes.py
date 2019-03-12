@@ -27,30 +27,46 @@ def matrix(jsonbestand):
 
         # definitiebestand ophalen
         errormessage = ''
-        definitiebestand = ophalen_definitiebestand(metadata)
-        if isinstance(definitiebestand, str):
-            errormessage = definitiebestand
-            return render_template("index.html", errormessage=errormessage)
-        else:
-            sjabloon_meta = definitiebestand['metadata']
+        # definitiebestand = ophalen_definitiebestand(metadata)
+        # if isinstance(definitiebestand, str):
+        #     errormessage = definitiebestand
+        #     return render_template("index.html", errormessage=errormessage)
+        # else:
+        #     sjabloon_meta = definitiebestand['metadata']
 
-        compacte_data = indikken_data(complete_upload['waarden'])
+        # compacte_data = indikken_data(complete_upload['waarden'])
         print('stap 1')
-        lasten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "LastenCategorie")}
-        baten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BatenCategorie")}
-        balans_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BalansDatum")}
-        rekening_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Taakveld')}
-        balans_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Balanscode')}
+        # lasten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "LastenCategorie")}
+        # baten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BatenCategorie")}
+        # balans_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BalansDatum")}
+        # rekening_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Taakveld')}
+        # balans_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Balanscode')}
         print('stap 2')
-        lasten_tabel = maak_tabel(compacte_data, 'Lasten', lasten_header, rekening_rijen)
-        baten_tabel = maak_tabel(compacte_data, 'Baten', baten_header, rekening_rijen)
-        balans_lasten_tabel = maak_tabel(compacte_data, 'balans_lasten', lasten_header, balans_rijen)
-        balans_baten_tabel = maak_tabel(compacte_data, 'balans_baten', baten_header, balans_rijen)
-        balans_standen_tabel = maak_tabel(compacte_data, 'balans_standen', balans_header, balans_rijen)
+        # lasten_tabel = maak_tabel(compacte_data, 'Lasten', lasten_header, rekening_rijen)
+        # baten_tabel = maak_tabel(compacte_data, 'Baten', baten_header, rekening_rijen)
+        # balans_lasten_tabel = maak_tabel(compacte_data, 'balans_lasten', lasten_header, balans_rijen)
+        # balans_baten_tabel = maak_tabel(compacte_data, 'balans_baten', baten_header, balans_rijen)
+        # balans_standen_tabel = maak_tabel(compacte_data, 'balans_standen', balans_header, balans_rijen)
         # data1 = data # dit is nep-data, niet ingelezen
         print('stap 3')
 
-        lasten = DraaiTabel(complete_upload['waarden'])
+        lasten = DraaiTabel(complete_upload['data']['lasten'])
+        # lasten_header = lasten.kolommen
+
+        sjabloon_meta = {
+            "Type": 1,
+            "Overheidslaag": 1,
+            "boekjaar": 1,
+        }
+
+        lasten_header = []
+        baten_header = []
+        balans_header = []
+        lasten_tabel = []
+        baten_tabel = []
+        balans_lasten_tabel = []
+        balans_baten_tabel = []
+        balans_standen_tabel = []
 
         params = {
             'lasten': lasten,  # Is alles wat ik nodig heb
@@ -65,7 +81,7 @@ def matrix(jsonbestand):
             'data': complete_upload,
             'meta': metadata,
             'sjabloon': sjabloon_meta,
-            'errormessage': errormessage,
+            # 'errormessage': errormessage,
         }
 
     return render_template("matrix.html", **params)
