@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from 'macros.html' import draaitabel %}
 
 {% block content %}
 <style>
@@ -68,165 +69,42 @@ table {
                     <button class="tablinks" onclick="openTab(event, 'Controles')">Controles</button>
                 </div>
 
-                <!-- Tab content -->
-                <div id="LastenLR" class="tabcontent">
-                  <h3>Lasten lopende rekening</h3>
-                   <div class="container">
+        <!-- Tab content -->
+        <div id='LastenLR' class="tabcontent">
+            <h3>Lasten lopende rekening</h3>
+                {{ draaitabel(lasten) }}
+        </div>
 
-                     <table border="1" class="pvtTable" style="opacity: 1">
-                         <thead>
-                         <tr>
-                             <th colspan="1" rowspan="1"></th>
-                             <th class="pvtAxisLabel">Categorie</th>
+        <div id='BatenLR' class="tabcontent">
+            <h3>Baten lopende rekening</h3>
+            {{ draaitabel(baten) }}
+        </div>
 
-                             {% for categorie in lasten.kolommen %}
-                             <th class="pvtTable pvtColLabel" colspan="1" rowspan="2">
-                                 {{' ' + categorie + ' '}}
-                             </th>
-                             {% endfor %}
-                             <th class="pvtTotalLabel" rowspan="2">Totaal</th>
-                         </tr>
-                         <tr>
-                             <th class="pvtAxisLabel">Taakveld</th>
-                         </tr>
-                         </thead>
-                         <tbody>
+        <div id="LastenBM" class="tabcontent">
+            <h3>Balansmutaties lasten</h3>
+            {{ draaitabel(balans_lasten) }}
+        </div>
 
-                         {% for taakveld in lasten.rijen %}
-                         <tr>
-                             <th class="pvtRowLabel" rowspan="1" colspan="2">
-                                 {{ taakveld }}
-                             </th>
-                             {% for kolom in lasten.kolommen %}
-                             <td class="pvtVal" taakveld="{{ taakveld }}" categorie="{{ kolom }}">
-                                 {{ lasten[taakveld, kolom] }}
-                             </td>
-                             {% endfor %}
-                         </tr>
-                         {% endfor %}
+        <div id='BatenBM' class="tabcontent">
+            <h3>Balansmutaties baten</h3>
+            {{ draaitabel(balans_baten) }}
+        </div>
 
-                    </table>
-                    </div>
-                </div>
+        <div id="Balans" class="tabcontent">
+            <h3>Balans</h3>
+            {{ draaitabel(balans_stand) }}
+        </div>
 
-                <div id="LastenDetail">
-                    <table>
-                        <thead>
+        <div id="LastenDetail">
+            <table>
+                <thead>
 
-                        </thead>
-                        <tbody>
+                </thead>
+                <tbody>
 
-                        </tbody>
-                    </table>
-                </div>
-
-        <!--
-                <div id="BatenLR" class="tabcontent">
-                  <h3>Baten lopende rekening</h3>
-                    <div class="container">
-
-                     <table border="1">
-                         <thead> <tr> <th> </th>
-                         {% for kol_nr in range(baten_header['kolkop']|count) %}
-                           <th>{{baten_header['kolkop'][kol_nr]}}</th>
-                         {% endfor %}
-                         </tr></thead>
-                         <tbody>
-                         {% for rij in baten_tabel['regels'] %}
-                            <tr>
-                                {% for kol  in rij %}
-                                    <td>{{ kol }} </td>
-                                {% endfor%}
-                            </tr>
-                         {% endfor %}
-
-                    </table>
-                    </div>
-                </div>
-
-                <div id="LastenBM" class="tabcontent">
-                  <h3>Balansmutaties lasten</h3>
-                  <div class="container">
-
-                     <table border="1">
-                         <thead> <tr> <th> </th>
-                         {% for kol_nr in range(lasten_header['kolkop']|count) %}
-                           <th>{{lasten_header['kolkop'][kol_nr]}}</th>
-                         {% endfor %}
-                         </tr></thead>
-                         <tbody>
-                         {% for rij in balans_lasten_tabel['regels'] %}
-                            <tr>
-                                {% for kol  in rij %}
-                                    <td>{{ kol }} </td>
-                                {% endfor%}
-                            </tr>
-                         {% endfor %}
-
-                    </table>
-                    </div>
-                </div>
-
-                <div id="BatenBM" class="tabcontent">
-                  <h3>Balansmutaties baten</h3>
-                  <div class="container">
-
-                     <table border="1">
-                         <thead> <tr> <th> </th>
-                         {% for kol_nr in range(baten_header['kolkop']|count) %}
-                           <th>{{baten_header['kolkop'][kol_nr]}}</th>
-                         {% endfor %}
-                         </tr></thead>
-                         <tbody>
-                         {% for rij in balans_baten_tabel['regels'] %}
-                            <tr>
-                                {% for kol  in rij %}
-                                    <td>{{ kol }} </td>
-                                {% endfor%}
-                            </tr>
-                         {% endfor %}
-
-                    </table>
-                    </div>
-                </div>
-
-
-
-                <div id="Balans" class="tabcontent">
-                  <h3>Balans</h3>
-                  <div class="container">
-
-                     <table border="1">
-                         <thead> <tr> <th> </th>
-                         {% for kol_nr in range(balans_header['kolkop']|count) %}
-                           <th>{{balans_header['kolkop'][kol_nr]}}</th>
-                         {% endfor %}
-                         </tr></thead>
-                         <tbody>
-                         {% for rij in balans_standen_tabel['regels'] %}
-                            <tr>
-                                {% for kol  in rij %}
-                                    <td>{{ kol }} </td>
-                                {% endfor%}
-                            </tr>
-                         {% endfor %}
-
-                    </table>
-                    </div>
-                </div>
-
-                <div id="Controles" class="tabcontent">
-                  <h3>Controles</h3>
-                  <p>Controles moeten nog worden gebouwd.</p>
-                </div>
-                -->
-
-
-
-	              <!-- <table id="overzicht"/> -->
-	              <!-- <table id="detail"/> -->
-
-	              <!-- <script src="{{url_for('static', filename='js/matrix.js')}}"></script> -->
+                </tbody>
+            </table>
+        </div>
 
     </font>
     <script>

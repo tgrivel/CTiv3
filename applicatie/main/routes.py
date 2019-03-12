@@ -51,30 +51,20 @@ def matrix(jsonbestand):
         print('stap 3')
 
         lasten = DraaiTabel(
-            complete_upload['data']['lasten'],
-            aggregeer_kolommen=['taakveld', 'categorie'])
+            data=complete_upload['data']['lasten'],
+            rij_naam='taakveld', kolom_naam='categorie')
         balans_lasten = DraaiTabel(
-            complete_upload['data']['balans_lasten'],
-            aggregeer_kolommen=['balanscode', 'categorie'])
+            data=complete_upload['data']['balans_lasten'],
+            rij_naam='balanscode', kolom_naam='categorie')
         baten = DraaiTabel(
-            complete_upload['data']['baten'],
-            aggregeer_kolommen=['taakveld', 'categorie'])
+            data=complete_upload['data']['baten'],
+            rij_naam='taakveld', kolom_naam='categorie')
         balans_baten = DraaiTabel(
-            complete_upload['data']['balans_baten'],
-            aggregeer_kolommen=['balanscode', 'categorie'])
+            data=complete_upload['data']['balans_baten'],
+            rij_naam='balanscode', kolom_naam='categorie')
         balans_stand = DraaiTabel(
-            complete_upload['data']['balans_stand'],
-            aggregeer_kolommen=['balanscode', 'standper'])
-
-        tabellen = {
-            'lasten': lasten,
-            'balans_lasten': balans_lasten,
-            'baten': baten,
-            'balans_baten': balans_baten,
-            'balans_stand': balans_stand,
-        }
-
-        # lasten_header = lasten.kolommen
+            data=complete_upload['data']['balans_stand'],
+            rij_naam='balanscode', kolom_naam='standper')
 
         sjabloon_meta = {
             "Type": 1,
@@ -93,6 +83,12 @@ def matrix(jsonbestand):
 
         params = {
             'lasten': lasten,  # Is alles wat ik nodig heb
+            'balans_lasten': balans_lasten,
+            'baten': baten,
+            'balans_baten': balans_baten,
+            'balans_stand': balans_stand,
+
+            # TODO Alles hieronder gebruik ik eigenlijk niet
             'lasten_header': lasten_header,
             'baten_header': baten_header,
             'balans_header': balans_header,
