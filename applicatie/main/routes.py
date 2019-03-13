@@ -63,7 +63,7 @@ def matrix(jsonbestand):
             data=complete_upload['data']['balans_baten'],
             rij_naam='balanscode', kolom_naam='categorie')
         balans_stand = DraaiTabel(
-            data=complete_upload['data']['balans_stand'],
+            data=complete_upload['data']['balans_standen'],
             rij_naam='balanscode', kolom_naam='standper')
 
         sjabloon_meta = {
