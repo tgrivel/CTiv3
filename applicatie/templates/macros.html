@@ -1,0 +1,39 @@
+{% macro draaitabel(tabel) %}
+
+<!-- Tab content -->
+<div class="container">
+    <table border="1" class="pvtTable" style="opacity: 1">
+        <thead>
+        <tr>
+            <th colspan="1" rowspan="1"></th>
+            <th class="pvtAxisLabel">{{ tabel.kolom_naam }}</th>
+
+            {% for kolom in tabel.kolommen %}
+            <th class="pvtTable pvtColLabel" colspan="1" rowspan="2">
+                {{' ' + kolom + ' '}}
+            </th>
+            {% endfor %}
+            <th class="pvtTotalLabel" rowspan="2">Totaal</th>
+        </tr>
+        <tr>
+            <th class="pvtAxisLabel">{{ tabel.rij_naam }}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for rij in tabel.rijen %}
+        <tr>
+            <th class="pvtRowLabel" rowspan="1" colspan="2">
+                {{ rij }}
+            </th>
+            {% for kolom in tabel.kolommen %}
+            <td class="pvtVal" {{ tabel.rij_naam }}="{{ rij }}" {{ tabel.kolom_naam }}="{{ kolom }}">
+                {{ tabel[rij, kolom] }}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endmacro %}
