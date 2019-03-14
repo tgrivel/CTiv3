@@ -2,6 +2,7 @@ from flask import render_template, request
 
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_databestand, ophalen_bestand_van_repo
+from applicatie.logic.controles import controle_met_schema
 from applicatie.main import bp
 
 
@@ -21,24 +22,30 @@ def index():
 def matrix(jsonbestand):
     """Laad de pagina met een overzicht."""
     if jsonbestand:
-        # json bestand inlezen
+        # json data bestand inlezen
         databestand, fouten_databestand = ophalen_databestand(jsonbestand)
 
         if fouten_databestand:
             return render_template("index.html", errormessages=fouten_databestand)
 
-        #schemabestand, foutmeldingen_schemabestand = ophalen_schemabestand()
+        # json schema bestand ophalen van repo
+        bestandsnaam = 'iv3_data_schema_v1_0.json'
+        repo_url = "https://raw.github.com/tgrivel/iv3_modellen/master/"
+        schemabestand, fouten_schemabestand = ophalen_bestand_van_repo(repo_url, bestandsnaam, 'schemabestand')
+        if fouten_schemabestand:
+            return render_template("index.html", errormessages=fouten_schemabestand)
 
-        #foutmeldingen_schemacontrole = controle_met_schema(databestand)
+        fouten_schemacontrole = controle_met_schema(databestand, schemabestand)
+        if fouten_schemacontrole:
+            return render_template("index.html", errormessages=fouten_schemacontrole)
 
-        # definitiebestand ophalen
+        # json definitie bestand ophalen van repo
         metadata = databestand['metadata']
         ovlaag = metadata['overheidslaag']
         boekjaar = metadata['boekjaar']
         bestandsnaam = 'iv3_definities_' + ovlaag + '_' + boekjaar + '.json'
-        url = "https://raw.github.com/tgrivel/iv3_modellen/master/"
-        definitiebestand, fouten_definitiebestand = ophalen_bestand_van_repo(url, bestandsnaam, 'definitiebetand')
-
+        repo_url = "https://raw.github.com/tgrivel/iv3_modellen/master/"
+        definitiebestand, fouten_definitiebestand = ophalen_bestand_van_repo(repo_url, bestandsnaam, 'definitiebetand')
         if fouten_definitiebestand:
             return render_template("index.html", errormessages=fouten_definitiebestand)
 

@@ -8,7 +8,6 @@ from urllib.error import URLError, HTTPError
 import logging
 from flask_table import Table, Col
 
-datalastenbaten = {}
 
 _logger = logging.getLogger(__file__)
 
