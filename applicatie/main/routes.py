@@ -1,5 +1,5 @@
 from flask import render_template, request
-from applicatie.logic.inlezen import laad_json_bestand, ophalen_definitiebestand, indikken_data
+from applicatie.logic.inlezen import laad_json_bestand, ophalen_definitiebestand
 from applicatie.logic.maak_matrix import maak_tabel, maak_lijst_koppen, pivot_table
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.main import bp
@@ -26,29 +26,15 @@ def matrix(jsonbestand):
         metadata = complete_upload['metadata']
 
         # definitiebestand ophalen
-        errormessage = ''
-        # definitiebestand = ophalen_definitiebestand(metadata)
-        # if isinstance(definitiebestand, str):
-        #     errormessage = definitiebestand
-        #     return render_template("index.html", errormessage=errormessage)
-        # else:
-        #     sjabloon_meta = definitiebestand['metadata']
+        resultaat = ophalen_definitiebestand(metadata)
+        definitiebestand = resultaat[0]
+        errormessage = resultaat[1]
 
-        # compacte_data = indikken_data(complete_upload['waarden'])
-        print('stap 1')
-        # lasten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "LastenCategorie")}
-        # baten_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BatenCategorie")}
-        # balans_header = {'kolkop': maak_lijst_koppen(definitiebestand, "BalansDatum")}
-        # rekening_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Taakveld')}
-        # balans_rijen = {'rijkop': maak_lijst_koppen(definitiebestand, 'Balanscode')}
-        print('stap 2')
-        # lasten_tabel = maak_tabel(compacte_data, 'Lasten', lasten_header, rekening_rijen)
-        # baten_tabel = maak_tabel(compacte_data, 'Baten', baten_header, rekening_rijen)
-        # balans_lasten_tabel = maak_tabel(compacte_data, 'balans_lasten', lasten_header, balans_rijen)
-        # balans_baten_tabel = maak_tabel(compacte_data, 'balans_baten', baten_header, balans_rijen)
-        # balans_standen_tabel = maak_tabel(compacte_data, 'balans_standen', balans_header, balans_rijen)
-        # data1 = data # dit is nep-data, niet ingelezen
-        print('stap 3')
+        if errormessage != '':
+            # we hebben een foutmelding teruggekregen
+            return render_template("index.html", errormessage=errormessage)
+
+        sjabloon_meta = definitiebestand['metadata']
 
         lasten = DraaiTabel(
             data=complete_upload['data']['lasten'],
@@ -62,45 +48,22 @@ def matrix(jsonbestand):
         balans_baten = DraaiTabel(
             data=complete_upload['data']['balans_baten'],
             rij_naam='balanscode', kolom_naam='categorie')
-        balans_stand = DraaiTabel(
-            data=complete_upload['data']['balans_stand'],
+        balans_standen = DraaiTabel(
+            data=complete_upload['data']['balans_standen'],
             rij_naam='balanscode', kolom_naam='standper')
-
-        sjabloon_meta = {
-            "Type": 1,
-            "Overheidslaag": 1,
-            "boekjaar": 1,
-        }
-
-        lasten_header = []
-        baten_header = []
-        balans_header = []
-        lasten_tabel = []
-        baten_tabel = []
-        balans_lasten_tabel = []
-        balans_baten_tabel = []
-        balans_standen_tabel = []
 
         params = {
             'lasten': lasten,  # Is alles wat ik nodig heb
             'balans_lasten': balans_lasten,
             'baten': baten,
             'balans_baten': balans_baten,
-            'balans_stand': balans_stand,
+            'balans_standen': balans_standen,
 
-            # TODO Alles hieronder gebruik ik eigenlijk niet
-            'lasten_header': lasten_header,
-            'baten_header': baten_header,
-            'balans_header': balans_header,
-            'lasten_tabel': lasten_tabel,
-            'baten_tabel': baten_tabel,
-            'balans_lasten_tabel': balans_lasten_tabel,
-            'balans_baten_tabel': balans_baten_tabel,
-            'balans_standen_tabel': balans_standen_tabel,
+            # hebben we onderstaande nog nodig?
             'data': complete_upload,
             'meta': metadata,
             'sjabloon': sjabloon_meta,
-            # 'errormessage': errormessage,
+            'errormessage': errormessage,
         }
 
     return render_template("matrix.html", **params)

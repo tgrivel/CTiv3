@@ -53,10 +53,11 @@ table {
     </script>
     <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
-    <div>nr: {{ meta['overheidsnummer']}} {{ meta['overheidsnaam'] }}</div>
-    <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
-    <div>Datum : {{ meta['datum_aanmaak']}} </div>
-    <div>Sjabloon: {{ sjabloon['Type'] }} , {{ sjabloon['Overheidslaag'] }} , {{ sjabloon['boekjaar'] }}   </div>
+        <div>Inzender: {{ meta['overheidsnaam']}}</div>
+        <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
+        <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
+        <div>Datum : {{ meta['datum']}} </div>
+        <div>Definitiebestand: {{ sjabloon['omschrijving'] }} , {{ sjabloon['overheidslaag'] }} , {{ sjabloon['boekjaar'] }}   </div>
 
              <!-- Tab links -->
 
@@ -92,7 +93,7 @@ table {
 
         <div id="Balans" class="tabcontent">
             <h3>Balans</h3>
-            {{ draaitabel(balans_stand) }}
+            {{ draaitabel(balans_standen) }}
         </div>
 
         <div id="LastenDetail">
