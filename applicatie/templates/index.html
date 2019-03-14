@@ -30,7 +30,13 @@
                      <div>
 					   <button>Start controle van gekozen JSON-bestand</button>
 					 </div>
-						<p><font size="2" color="black">{{errormessage}}</font></p>
+
+                    <br/>
+
+                    {% for errormessage in errormessages %}
+						<div class="error">{{ errormessage }}</div>
+                    {% endfor %}
+
 					</form>
 					<!--
                     <div>
