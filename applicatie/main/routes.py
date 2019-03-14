@@ -1,7 +1,7 @@
 from flask import render_template, request
 
 from applicatie.logic.draaitabel import DraaiTabel
-from applicatie.logic.inlezen import ophalen_definitiebestand, ophalen_databestand
+from applicatie.logic.inlezen import ophalen_databestand, ophalen_bestand_van_repo
 from applicatie.main import bp
 
 
@@ -22,17 +22,25 @@ def matrix(jsonbestand):
     """Laad de pagina met een overzicht."""
     if jsonbestand:
         # json bestand inlezen
-        databestand, foutmeldingen_databestand = ophalen_databestand(jsonbestand)
+        databestand, fouten_databestand = ophalen_databestand(jsonbestand)
 
-        if foutmeldingen_databestand:
-            return render_template("index.html", errormessages=foutmeldingen_databestand)
+        if fouten_databestand:
+            return render_template("index.html", errormessages=fouten_databestand)
+
+        #schemabestand, foutmeldingen_schemabestand = ophalen_schemabestand()
+
+        #foutmeldingen_schemacontrole = controle_met_schema(databestand)
 
         # definitiebestand ophalen
         metadata = databestand['metadata']
-        definitiebestand, foutmeldingen_definitiebestand = ophalen_definitiebestand(metadata)
+        ovlaag = metadata['overheidslaag']
+        boekjaar = metadata['boekjaar']
+        bestandsnaam = 'iv3_definities_' + ovlaag + '_' + boekjaar + '.json'
+        url = "https://raw.github.com/tgrivel/iv3_modellen/master/"
+        definitiebestand, fouten_definitiebestand = ophalen_bestand_van_repo(url, bestandsnaam, 'definitiebetand')
 
-        if foutmeldingen_definitiebestand:
-            return render_template("index.html", errormessages=foutmeldingen_definitiebestand)
+        if fouten_definitiebestand:
+            return render_template("index.html", errormessages=fouten_definitiebestand)
 
         sjabloon_meta = definitiebestand['metadata']
 

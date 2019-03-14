@@ -53,13 +53,13 @@ def ophalen_databestand(jsonbestand):
     return complete_upload, foutmeldingen
 
 
-def ophalen_definitiebestand(meta):
-    foutmeldingen = []
-    ovlaag = meta['overheidslaag']
-    boekjaar = meta['boekjaar']
-    bestandsnaam = 'iv3_definities_' + ovlaag + '_' + boekjaar + '.json'
-    url = "https://raw.github.com/tgrivel/iv3_modellen/master/" + bestandsnaam
+def ophalen_bestand_van_repo(url, bestandsnaam, bestandstype):
+    """Haal json bestand van repo op.
 
+     Geef json-bestand terug of een lijst met foutmeldingen.
+     """
+    url = url + bestandsnaam
+    foutmeldingen = []
     inhoud_bestand = None
     errorcode = 0
     try:
@@ -72,9 +72,9 @@ def ophalen_definitiebestand(meta):
         if webUrl.getcode() == http.HTTPStatus.OK:
             inhoud_bestand, foutmeldingen_json = laad_json_bestand(webUrl)
             foutmeldingen.extend(foutmeldingen_json)
-            _logger.info("Sjabloon opgehaald van %s", url)
+            _logger.info("Bestand opgehaald van %s", url)
     else:
-        errormessage = 'Fout bij ophalen definitiebestand {0} (foutcode #{1})'.format(bestandsnaam, errorcode)
+        errormessage = 'Fout bij ophalen {0}: {1} (foutcode #{2})'.format(bestandstype, bestandsnaam, errorcode)
         foutmeldingen.append(errormessage)
         _logger.info("Fout bij ophalen Iv3 definitiebestand")
 
