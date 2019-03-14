@@ -36,14 +36,14 @@ def matrix(jsonbestand):
             return render_template("index.html", errormessages=fouten_schemabestand)
 
         fouten_schemacontrole = controle_met_schema(databestand, schemabestand)
-        if fouten_schemacontrole:
+        if len(fouten_schemacontrole) > 1:
             return render_template("index.html", errormessages=fouten_schemacontrole)
 
         # json definitie bestand ophalen van repo
         metadata = databestand['metadata']
         ovlaag = metadata['overheidslaag']
         boekjaar = metadata['boekjaar']
-        bestandsnaam = 'iv3_definities_' + ovlaag + '_' + boekjaar + '.json'
+        bestandsnaam = 'iv3_definities_' + ovlaag + '_' + boekjaar + 'x.json'
         repo_url = "https://raw.github.com/tgrivel/iv3_modellen/master/"
         definitiebestand, fouten_definitiebestand = ophalen_bestand_van_repo(repo_url, bestandsnaam, 'definitiebetand')
         if fouten_definitiebestand:
