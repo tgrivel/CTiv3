@@ -60,8 +60,7 @@ def ophalen_definitiebestand(meta):
     bestandsnaam = 'iv3_definities_' + ovlaag + '_' + boekjaar + '.json'
     url = "https://raw.github.com/tgrivel/iv3_modellen/master/" + bestandsnaam
 
-    inhoud_bestand = object()
-    errormessage = ''
+    inhoud_bestand = None
     errorcode = 0
     try:
         webUrl = urllib.request.urlopen(url)
