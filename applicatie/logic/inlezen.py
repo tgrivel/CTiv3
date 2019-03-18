@@ -29,7 +29,7 @@ def laad_json_bestand(bestand):
         except UnicodeDecodeError:
             continue  # Probeer de volgende
         except JSONDecodeError as e:
-            foutmeldingen.append(f"{bestand} is geen JSON-bestand")
+            foutmeldingen.append(f"{bestand} is geen json-bestand")
             break
     else:
         foutmeldingen.append('Het bestand kon niet gelezen worden. '
@@ -45,11 +45,8 @@ def ophalen_databestand(jsonbestand):
     """
 
     # json bestand inlezen
-    complete_upload, foutmeldingen = laad_json_bestand(jsonbestand)
-
-    # TODO Valideren met schema en foutmeldingen aanvullen
-
-    return complete_upload, foutmeldingen
+    bestand, foutmeldingen = laad_json_bestand(jsonbestand)
+    return bestand, foutmeldingen
 
 
 def ophalen_bestand_van_repo(url, bestandsnaam, bestandstype):
@@ -71,14 +68,12 @@ def ophalen_bestand_van_repo(url, bestandsnaam, bestandstype):
         if webUrl.getcode() == http.HTTPStatus.OK:
             inhoud_bestand, foutmeldingen_json = laad_json_bestand(webUrl)
             foutmeldingen.extend(foutmeldingen_json)
-            _logger.info("Bestand opgehaald van %s", url)
+            _logger.info("json bestand opgehaald van %s", url)
     else:
         errormessage = 'Fout bij ophalen {0}: {1} (foutcode #{2})'.format(bestandstype, bestandsnaam, errorcode)
         foutmeldingen.append(errormessage)
-        _logger.info("Fout bij ophalen Iv3 definitiebestand")
+        _logger.info("Fout bij ophalen Iv3-definitiebestand")
 
     # TODO Valideren met schema en foutmeldingen aanvullen
 
     return inhoud_bestand, foutmeldingen
-
-
