@@ -61,42 +61,17 @@ def matrix(jsonbestand):
 
         # alle controles zijn uitgevoerd.
         # nu data aggregeren en tonen op het scherm
-        try:
-            data_lasten=databestand['data']['lasten']
-        except:
-            data_lasten=[]
-        try:
-            data_balans_lasten=databestand['data']['balans_lasten']
-        except:
-            data_balans_lasten=[]
-        try:
-            data_baten=databestand['data']['baten']
-        except:
-            data_baten=[]
-        try:
-            data_balans_baten=databestand['data']['balans_baten']
-        except:
-            data_balans_baten=[]
-        try:
-            data_balans_standen=databestand['data']['balans_standen']
-        except:
-            data_balans_standen=[]
-
+        data = databestand['data']
         lasten = DraaiTabel(
-            data=data_lasten,
-            rij_naam='taakveld', kolom_naam='categorie')
+            data=data['lasten'], rij_naam='taakveld', kolom_naam='categorie')
         balans_lasten = DraaiTabel(
-            data=data_balans_lasten,
-            rij_naam='balanscode', kolom_naam='categorie')
+            data=data['balans_lasten'], rij_naam='balanscode', kolom_naam='categorie')
         baten = DraaiTabel(
-            data=data_baten,
-            rij_naam='taakveld', kolom_naam='categorie')
+            data=data['baten'], rij_naam='taakveld', kolom_naam='categorie')
         balans_baten = DraaiTabel(
-            data=data_balans_baten,
-            rij_naam='balanscode', kolom_naam='categorie')
+            data=data['balans_baten'], rij_naam='balanscode', kolom_naam='categorie')
         balans_standen = DraaiTabel(
-            data=data_balans_standen,
-            rij_naam='balanscode', kolom_naam='standper')
+            data=data['balans_standen'], rij_naam='balanscode', kolom_naam='standper')
 
         params = {
             'lasten': lasten,

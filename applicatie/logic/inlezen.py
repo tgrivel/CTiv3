@@ -46,6 +46,15 @@ def ophalen_databestand(jsonbestand):
 
     # json bestand inlezen
     bestand, foutmeldingen = laad_json_bestand(jsonbestand)
+
+    if not foutmeldingen:
+        if not 'balans_lasten' in bestand['data']:
+            bestand['data'].update({'balans_lasten':[]})
+        if not 'balans_baten' in bestand['data']:
+            bestand['data'].update({'balans_baten':[]})
+        if not 'balans_standen' in bestand['data']:
+            bestand['data'].update({'balans_standen':[]})
+
     return bestand, foutmeldingen
 
 
