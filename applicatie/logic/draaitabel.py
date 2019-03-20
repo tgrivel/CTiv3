@@ -9,6 +9,9 @@ class DraaiTabel:
        self.rij_naam, self.kolom_naam = rij_naam, kolom_naam
        self.rijen, self.kolommen = indices
 
+       self.rijen = sorted(self.rijen)
+       self.kolommen = sorted(self.kolommen)
+
    def __getitem__(self, args):
        """Geef een specifieke waarde uit de draaitabel terug."""
        return self.tabel[args]
