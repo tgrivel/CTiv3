@@ -40,3 +40,11 @@ def controle_met_schema(json_bestand, json_schema):
             "Samenvatting: totaal {} unieke fouten gevonden op basis van schema controle.".format(numerr))
         _logger.info("Fouten gevonden op basis van schema controle")
     return foutmeldingen
+
+
+def controle_met_defbestand(json_bestand, json_schema):
+    """"Controleer een json data bestand
+    aan de hand van het definitiebestand"""
+
+    return ['foutje bedankt']
+
