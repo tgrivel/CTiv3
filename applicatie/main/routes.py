@@ -1,7 +1,9 @@
 from flask import render_template, request
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
-from config.configurations import REPO_PATH
+from applicatie.main import bp
+from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
+
 
 @bp.route("/", methods=['GET', 'POST'])
 def index():
@@ -28,11 +30,12 @@ def matrix(jsonbestand):
             return render_template("index.html", errormessages=fouten)
 
         # json definitie bestand ophalen van web
+        # in de controles bij het inlezen is al bepaald dat dit bestaat
         meta = data_bestand['metadata']
         overheidslaag = meta['overheidslaag']
         boekjaar = meta['boekjaar']
-        bestandsnaam = 'iv3_definities_' + overheidslaag + '_' + boekjaar + '.json'
-        definitie_bestand, fouten = ophalen_bestand_van_web(REPO_PATH, bestandsnaam, 'definitiebetand')
+        bestandsnaam = IV3_DEF_FILE.format(overheidslaag, boekjaar)
+        definitie_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebetand')
 
         # json bestand is opgehaald en geen fouten zijn gevonden
         # vervolgens data aggregeren en tonen op het scherm

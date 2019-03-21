@@ -6,9 +6,10 @@ from collections import OrderedDict
 from json import JSONDecodeError
 from urllib.error import URLError, HTTPError
 from applicatie.logic.controles import controle_met_schema
-from config.configurations import REPO_PATH
+from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE, IV3_SCHEMA_FILE
 
 _logger = logging.getLogger(__file__)
+
 
 def ophalen_en_controleren_databestand(jsonbestand):
     """Haal JSON-bestand op. Voer controles uit.
@@ -27,8 +28,9 @@ def ophalen_en_controleren_databestand(jsonbestand):
         return data_bestand, fouten
 
     # json schema ophalen van web
-    bestandsnaam = 'iv3_data_schema_v1_0.json'
-    schema_bestand, fouten = ophalen_bestand_van_web(REPO_PATH, bestandsnaam, 'schemabestand')
+    versie = "1_0"
+    bestandsnaam = IV3_SCHEMA_FILE.format(versie)
+    schema_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'schemabestand')
     if fouten:
         return data_bestand, fouten
 
@@ -51,8 +53,8 @@ def ophalen_en_controleren_databestand(jsonbestand):
     meta = data_bestand['metadata']
     overheidslaag = meta['overheidslaag']
     boekjaar = meta['boekjaar']
-    bestandsnaam = 'iv3_definities_' + overheidslaag + '_' + boekjaar + '.json'
-    definitie_bestand, fouten = ophalen_bestand_van_web(REPO_PATH, bestandsnaam, 'definitiebetand')
+    bestandsnaam = IV3_DEF_FILE.format(overheidslaag, boekjaar)
+    definitie_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebetand')
     if fouten:
         return data_bestand, fouten
 
