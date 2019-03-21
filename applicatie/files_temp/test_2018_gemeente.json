@@ -1,5 +1,5 @@
 {"metadata":{"overheidslaag":"Gemeente","overheidsnummer":"1234","overheidsnaam":"TheoDorp","boekjaar":"2018","periode":"1","status":"Realisatie","datum":"6-3-2019"},
-"contact":{"naam":"Theo Grivel","telefoonnr":"070 337 4501","mail":"t.grivel@cbs.nl"},
+"contact":{"naam":"Theo Grivel","telefoon":"070 337 4501","e-mail":"t.grivel@cbs.nl"},
 "data":{
 "lasten":[
 {"categorie":"3.5.1","taakveld":"0.3","bedrag":23},
