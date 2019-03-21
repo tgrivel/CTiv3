@@ -21,19 +21,19 @@ def controle_met_schema(json_bestand, json_schema):
         else:
             numerr = numerr + len(error.context)
 
-        foutmelding = []
-        foutmelding.append("Fout #{}:".format(n + 1))
-        foutmelding.append(", ".join(list(error.schema_path)))
-        foutmelding.append(": " + error.message)
-        foutmeldingen.append(" ".join(foutmelding))
+        fout = list()
+        fout.append("Fout #{}:".format(n + 1))
+        fout.append(", ".join(list(error.schema_path)))
+        fout.append(": " + error.message)
+        foutmeldingen.append(" ".join(fout))
 
         suberrors = sorted(error.context, key=lambda e: e.schema_path)
         for m, suberror in enumerate(suberrors):
-            foutmelding = []
-            foutmelding.append("Subfout #{}.{}:".format(n + 1, m + 1))
-            foutmelding.append(", ".join(str(x) for x in list(suberror.schema_path)))
-            foutmelding.append(": " + suberror.message)
-            foutmeldingen.append(" ".join(foutmelding))
+            fout = list()
+            fout.append("Subfout #{}.{}:".format(n + 1, m + 1))
+            fout.append(", ".join(str(x) for x in list(suberror.schema_path)))
+            fout.append(": " + suberror.message)
+            foutmeldingen.append(" ".join(fout))
 
     if numerr > 0:
         foutmeldingen.append(
@@ -77,7 +77,7 @@ def extract_values_from_json(obj: object, key: str, key2: str, detail: bool):
 
 def controle_met_defbestand(json_bestand, json_definities):
     """"Controleer een json data bestand
-    aan de hand van het definitiebestand"""
+    aan de hand van de codelijsten in het definitiebestand"""
 
     codefouten = []
 
@@ -100,13 +100,16 @@ def controle_met_defbestand(json_bestand, json_definities):
 
                 # we gebruiken codelijst 'standper' tijdelijk niet
                 # ivm inconsistentie tussen schema en codelijst
-                if cl_key == 'standper': continue
+                if cl_key == 'standper':
+                    continue
 
                 # voor categorie hebben we twee codelijsten
                 # afhankelijk van rekening
                 if cl_key == 'categorie':
-                    if 'lasten' in rekening: cl_key += '_lasten'
-                    if 'baten' in rekening: cl_key += '_baten'
+                    if 'lasten' in rekening:
+                        cl_key += '_lasten'
+                    if 'baten' in rekening:
+                        cl_key += '_baten'
 
                 # indien een codelijst beschikbaar is voor de sleutel,
                 # checken of de waarde hierin voorkomt
@@ -117,5 +120,5 @@ def controle_met_defbestand(json_bestand, json_definities):
     if codefouten:
         codefouten.append(
             "Samenvatting: totaal {} fouten gevonden op basis van codelijst controle.".format(len(codefouten)))
-        _logger.info("Fouten gevonden op basis van controle met def bestand")
+        _logger.info("Fouten gevonden op basis van codelijst controle met def bestand")
     return codefouten
