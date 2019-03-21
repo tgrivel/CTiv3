@@ -1,8 +1,7 @@
 from flask import render_template, request
 from applicatie.logic.draaitabel import DraaiTabel
-from applicatie.logic.inlezen import ophalen_en_controleren_databestand
-from applicatie.main import bp
-
+from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
+from config.configurations import REPO_PATH
 
 @bp.route("/", methods=['GET', 'POST'])
 def index():
@@ -24,13 +23,20 @@ def matrix(jsonbestand):
 
     if jsonbestand:
         # json data bestand ophalen en evt. fouten teruggeven
-        databestand, fouten = ophalen_en_controleren_databestand(jsonbestand)
+        data_bestand, fouten = ophalen_en_controleren_databestand(jsonbestand)
         if fouten:
             return render_template("index.html", errormessages=fouten)
 
+        # json definitie bestand ophalen van web
+        meta = data_bestand['metadata']
+        overheidslaag = meta['overheidslaag']
+        boekjaar = meta['boekjaar']
+        bestandsnaam = 'iv3_definities_' + overheidslaag + '_' + boekjaar + '.json'
+        definitie_bestand, fouten = ophalen_bestand_van_web(REPO_PATH, bestandsnaam, 'definitiebetand')
+
         # json bestand is opgehaald en geen fouten zijn gevonden
         # vervolgens data aggregeren en tonen op het scherm
-        data = databestand['data']
+        data = data_bestand['data']
         lasten = DraaiTabel(
             data=data['lasten'], rij_naam='taakveld', kolom_naam='categorie')
         balans_lasten = DraaiTabel(
@@ -42,8 +48,8 @@ def matrix(jsonbestand):
         balans_standen = DraaiTabel(
             data=data['balans_standen'], rij_naam='balanscode', kolom_naam='standper')
 
-        metadata = databestand['metadata']
-        sjabloon_meta = []
+        metadata = data_bestand['metadata']
+        sjabloon_meta = definitie_bestand['metadata']
 
         params = {
             'lasten': lasten,
@@ -53,7 +59,7 @@ def matrix(jsonbestand):
             'balans_standen': balans_standen,
 
             # hebben we onderstaande nog nodig?
-            'data': databestand,
+            'data': data_bestand,
             'meta': metadata,
             'sjabloon': sjabloon_meta,
             'errormessage': "",  # TODO bij foutmeldingen geven we index terug
