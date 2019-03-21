@@ -24,3 +24,7 @@ padding:12px;
     font-size:2em;
     vertical-align:middle;
 }
+
+table.pvtTable thead tr th, table.pvtTable tbody tr th {
+    color: #3D3D3D;
+}

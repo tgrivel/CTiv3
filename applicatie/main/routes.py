@@ -1,7 +1,6 @@
 from flask import render_template, request
-
 from applicatie.logic.draaitabel import DraaiTabel
-from applicatie.logic.inlezen import ophalen_definitiebestand, ophalen_databestand
+from applicatie.logic.inlezen import ophalen_en_controleren_databestand
 from applicatie.main import bp
 
 
@@ -19,38 +18,32 @@ def index():
 
 @bp.route("/matrix", methods=['GET', 'POST'])
 def matrix(jsonbestand):
-    """Laad de pagina met een overzicht."""
+    """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
+    Indien geen fouten, laad de pagina met een overzicht van de data.
+    """
+
     if jsonbestand:
-        # json bestand inlezen
-        databestand, foutmeldingen_databestand = ophalen_databestand(jsonbestand)
+        # json data bestand ophalen en evt. fouten teruggeven
+        databestand, fouten = ophalen_en_controleren_databestand(jsonbestand)
+        if fouten:
+            return render_template("index.html", errormessages=fouten)
 
-        if foutmeldingen_databestand:
-            return render_template("index.html", errormessages=foutmeldingen_databestand)
-
-        # definitiebestand ophalen
-        metadata = databestand['metadata']
-        definitiebestand, foutmeldingen_definitiebestand = ophalen_definitiebestand(metadata)
-
-        if foutmeldingen_definitiebestand:
-            return render_template("index.html", errormessages=foutmeldingen_definitiebestand)
-
-        sjabloon_meta = definitiebestand['metadata']
-
+        # json bestand is opgehaald en geen fouten zijn gevonden
+        # vervolgens data aggregeren en tonen op het scherm
+        data = databestand['data']
         lasten = DraaiTabel(
-            data=databestand['data']['lasten'],
-            rij_naam='taakveld', kolom_naam='categorie')
+            data=data['lasten'], rij_naam='taakveld', kolom_naam='categorie')
         balans_lasten = DraaiTabel(
-            data=databestand['data']['balans_lasten'],
-            rij_naam='balanscode', kolom_naam='categorie')
+            data=data['balans_lasten'], rij_naam='balanscode', kolom_naam='categorie')
         baten = DraaiTabel(
-            data=databestand['data']['baten'],
-            rij_naam='taakveld', kolom_naam='categorie')
+            data=data['baten'], rij_naam='taakveld', kolom_naam='categorie')
         balans_baten = DraaiTabel(
-            data=databestand['data']['balans_baten'],
-            rij_naam='balanscode', kolom_naam='categorie')
+            data=data['balans_baten'], rij_naam='balanscode', kolom_naam='categorie')
         balans_standen = DraaiTabel(
-            data=databestand['data']['balans_standen'],
-            rij_naam='balanscode', kolom_naam='standper')
+            data=data['balans_standen'], rij_naam='balanscode', kolom_naam='standper')
+
+        metadata = databestand['metadata']
+        sjabloon_meta = []
 
         params = {
             'lasten': lasten,
