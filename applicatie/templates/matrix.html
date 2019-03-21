@@ -46,9 +46,11 @@ table {
   border-collapse: collapse;
 }
 </style>
+
+
 <body>
+    <script src="{{ url_for('static', filename='js/detail.js') }}"/>
     <script>
-        /* is dit stukje nog nodig??? TG*/
         var data = {{ data | tojson }};
     </script>
     <body bgcolor="#1a1aff">
@@ -96,6 +98,13 @@ table {
             {{ draaitabel(balans_standen) }}
         </div>
 
+        <div class="container">
+            <table id="Detail" class="pvtTable" border="1" style="opacity: 1">
+                <thead> <tr></tr> </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
         <div id="LastenDetail">
             <table>
                 <thead>
@@ -131,6 +140,8 @@ table {
       evt.currentTarget.className += " active";
     }
     </script>
+
+
     </body>
 
 {% endblock %}

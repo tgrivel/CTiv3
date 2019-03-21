@@ -2,7 +2,12 @@
 
 <!-- Tab content -->
 <div class="container">
-    <table border="1" class="pvtTable" style="opacity: 1">
+    <table border="1" class="pvtTable" style="opacity: 1"
+           rij_naam='{{ tabel.rij_naam }}'
+           kolom_naam='{{ tabel.kolom_naam }}'
+           data='{{ tabel.data | tojson }}'
+           detail_kolommen='{{ tabel.geef_detail_kolommen() | tojson }}'
+    >
         <thead>
         <tr>
             <th colspan="1" rowspan="1"></th>
@@ -27,13 +32,20 @@
                 {{ rij }}
             </th>
             {% for kolom in tabel.kolommen %}
-            <td class="pvtVal" {{ tabel.rij_naam }}="{{ rij }}" {{ tabel.kolom_naam }}="{{ kolom }}">
+            <td class="pvtVal"
+                {{ tabel.rij_naam }}="{{ rij }}"
+                {{ tabel.kolom_naam }}="{{ kolom }}"
+                onclick="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
+                onkeydown="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
+            >
                 {{ tabel[rij, kolom] }}
             </td>
             {% endfor %}
         </tr>
         {% endfor %}
     </table>
+
+    <p>Klik een cel aan voor detail-informatie</p>
 </div>
 
 {% endmacro %}
