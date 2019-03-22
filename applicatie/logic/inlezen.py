@@ -5,10 +5,11 @@ import urllib.request
 from collections import OrderedDict
 from json import JSONDecodeError
 from urllib.error import URLError, HTTPError
-from applicatie.logic.controles import controle_met_schema
-from config.configurations import REPO_PATH
+from applicatie.logic.controles import controle_met_schema, controle_met_defbestand
+from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE, IV3_SCHEMA_FILE
 
 _logger = logging.getLogger(__file__)
+
 
 def ophalen_en_controleren_databestand(jsonbestand):
     """Haal JSON-bestand op. Voer controles uit.
@@ -18,7 +19,7 @@ def ophalen_en_controleren_databestand(jsonbestand):
         - json schema ophalen van web
         - json data controleren aan json schema
         - json definitie bestand ophalen van web
-        - TODO: json data controleren aan het definitie bestand
+        - json data controleren aan het definitie bestand
     """
 
     # json bestand inlezen
@@ -27,8 +28,9 @@ def ophalen_en_controleren_databestand(jsonbestand):
         return data_bestand, fouten
 
     # json schema ophalen van web
-    bestandsnaam = 'iv3_data_schema_v1_0.json'
-    schema_bestand, fouten = ophalen_bestand_van_web(REPO_PATH, bestandsnaam, 'schemabestand')
+    versie = "1_0"
+    bestandsnaam = IV3_SCHEMA_FILE.format(versie)
+    schema_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'schemabestand')
     if fouten:
         return data_bestand, fouten
 
@@ -51,13 +53,17 @@ def ophalen_en_controleren_databestand(jsonbestand):
     meta = data_bestand['metadata']
     overheidslaag = meta['overheidslaag']
     boekjaar = meta['boekjaar']
-    bestandsnaam = 'iv3_definities_' + overheidslaag + '_' + boekjaar + '.json'
-    definitie_bestand, fouten = ophalen_bestand_van_web(REPO_PATH, bestandsnaam, 'definitiebetand')
+    bestandsnaam = IV3_DEF_FILE.format(overheidslaag, boekjaar)
+    definitie_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebetand')
     if fouten:
         return data_bestand, fouten
 
-    # json data controleren aan het definitiebestand
-    # TODO: nog niet klaar
+    # json data controleren met het definitie bestand
+    fouten = controle_met_defbestand(data_bestand, definitie_bestand)
+    if fouten:
+        return data_bestand, fouten
+
+    # WHAT ELSE? Of zijn we zo klaar met de controles...
 
     return data_bestand, fouten
 
@@ -89,28 +95,41 @@ def laad_json_bestand(bestand):
 
 
 def ophalen_bestand_van_web(url, bestandsnaam, bestandstype):
-    """Haal JSON bestand van website op.
+    """Haal JSON-bestand van website op.
 
      Geef JSON-bestand terug of een lijst met foutmeldingen.
      """
     url = url + bestandsnaam
-    foutmeldingen = []
+    weburl = None
     bestand = None
     errorcode = 0
+    errorstr = ''
+    foutmeldingen = []
+
     try:
-        webUrl = urllib.request.urlopen(url)
+        weburl = urllib.request.urlopen(url)
     except HTTPError as e:
         errorcode = e.code
     except URLError as e:
-        errorcode = e.code
-    if errorcode == 0:
-        if webUrl.getcode() == http.HTTPStatus.OK:
-            bestand, foutmeldingen_json = laad_json_bestand(webUrl)
+        if type(e.reason) is str:
+            errorstr = e.reason
+        else:
+            errorstr = 'onbekende fout: {}'.format(str(e.reason))
+
+    if errorcode == 0 and errorstr == '':
+        if weburl.getcode() == http.HTTPStatus.OK:
+            bestand, foutmeldingen_json = laad_json_bestand(weburl)
             foutmeldingen.extend(foutmeldingen_json)
-            _logger.info("JSON bestand opgehaald van %s", url)
+            _logger.info("JSON-bestand opgehaald van %s", url)
     else:
-        errormessage = 'Fout bij ophalen {0}: {1} (foutcode #{2})'.format(bestandstype, bestandsnaam, errorcode)
-        foutmeldingen.append(errormessage)
+        foutmelding = 'Fout bij ophalen {}: {}'.format(bestandstype, bestandsnaam)
+        if errorcode != 0:
+            foutmelding = foutmelding + ' (HTTP foutcode #{})'.format(errorcode)
+        if errorstr != '':
+            foutmelding = foutmelding + ' (URL fout: {})'.format(errorstr)
+        foutmeldingen.append(foutmelding)
+
+    if foutmeldingen:
         _logger.info("Fout bij ophalen Iv3-definitiebestand")
 
     return bestand, foutmeldingen
