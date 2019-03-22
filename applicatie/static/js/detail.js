@@ -1,5 +1,7 @@
 function vul_detail(element, rij_naam, kolom_naam) {
 
+    $("#Detail").show(100);
+
     // Collect necessary data
     var element = $(element);
     var tabel = element.closest('table');
@@ -13,6 +15,10 @@ function vul_detail(element, rij_naam, kolom_naam) {
 
     var sel = data.filter(rij => rij[rij_naam] == rij_waarde
                           && rij[kolom_naam] == kolom_waarde);
+
+    // Highlight choice
+    tabel.find('td').removeClass("selected");
+    element.addClass("selected");
 
     // Delete the existing data and recreate table
     // I know this is not "reactive programming" but it's convenient for now
@@ -49,5 +55,4 @@ function vul_detail(element, rij_naam, kolom_naam) {
                 .append("td")
                     .classed('pvtVal', true)
                     .text(value => value);
-
 }
