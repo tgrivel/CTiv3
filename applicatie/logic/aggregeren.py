@@ -1,9 +1,108 @@
 # logica voor aggregeren van data
+import logging
+from applicatie.logic.controles import geef_codechecklijst
+
+_logger = logging.getLogger(__file__)
+
+
+def aggregeren_volledig(data, defbestand):
+    """"Volledige dataset aggregeren.
+    Per rekening specificeren we de dimensies
+    waarover geaggregeerd moet worden.
+    """
+    data_geaggregeerd = dict()
+    fouten_aggregeren = list()
+
+    cl = defbestand['codelijsten']
+    codechecklijst = geef_codechecklijst(cl)
+
+    # rekening lasten aggregeren
+    data_agg, fouten = aggregeren_rekening(
+        data['lasten'],
+        ['categorie', 2, 'categorie_lasten'],
+        ['taakveld', 2, 'taakveld'],
+        codechecklijst
+    )
+    data_geaggregeerd.update({'lasten':data_agg})
+    fouten_aggregeren.extend(fouten)
+
+    # rekening balans_lasten aggregeren
+    data_agg, fouten = aggregeren_rekening(
+        data['balans_lasten'],
+        ['categorie', 2, 'categorie_lasten'],
+        ['balanscode', 2, 'balanscode'],
+        codechecklijst
+    )
+    data_geaggregeerd.update({'balans_lasten': data_agg})
+    fouten_aggregeren.extend(fouten)
+
+    # rekening baten aggregeren
+    data_agg, fouten = aggregeren_rekening(
+        data['baten'],
+        ['categorie', 2, 'categorie_baten'],
+        ['taakveld', 2, 'taakveld'],
+        codechecklijst
+    )
+    data_geaggregeerd.update({'baten': data_agg})
+    fouten_aggregeren.extend(fouten)
+
+    # rekening balans_baten aggregeren
+    data_agg, fouten = aggregeren_rekening(
+        data['balans_baten'],
+        ['categorie', 2, 'categorie_baten'],
+        ['balanscode', 2, 'balanscode'],
+        codechecklijst
+    )
+    data_geaggregeerd.update({'balans_baten': data_agg})
+    fouten_aggregeren.extend(fouten)
+
+    # rekening balans_standen aggregeren
+    data_agg, fouten = aggregeren_rekening(
+        data['balans_standen'],
+        ['standper', -1, 'standper'],  # aggregatieniveau -1 betekent niet aggregeren
+        ['balanscode', 2, 'balanscode'],
+        codechecklijst
+    )
+    data_geaggregeerd.update({'balans_standen': data_agg})
+    fouten_aggregeren.extend(fouten)
+
+    return data_geaggregeerd, fouten_aggregeren
+
+
+def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
+    """
+    data voor een rekening volledig aggregeren over twee dimensies
+    we specificeren hiervoor dimensie_1 en dimensie_2, dit zijn lists:
+    [ naam dimensie, aggregatieniveau, naam codelijst ]
+    """
+    foutenlijst = list()
+
+    # aggregeren over dimensie 1
+    vastedims = [dimensie_2[0], 'bedrag']   # we houden de tweede dimensie vast
+    aggdim = dimensie_1[0]
+    aggniv = dimensie_1[1]
+    clijst = codechecklijst.get(dimensie_1[2])
+    if aggniv > -1:
+        data, fouten = aggregeren_data(data, aggdim, vastedims, aggniv, clijst, False)
+        foutenlijst.extend(fouten)
+
+    # aggregeren over dimensie 2
+    vastedims = [dimensie_1[0], 'bedrag']   # we houden de eerste dimensie vast
+    aggdim = dimensie_2[0]
+    aggniv = dimensie_2[1]
+    clijst = codechecklijst.get(dimensie_2[2])
+    data, fouten = aggregeren_data(data, aggdim, vastedims, aggniv, clijst, True)
+    foutenlijst.extend(fouten)
+
+    data = data_opschonen(data, ['geteld', 'numgeteld'])
+
+    return data, foutenlijst
 
 
 def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_geteld):
-    """"aggregeren data records"""""
+    """"aggregeren data: lijst van data records"""""
     # Laatste wijziging 24 maart 2019 (getest in Jupyter notebook)
+
     agg_data = list()
     fouten = list()
 
@@ -12,18 +111,17 @@ def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_ge
         return agg_data, fouten
 
     if aggniveau < 0:
-        # stopppen indien aggregatieniveau negatief
+        # stoppen indien aggregatieniveau negatief
         fouten.append("Aggregatieniveau mag niet negatief zijn.")
         return agg_data, fouten
 
     cds = clijst[0::4]  # cds: lijst van codes
     niv = clijst[2::4]  # niv: niveau van codes in de codelijst (0 = hoogste niveau)
     ptc = clijst[3::4]  # ptc: lijst van parent codes behorende bij de codes
-    agg_data = list()
 
     def aggregeren_record(recs, errs, record, dimensie, vastedimensies, aggniveau, cds, niv, ptc):
-        """recursieve functie om een record uit data 
-        te aggregeren tot het laagste niveau"""""
+        """Recursieve functie om een record uit data 
+        te aggregeren tot op het laagste niveau"""""
 
         def tel_record(record, dimensie, vastedimensies, aggniv, cds, niv, ptc):
             geteld_record = dict()
@@ -71,7 +169,7 @@ def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_ge
         if record:
             # voeg record toe aan de lijst
             recs.append(record)
-            # tel record 1 niveau omlaag (= bovenliggend record) voor de gekozen dimensie
+            # tel record 1 niveau omlaag (= naar bovenliggend record) voor de gekozen dimensie
             record, telfouten = tel_record(record, dimensie, vastedimensies, aggniveau, cds, niv, ptc)
             # voeg eventuele fouten toe
             errs.extend(telfouten)
@@ -82,6 +180,7 @@ def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_ge
 
         return recs, errs
 
+    # dit is de main loop waarin de door de data lopen
     for index, record in enumerate(data):
         # ieder record uit data aggregeren
         aggrecords, fouten_agg = aggregeren_record([], [], record, dimensie, vastedimensies, aggniveau, cds, niv, ptc)
@@ -124,11 +223,9 @@ def data_opschonen(data, keylist):
         return data_schoon
 
     for rec in data:
-        if type(rec) is dict:
-            rec_schoon = dict(rec)
-            for k in keylist:
-                if k in rec:
-                    del rec_schoon[k]
-            data_schoon.append(rec_schoon)
+        for k in keylist:
+            if k in rec:
+                del rec[k]
+        data_schoon.append(rec)
 
     return data_schoon
