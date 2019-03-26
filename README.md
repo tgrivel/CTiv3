@@ -23,3 +23,6 @@ Alternatief:
 python applicatie.py
 ```
 
+# Docker
+docker build -t ctiv3 .
+docker run ctiv3
