@@ -1,7 +1,6 @@
 from jsonschema import Draft4Validator
 import logging
 
-
 _logger = logging.getLogger(__file__)
 
 
@@ -75,20 +74,26 @@ def extract_values_from_json(obj: object, key: str, key2: str, detail: bool):
     return results
 
 
+def geef_codechecklijst(codelijst):
+    """"maak per codelijst-item een lijst van alle voorkomende codes
+    hierbij gebruiken we een hulpfunctie extract_values_from_json.
+    iedere code krijgt 4 items in de lijst in deze volgorde:
+    [code, omschrijving, niveau, parentcode]"""
+    codechecklijst = {}
+    for k in list(codelijst.keys()):
+        codechecklijst.update({k: extract_values_from_json(codelijst[k], 'code', 'description', True)})
+    return codechecklijst
+
+
 def controle_met_defbestand(json_bestand, json_definities):
     """"Controleer een json data bestand
     aan de hand van de codelijsten in het definitiebestand"""
-
     codefouten = []
 
     # codelijsten ophalen uit definitiebestand
     cl = json_definities['codelijsten']
 
-    # maak per codelijst-item een lijst van de voorkomende codes
-    # hierbij gebruiken we een hulpfunctie extract_values_from_json
-    codechecklijst = {}
-    for k in list(cl.keys()):
-        codechecklijst.update({k: extract_values_from_json(cl[k], 'code', 'description', True)})
+    codechecklijst = geef_codechecklijst(cl)
 
     foutstring = "Codefout in [data]:[{}] record #{}: {} {} komt niet voor in de codelijst voor '{}'"
 
