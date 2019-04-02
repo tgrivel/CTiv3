@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% from 'macros.html' import draaitabel %}
+{% from 'macros.html' import draaitabel, controle_resultaat %}
 
 {% block content %}
 <style>
@@ -96,6 +96,13 @@ table {
         <div id="Balans" class="tabcontent">
             <h3>Balans</h3>
             {{ draaitabel(balans_standen) }}
+        </div>
+
+        <div id="Controles" class="tabcontent">
+            <h3>Controles</h3>
+            {% for resultaat in controle_resultaten %}
+            {{ controle_resultaat(resultaat) }}
+            {% endfor %}
         </div>
 
         <div class="container">
