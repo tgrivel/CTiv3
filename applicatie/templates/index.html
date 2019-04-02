@@ -13,21 +13,25 @@
 			<br>
 				<center>
 					<h2>Welkom bij de controletool voor iv3-leveringen aan het CBS V1.1</h2>
-					<p>Een hulpmiddel om te controleren of uw json bestand voldoet aan de plausibiliteitstoetsen van het CBS</p>
-						<p>Dit hulpmiddel is bedoeld voor overheidsinstanties die de eigen financiële gegevens <br/>
-							beschikbaar willen stellen voor download door het CBS.</p>
-						<p>Het is niet mogelijk om gegevens direct aan het CBS te zenden.</p>
+					<h4>Een hulpmiddel om te controleren of uw json bestand voldoet aan de plausibiliteitstoetsen van het CBS</h4>
+						<h4>Dit hulpmiddel is bedoeld voor overheidsinstanties die de eigen financiële gegevens<br/>
+							beschikbaar willen stellen voor download door het CBS.</h4>
+						<h4>Het is niet mogelijk om gegevens direct aan het CBS te zenden.</h4>
+					<br/>
+
 					<form method="post" enctype="multipart/form-data">
-					 <div>
-					   <label for="file">Kies een JSON-bestand ter controle</label><br/>
-					   <input type="file" id="file" accept=".json" name="file" multiple>
-					 </div>
+						<div class="input-group">
+    				<label class="input-group-btn">
+        			<span class="btn btn-primary">
+            		Kies een JSON-bestand ter controle&hellip; <input id="file" accept=".json" name="file" type="file" style="display:none;" onchange="$('#upload-file-info').val($(this).val());">
+        			</span>
+    				</label>
+    					<input type="text" class="form-control col-lg-12" id="upload-file-info" readonly>
+					</div>
 						<br/>
-
                      <div>
-					   <button>Start controle van gekozen JSON-bestand</button>
+					   <button class="btn btn-primary">Start controle van gekozen JSON-bestand</button>
 					 </div>
-
                     <br/>
 
                     {% for errormessage in errormessages %}
