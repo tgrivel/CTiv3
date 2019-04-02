@@ -2,7 +2,9 @@
 
 <!-- Tab content -->
 <div class="container">
-    <table border="1" class="pvtTable" style="opacity: 1"
+    <!-- TODO Je kunt spelen met class=table of table-striped -->
+    <!-- https://getbootstrap.com/docs/3.3/css/#tables-example -->
+    <table border="1" class="pvtTable table" style="opacity: 1"
            rij_naam='{{ tabel.rij_naam }}'
            kolom_naam='{{ tabel.kolom_naam }}'
            data='{{ tabel.data | tojson }}'
