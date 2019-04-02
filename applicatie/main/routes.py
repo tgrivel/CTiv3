@@ -2,6 +2,7 @@ from flask import render_template, request
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
 from applicatie.logic.aggregeren import aggregeren_volledig
+from applicatie.logic.plausibiliteitscontrole import PlausibiliteitsControle
 from applicatie.main import bp
 from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
 
