@@ -3,6 +3,7 @@ from flask import render_template, request
 from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
+from applicatie.logic.aggregeren import aggregeren_volledig
 from applicatie.logic.plausibiliteitscontrole import PlausibiliteitsControle
 from applicatie.main import bp
 from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
@@ -49,16 +50,22 @@ def matrix(jsonbestand):
         # json bestand is opgehaald en geen fouten zijn gevonden
         # vervolgens data aggregeren en tonen op het scherm
         data = data_bestand['data']
+
+        # de data volledig aggregeren
+        data_geaggregeerd, fouten = aggregeren_volledig(data, definitie_bestand)
+        if fouten:
+            return render_template("index.html", errormessages=fouten)
+
         lasten = DraaiTabel(
-            data=data['lasten'], rij_naam='taakveld', kolom_naam='categorie')
+            data=data_geaggregeerd['lasten'], rij_naam='taakveld', kolom_naam='categorie')
         balans_lasten = DraaiTabel(
-            data=data['balans_lasten'], rij_naam='balanscode', kolom_naam='categorie')
+            data=data_geaggregeerd['balans_lasten'], rij_naam='balanscode', kolom_naam='categorie')
         baten = DraaiTabel(
-            data=data['baten'], rij_naam='taakveld', kolom_naam='categorie')
+            data=data_geaggregeerd['baten'], rij_naam='taakveld', kolom_naam='categorie')
         balans_baten = DraaiTabel(
-            data=data['balans_baten'], rij_naam='balanscode', kolom_naam='categorie')
+            data=data_geaggregeerd['balans_baten'], rij_naam='balanscode', kolom_naam='categorie')
         balans_standen = DraaiTabel(
-            data=data['balans_standen'], rij_naam='balanscode', kolom_naam='standper')
+            data=data_geaggregeerd['balans_standen'], rij_naam='balanscode', kolom_naam='standper')
 
         # Voer controles uit
         plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'],
