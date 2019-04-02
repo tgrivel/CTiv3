@@ -24,46 +24,27 @@ def ophalen_en_controleren_databestand(jsonbestand):
 
     # json bestand inlezen
     data_bestand, fouten = laad_json_bestand(jsonbestand)
-    if fouten:
-        return data_bestand, fouten
 
-    # json schema ophalen van web
-    versie = "1_0"
-    bestandsnaam = IV3_SCHEMA_FILE.format(versie)
-    schema_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'schemabestand')
-    if fouten:
-        return data_bestand, fouten
+    if not fouten:
+        # json schema ophalen van web
+        versie = "1_0"
+        bestandsnaam = IV3_SCHEMA_FILE.format(versie)
+        schema_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'schemabestand')
 
     # json data controleren aan json schema
-    fouten = controle_met_schema(data_bestand, schema_bestand)
-    if fouten:
-        return data_bestand, fouten
+    if not fouten:
+        fouten = controle_met_schema(data_bestand, schema_bestand)
 
     # json bestand voldoet aan het schema
     # echter balans_lasten, balans_baten en/of balans_standen kunnen ontbreken
     # in dit geval voegen we deze toe als lege dict
-    if 'balans_lasten' not in data_bestand['data']:
-        data_bestand['data'].update({'balans_lasten': []})
-    if 'balans_baten' not in data_bestand['data']:
-        data_bestand['data'].update({'balans_baten': []})
-    if 'balans_standen' not in data_bestand['data']:
-        data_bestand['data'].update({'balans_standen': []})
-
-    # json definitie bestand ophalen van web
-    meta = data_bestand['metadata']
-    overheidslaag = meta['overheidslaag']
-    boekjaar = meta['boekjaar']
-    bestandsnaam = IV3_DEF_FILE.format(overheidslaag, boekjaar)
-    definitie_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebetand')
-    if fouten:
-        return data_bestand, fouten
-
-    # json data controleren met het definitie bestand
-    fouten = controle_met_defbestand(data_bestand, definitie_bestand)
-    if fouten:
-        return data_bestand, fouten
-
-    # WHAT ELSE? Of zijn we zo klaar met de controles...
+    if not fouten:
+        if 'balans_lasten' not in data_bestand['data']:
+            data_bestand['data'].update({'balans_lasten': []})
+        if 'balans_baten' not in data_bestand['data']:
+            data_bestand['data'].update({'balans_baten': []})
+        if 'balans_standen' not in data_bestand['data']:
+            data_bestand['data'].update({'balans_standen': []})
 
     return data_bestand, fouten
 

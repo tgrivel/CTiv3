@@ -8,7 +8,7 @@ https://www.anaconda.com/download/
 
 ```
 conda env --file requirements.txt
-pip install python-dotenv
+pip install -r requirements-pip.txt
 ```
 
 # Running
@@ -23,3 +23,6 @@ Alternatief:
 python applicatie.py
 ```
 
+# Docker
+docker build -t ctiv3 .
+docker run ctiv3

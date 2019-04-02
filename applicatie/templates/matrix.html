@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% from 'macros.html' import draaitabel %}
+{% from 'macros.html' import draaitabel, controle_resultaat %}
 
 {% block content %}
 <style>
@@ -46,9 +46,11 @@ table {
   border-collapse: collapse;
 }
 </style>
+
+
 <body>
+    <script src="{{ url_for('static', filename='js/detail.js') }}"/>
     <script>
-        /* is dit stukje nog nodig??? TG*/
         var data = {{ data | tojson }};
     </script>
     <body bgcolor="#1a1aff">
@@ -96,6 +98,20 @@ table {
             {{ draaitabel(balans_standen) }}
         </div>
 
+        <div id="Controles" class="tabcontent">
+            <h3>Controles</h3>
+            {% for resultaat in controle_resultaten %}
+            {{ controle_resultaat(resultaat) }}
+            {% endfor %}
+        </div>
+
+        <div class="container">
+            <table id="Detail" class="pvtTable" border="1" style="opacity: 1">
+                <thead> <tr></tr> </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
         <div id="LastenDetail">
             <table>
                 <thead>
@@ -114,6 +130,9 @@ table {
       // Declare all variables
       var i, tabcontent, tablinks;
 
+      // Verberg tabel met details
+      $("#Detail").hide(0);
+
       // Get all elements with class="tabcontent" and hide them
       tabcontent = document.getElementsByClassName("tabcontent");
       for (i = 0; i < tabcontent.length; i++) {
@@ -131,6 +150,8 @@ table {
       evt.currentTarget.className += " active";
     }
     </script>
+
+
     </body>
 
 {% endblock %}
