@@ -1,3 +1,10 @@
+body.body {
+    // TODO We willen een CBS-blauwe achtergrondkleur.
+    // background-color:#0066ff
+    background-color: #00A1CD;
+    font-color: #FFFFFF;
+}
+
 .info, .success, .warning, .error {
 margin: 10px 0px;
 padding:12px;
