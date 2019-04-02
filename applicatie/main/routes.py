@@ -64,7 +64,7 @@ def matrix(jsonbestand):
         plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'],
                                                             controle['definitie'])
                                     for controle in definitie_bestand['controlelijst']['controles']]
-        controle_resultaten = [controle.run() for controle in plausibiliteitscontroles]
+        controle_resultaten = [controle.run(data) for controle in plausibiliteitscontroles]
 
         metadata = data_bestand['metadata']
         sjabloon_meta = definitie_bestand['metadata']
