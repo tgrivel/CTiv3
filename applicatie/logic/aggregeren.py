@@ -23,7 +23,7 @@ def aggregeren_volledig(data, defbestand):
         ['taakveld', 2, 'taakveld'],
         codechecklijst
     )
-    data_geaggregeerd.update({'lasten':data_agg})
+    data_geaggregeerd['lasten'] = data_agg
     fouten_aggregeren.extend(fouten)
 
     # rekening balans_lasten aggregeren
@@ -33,7 +33,7 @@ def aggregeren_volledig(data, defbestand):
         ['balanscode', 2, 'balanscode'],
         codechecklijst
     )
-    data_geaggregeerd.update({'balans_lasten': data_agg})
+    data_geaggregeerd['balans_lasten'] = data_agg
     fouten_aggregeren.extend(fouten)
 
     # rekening baten aggregeren
@@ -43,7 +43,7 @@ def aggregeren_volledig(data, defbestand):
         ['taakveld', 2, 'taakveld'],
         codechecklijst
     )
-    data_geaggregeerd.update({'baten': data_agg})
+    data_geaggregeerd['baten'] = data_agg
     fouten_aggregeren.extend(fouten)
 
     # rekening balans_baten aggregeren
@@ -53,7 +53,7 @@ def aggregeren_volledig(data, defbestand):
         ['balanscode', 2, 'balanscode'],
         codechecklijst
     )
-    data_geaggregeerd.update({'balans_baten': data_agg})
+    data_geaggregeerd['balans_baten'] = data_agg
     fouten_aggregeren.extend(fouten)
 
     # rekening balans_standen aggregeren
@@ -63,7 +63,7 @@ def aggregeren_volledig(data, defbestand):
         ['balanscode', 2, 'balanscode'],
         codechecklijst
     )
-    data_geaggregeerd.update({'balans_standen': data_agg})
+    data_geaggregeerd['balans_standen'] = data_agg
     fouten_aggregeren.extend(fouten)
 
     return data_geaggregeerd, fouten_aggregeren
@@ -79,18 +79,16 @@ def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
 
     # aggregeren over dimensie 1
     vastedims = [dimensie_2[0], 'bedrag']   # we houden de tweede dimensie vast
-    aggdim = dimensie_1[0]
-    aggniv = dimensie_1[1]
-    clijst = codechecklijst.get(dimensie_1[2])
+    aggdim, aggniv, clnaam = dimensie_1
+    clijst = codechecklijst.get(clnaam)
     if aggniv > -1:
         data, fouten = aggregeren_data(data, aggdim, vastedims, aggniv, clijst, False)
         foutenlijst.extend(fouten)
 
     # aggregeren over dimensie 2
     vastedims = [dimensie_1[0], 'bedrag']   # we houden de eerste dimensie vast
-    aggdim = dimensie_2[0]
-    aggniv = dimensie_2[1]
-    clijst = codechecklijst.get(dimensie_2[2])
+    aggdim, aggniv, clnaam = dimensie_2
+    clijst = codechecklijst.get(clnaam)
     data, fouten = aggregeren_data(data, aggdim, vastedims, aggniv, clijst, True)
     foutenlijst.extend(fouten)
 
@@ -218,14 +216,8 @@ def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_ge
 def data_opschonen(data, keylist):
     # data is een list van records (dicts)
     # verwijder de opgegeven keys uit alle records
-    data_schoon = list()
-    if type(data) is not list:
-        return data_schoon
 
-    for rec in data:
-        for k in keylist:
-            if k in rec:
-                del rec[k]
-        data_schoon.append(rec)
+    data_schoon = [{k: v for (k, v) in record.items() if k not in keylist}
+                   for record in data]
 
     return data_schoon
