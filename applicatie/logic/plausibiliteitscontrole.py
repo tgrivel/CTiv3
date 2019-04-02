@@ -65,4 +65,3 @@ class ControleResultaat(object):
         #     "b = 4",
         #     "De check is gefaald. Er moet gelden a > b, maar a = 6 en b = 4"
         # ]
-
