@@ -3,6 +3,7 @@ from flask import render_template, request
 from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
+from applicatie.logic.plausibiliteitscontrole import PlausibiliteitsControle
 from applicatie.main import bp
 from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
 
@@ -59,15 +60,23 @@ def matrix(jsonbestand):
         balans_standen = DraaiTabel(
             data=data['balans_standen'], rij_naam='balanscode', kolom_naam='standper')
 
+        # Voer controles uit
+        plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'],
+                                                            controle['definitie'])
+                                    for controle in definitie_bestand['controlelijst']['controles']]
+        controle_resultaten = [controle.run() for controle in plausibiliteitscontroles]
+
         metadata = data_bestand['metadata']
         sjabloon_meta = definitie_bestand['metadata']
 
+        # Render sjabloon
         params = {
             'lasten': lasten,
             'balans_lasten': balans_lasten,
             'baten': baten,
             'balans_baten': balans_baten,
             'balans_standen': balans_standen,
+            'controle_resultaten': controle_resultaten,
 
             # hebben we onderstaande nog nodig?
             'data': data_bestand,
