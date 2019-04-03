@@ -22,6 +22,7 @@ body {font-family: Arial;}
   padding: 14px 16px;
   transition: 0.3s;
   font-size: 17px;
+  color: black;
 }
 
 /* Change background color of buttons on hover */
@@ -55,31 +56,33 @@ table {
     </script>
     <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
+        <div style="position: relative;left: 5px;font-size: 17px;">
+        <div>Bestand: {{filenaam}}</div>
         <div>Inzender: {{ meta['overheidsnaam']}}</div>
         <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
         <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
-        <div>Datum : {{ meta['datum']}} </div>
-        <div>Definitiebestand: {{ sjabloon['omschrijving'] }} , {{ sjabloon['overheidslaag'] }} , {{ sjabloon['boekjaar'] }}   </div>
-
+        <div>Datum : {{ meta['datum']}}</div>
+        <div>Definitiebestand: {{ sjabloon['omschrijving'] }} , {{ sjabloon['overheidslaag'] }} , {{ sjabloon['boekjaar'] }}</div>
+        </div>
              <!-- Tab links -->
 
                 <div class="tab">
-                    <button class="tablinks" onclick="openTab(event, 'LastenLR')">Lasten lopende rekening</button>
-                    <button class="tablinks" onclick="openTab(event, 'BatenLR')">Baten lopende rekening</button>
-                    <button class="tablinks" onclick="openTab(event, 'LastenBM')">Lasten balansmutaties</button>
-                    <button class="tablinks" onclick="openTab(event, 'BatenBM')">Baten balansmutaties</button>
+                    <button class="tablinks" onclick="openTab(event, 'LastenLR')">Lasten</button>
+                    <button class="tablinks" onclick="openTab(event, 'BatenLR')">Baten</button>
+                    <button class="tablinks" onclick="openTab(event, 'LastenBM')">Balansmutaties lasten</button>
+                    <button class="tablinks" onclick="openTab(event, 'BatenBM')">Balansmutaties baten</button>
                     <button class="tablinks" onclick="openTab(event, 'Balans')">Balans standen</button>
                     <button class="tablinks" onclick="openTab(event, 'Controles')">Controles</button>
                 </div>
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            <h3>Lasten lopende rekening</h3>
+            <h3>Lasten</h3>
                 {{ draaitabel(lasten) }}
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            <h3>Baten lopende rekening</h3>
+            <h3>Baten</h3>
             {{ draaitabel(baten) }}
         </div>
 
@@ -94,7 +97,7 @@ table {
         </div>
 
         <div id="Balans" class="tabcontent">
-            <h3>Balans</h3>
+            <h3>Balans standen</h3>
             {{ draaitabel(balans_standen) }}
         </div>
 
