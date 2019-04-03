@@ -8,7 +8,6 @@ WAARDE_KOLOM = 'bedrag'
 
 class DraaiTabel:
    def __init__(self, data, rij_naam, kolom_naam):
-       self._data = data
        indices, self.tabel = pivot_table(data, aggregeer_kolommen=[rij_naam, kolom_naam],
                                          waarde_kolom=WAARDE_KOLOM)
        self.rij_naam, self.kolom_naam = rij_naam, kolom_naam
