@@ -77,32 +77,32 @@ table {
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            <h3>Lasten</h3>
+            <h3 style="color:white;">Lasten</h3>
                 {{ draaitabel(lasten) }}
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            <h3>Baten</h3>
+            <h3 style="color:white;">Baten</h3>
             {{ draaitabel(baten) }}
         </div>
 
         <div id="LastenBM" class="tabcontent">
-            <h3>Balansmutaties lasten</h3>
+            <h3 style="color:white;">Balansmutaties lasten</h3>
             {{ draaitabel(balans_lasten) }}
         </div>
 
         <div id='BatenBM' class="tabcontent">
-            <h3>Balansmutaties baten</h3>
+            <h3 style="color:white;">Balansmutaties baten</h3>
             {{ draaitabel(balans_baten) }}
         </div>
 
         <div id="Balans" class="tabcontent">
-            <h3>Balans standen</h3>
+            <h3 style="color:white;">Balans standen</h3>
             {{ draaitabel(balans_standen) }}
         </div>
 
         <div id="Controles" class="tabcontent">
-            <h3>Controles</h3>
+            <h3 style="color:white;">Controles</h3>
             {% for resultaat in controle_resultaten %}
             {{ controle_resultaat(resultaat) }}
             {% endfor %}
