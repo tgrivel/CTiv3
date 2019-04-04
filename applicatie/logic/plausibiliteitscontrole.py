@@ -1,4 +1,15 @@
+import operator
+
 from applicatie.logic.plausibele_berekening import bereken
+
+
+gelijkheidsoperatoren = {
+    '>': operator.gt,
+    '<': operator.lt,
+    '=': operator.eq,
+    '>=': operator.ge,
+    '<=': operator.le,
+}
 
 
 class PlausibiliteitsControle(object):
@@ -17,8 +28,23 @@ class PlausibiliteitsControle(object):
             expressie = stap['expressie']
 
             if "check" in expressie:
-                formule = expressie['formule'] + ' ' + expressie['check']
-                controle_resultaat = bool(bereken(formule, omgeving))
+                check = expressie['check']
+
+                operator_functie = None
+                rechterkant = None
+                for operator in gelijkheidsoperatoren:
+                    if check.startswith(operator):
+                        operator_functie = gelijkheidsoperatoren[operator]
+                        rechterkant = check[:len(operator)]
+
+                if operator_functie and rechterkant:
+                    rapportage.append("Kan niet rekenen met")
+
+                resultaat_links = bereken(expressie['formule'])
+                resultaat_rechts = bereken(rechterkant)
+
+                # formule = expressie['formule'] + ' ' + expressie['check']
+                # controle_resultaat = bool(bereken(formule, omgeving))
 
                 if controle_resultaat:
                     rapportage.append(f'Controle {formule} is waar')
