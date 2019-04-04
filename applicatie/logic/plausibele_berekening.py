@@ -63,7 +63,7 @@ class Rekenmachine(object):
         atom = (fnumber | (ident + lpar + expr + rpar) | ident | (lpar + expr + rpar)).setParseAction(self._push_stack)
         term = atom + ZeroOrMore((multop + atom).setParseAction(self._push_stack))
         expr << term + ZeroOrMore((addop + term).setParseAction(self._push_stack))
-        comp = Literal('>') | Literal('<') | Literal('=') | Literal('>=') | Literal('<=')
+        comp = Literal('>=') | Literal('<=') | Literal('>') | Literal('<') | Literal('=')
         comp_expr = expr + Optional((comp + expr).setParseAction(self._push_stack))
         return comp_expr
 

@@ -1,16 +1,6 @@
 import operator
 
-from applicatie.logic.plausibele_berekening import bereken
-
-
-gelijkheidsoperatoren = {
-    '>': operator.gt,
-    '<': operator.lt,
-    '=': operator.eq,
-    '>=': operator.ge,
-    '<=': operator.le,
-}
-
+from applicatie.logic.plausibele_berekening import bereken, RekenFout
 
 class PlausibiliteitsControle(object):
     def __init__(self, omschrijving, definitie):
@@ -23,38 +13,37 @@ class PlausibiliteitsControle(object):
         omgeving = dict()
         rapportage = []
 
+        is_geslaagd = True  # Tot tegendeel bewezen is
+
         for stap in self.definitie:
             variabele = stap['variabele']
             expressie = stap['expressie']
 
             if "check" in expressie:
-                # check = expressie['check']
-
-                # operator_functie = None
-                # rechterkant = None
-                # for operator in gelijkheidsoperatoren:
-                #     if check.startswith(operator):
-                #         operator_functie = gelijkheidsoperatoren[operator]
-                #         rechterkant = check[:len(operator)]
-
-                # if operator_functie and rechterkant:
-                #     rapportage.append("Kan niet rekenen met")
-
-                # resultaat_links = bereken(expressie['formule'])
-                # resultaat_rechts = bereken(rechterkant)
-
                 formule = expressie['formule'] + ' ' + expressie['check']
-                controle_resultaat = bool(bereken(formule, omgeving))
 
-                if controle_resultaat:
-                    rapportage.append(f'Controle {formule} is waar')
+                try:
+                    controle_resultaat = bool(bereken(formule, omgeving))
+                except RekenFout as e:
+                    rapportage.append(e.melding)
+                    is_geslaagd = False
+                    break
                 else:
-                    rapportage.append(f'Controle {formule} is onwaar')
+                    if controle_resultaat:
+                        rapportage.append(f'Controle {formule} is waar')
+                    else:
+                        rapportage.append(f'Controle {formule} is onwaar')
 
             if "formule" in expressie:
-                formule = bereken(expressie['formule'], omgeving)
-                omgeving[variabele] = formule
-                rapportage.append(f"{variabele} = {totaal_bedrag}")
+                try:
+                    formule = bereken(expressie['formule'], omgeving)
+                except RekenFout as e:
+                    rapportage.append(e.melding)
+                    is_geslaagd = False
+                    break
+                else:
+                    omgeving[variabele] = formule
+                    rapportage.append(f"{variabele} = {totaal_bedrag}")
             else:
                 query = expressie
                 rekeningkant = query.pop('rekeningsoort')
@@ -63,25 +52,25 @@ class PlausibiliteitsControle(object):
                            if all(rij[key] == query[key] for key in query)]
 
                 if not matches:
-                    rapportage.append(f'Er is geen record met eigenschappen {query}!')
+                    rapportage.append(f'Er is geen record met eigenschappen {dict(query)}!')
 
                 totaal_bedrag = sum(match['bedrag'] for match in matches)
                 omgeving[variabele] = totaal_bedrag
                 rapportage.append(f"{variabele} = {totaal_bedrag}")
 
-        return ControleResultaat(self, omgeving, rapportage)
+        return ControleResultaat(self, omgeving, is_geslaagd, rapportage)
 
 
 class ControleResultaat(object):
-    def __init__(self, controle, omgeving, rapportage):
+    def __init__(self, controle, omgeving, is_geslaagd, rapportage):
         self.controle = controle
         self.omgeving = omgeving
+        self._is_geslaagd = is_geslaagd
         self._rapportage = rapportage
 
     def is_geslaagd(self):
         """Retoerneer of de controle geslaagd is."""
-        # return True
-        return False
+        return self._is_geslaagd
 
     def rapportage(self):
         """Uitgebreide rapportage om de tussenstappen van de contole te printen."""

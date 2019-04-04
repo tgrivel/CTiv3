@@ -55,7 +55,7 @@ class TestPlausibeleBerekening(TestCase):
     # @skip
     def test_kleiner_dan(self):
         # ARRANGE
-        formule = "(relatief_verschil) < 0.01"
+        formule = "(relatief_verschil) <= 0.01"
         omgeving = {
             'relatief_verschil': 50,
         }
