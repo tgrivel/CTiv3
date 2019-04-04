@@ -16,13 +16,14 @@ def index():
             return render_template("index.html", errormessages=['Geen json bestand geselecteerd'])
         else:
             jsonfile = request.files['file']
-            return matrix(jsonbestand=jsonfile)
+            jsonfilename = jsonfile.filename
+            return matrix(jsonbestand=jsonfile, jsonbestandsnaam=jsonfilename)
     elif request.method == 'GET':
         return render_template("index.html", errormessages=[])
 
 
 @bp.route("/matrix", methods=['GET', 'POST'])
-def matrix(jsonbestand):
+def matrix(jsonbestand, jsonbestandsnaam):
     """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
     Indien geen fouten, laad de pagina met een overzicht van de data.
     """
@@ -71,7 +72,7 @@ def matrix(jsonbestand):
         plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'],
                                                             controle['definitie'])
                                     for controle in definitie_bestand['controlelijst']['controles']]
-        controle_resultaten = [controle.run() for controle in plausibiliteitscontroles]
+        controle_resultaten = [controle.run(data) for controle in plausibiliteitscontroles]
 
         metadata = data_bestand['metadata']
         sjabloon_meta = definitie_bestand['metadata']
@@ -86,6 +87,7 @@ def matrix(jsonbestand):
             'controle_resultaten': controle_resultaten,
 
             # hebben we onderstaande nog nodig?
+            'filenaam': jsonbestandsnaam,
             'data': data_bestand,
             'meta': metadata,
             'sjabloon': sjabloon_meta,
