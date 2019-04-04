@@ -52,15 +52,14 @@ class TestPlausibeleBerekening(TestCase):
         resultaat = bereken(formule, omgeving)
         self.assertEqual(50, resultaat)
 
-    @skip
+    # @skip
     def test_kleiner_dan(self):
         # ARRANGE
-        formule = "(relatief_verschil) <= 0.01"
+        formule = "(relatief_verschil) < 0.01"
         omgeving = {
-            'Totaal_baten_LR': 50,
-            'Totaal_lasten_LR': 100
+            'relatief_verschil': 50,
         }
 
         # ACT
         resultaat = bereken(formule, omgeving)
-        self.assertEqual(50, resultaat)
+        self.assertEqual(False, resultaat)

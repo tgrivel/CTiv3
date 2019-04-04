@@ -1,7 +1,7 @@
 import operator
 from typing import Dict
 
-from pyparsing import Literal, Word, ZeroOrMore, Forward, alphas, Regex, Suppress
+from pyparsing import Literal, Word, ZeroOrMore, Forward, alphas, Regex, Suppress, oneOf, Optional
 
 __all__ = 'berekenen'
 
@@ -37,14 +37,19 @@ binary_op = {
     '+': operator.add,
     '-': operator.sub,
     '*': operator.mul,
-    '/': veilig_delen
+    '/': veilig_delen,
+    '>': operator.gt,
+    '>=': operator.ge,
+    '<': operator.lt,
+    '<=': operator.le,
+    '=': operator.eq,
 }
 
 
 class RekenFout(Exception):
     def __init__(self, melding):
         self.melding = melding
-        super(RekenFout, self).__init__()
+        super(RekenFout, self).__init__(melding)
 
 
 class Rekenmachine(object):
@@ -55,10 +60,12 @@ class Rekenmachine(object):
 
     def _make_bnf(self):
         expr = Forward()
-        atom = (fnumber | ident + lpar + expr + rpar | ident | lpar + expr + rpar).setParseAction(self._push_stack)
+        atom = (fnumber | (ident + lpar + expr + rpar) | ident | (lpar + expr + rpar)).setParseAction(self._push_stack)
         term = atom + ZeroOrMore((multop + atom).setParseAction(self._push_stack))
         expr << term + ZeroOrMore((addop + term).setParseAction(self._push_stack))
-        return expr
+        comp = Literal('>') | Literal('<') | Literal('=') | Literal('>=') | Literal('<=')
+        comp_expr = expr + Optional((comp + expr).setParseAction(self._push_stack))
+        return comp_expr
 
     def _push_stack(self, _1, _2, toks):
         """Zet een operator of waarde op de stack."""
@@ -74,7 +81,7 @@ class Rekenmachine(object):
         Eigenlijk is dit RPN-notatie:
         http://concatenative.org/wiki/view/Factor/Examples
         """
-
+        
         op = self._stack.pop()
         if op in unary_op:
             return unary_op[op](self._reduce_stack())
@@ -84,8 +91,9 @@ class Rekenmachine(object):
             return binary_op[op](linker_operand, rechter_operand)
         elif op in self._omgeving:
             return self._omgeving[op]
+        elif op[0].isdigit():
+            return float(op)
         else:
-            print("self._omgeving = {!r}".format(self._omgeving))
             raise RekenFout(f"Rekenmachine kan niet omgaan met {op}")
 
     def bereken(self, expressie):

@@ -28,23 +28,23 @@ class PlausibiliteitsControle(object):
             expressie = stap['expressie']
 
             if "check" in expressie:
-                check = expressie['check']
+                # check = expressie['check']
 
-                operator_functie = None
-                rechterkant = None
-                for operator in gelijkheidsoperatoren:
-                    if check.startswith(operator):
-                        operator_functie = gelijkheidsoperatoren[operator]
-                        rechterkant = check[:len(operator)]
+                # operator_functie = None
+                # rechterkant = None
+                # for operator in gelijkheidsoperatoren:
+                #     if check.startswith(operator):
+                #         operator_functie = gelijkheidsoperatoren[operator]
+                #         rechterkant = check[:len(operator)]
 
-                if operator_functie and rechterkant:
-                    rapportage.append("Kan niet rekenen met")
+                # if operator_functie and rechterkant:
+                #     rapportage.append("Kan niet rekenen met")
 
-                resultaat_links = bereken(expressie['formule'])
-                resultaat_rechts = bereken(rechterkant)
+                # resultaat_links = bereken(expressie['formule'])
+                # resultaat_rechts = bereken(rechterkant)
 
-                # formule = expressie['formule'] + ' ' + expressie['check']
-                # controle_resultaat = bool(bereken(formule, omgeving))
+                formule = expressie['formule'] + ' ' + expressie['check']
+                controle_resultaat = bool(bereken(formule, omgeving))
 
                 if controle_resultaat:
                     rapportage.append(f'Controle {formule} is waar')
