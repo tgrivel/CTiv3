@@ -4,7 +4,7 @@
 <div class="container">
     <!-- TODO Je kunt spelen met class=table of table-striped -->
     <!-- https://getbootstrap.com/docs/3.3/css/#tables-example -->
-    <table border="1" class="pvtTable table" style="opacity: 1"
+    <table border="1" class="pvtTable" style="opacity: 1"
            rij_naam='{{ tabel.rij_naam }}'
            kolom_naam='{{ tabel.kolom_naam }}'
            data='{{ tabel.data | tojson }}'
@@ -33,7 +33,7 @@
                 {{ rij }}
             </th>
             {% for kolom in tabel.kolommen %}
-            <td class="pvtVal"
+            <td class="td default"
                 {{ tabel.rij_naam }}="{{ rij }}"
                 {{ tabel.kolom_naam }}="{{ kolom }}"
                 onclick="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
