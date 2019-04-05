@@ -4,9 +4,10 @@
 import os
 from dotenv import load_dotenv
 
-#IV3_REPO_PATH = "https://raw.github.com/statistiekcbs/iv3_definities/master/"
-## tijdelijk teruggezet naar oude repo omdat we daarin de regels kunnen editen
-IV3_REPO_PATH = "https://raw.github.com/tgrivel/iv3_modellen/master/"
+## Nieuwe REPO:
+IV3_REPO_PATH = "https://raw.github.com/statistiekcbs/iv3_definities/master/"
+## Oude REPO:
+## IV3_REPO_PATH = "https://raw.github.com/tgrivel/iv3_modellen/master/"
 IV3_SCHEMA_FILE = "iv3_data_schema_v{}.json"
 IV3_DEF_FILE = "iv3_definities_{}_{}.json"
 
