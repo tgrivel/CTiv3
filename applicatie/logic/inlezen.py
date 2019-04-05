@@ -85,30 +85,37 @@ def ophalen_bestand_van_web(url, bestandsnaam, bestandstype):
     weburl = None
     bestand = None
     errorcode = 0
-    errorstr = ''
+    errortext = ''
     foutmeldingen = []
 
     try:
-        weburl = urllib.request.urlopen(url)
+        req = urllib.request
+        weburl = req.urlopen(url)
     except HTTPError as e:
         errorcode = e.code
+        errortext = e.msg
     except URLError as e:
         if type(e.reason) is str:
-            errorstr = e.reason
+            errortext = e.reason
         else:
-            errorstr = 'onbekende fout: {}'.format(str(e.reason))
+            errortext = 'onbekende fout < {} >'.format(str(e.reason))
+    except ValueError:
+            errortext = 'onbekende fout < value error >'
 
-    if errorcode == 0 and errorstr == '':
+    if errorcode == 0 and errortext == '':
         if weburl.getcode() == http.HTTPStatus.OK:
             bestand, foutmeldingen_json = laad_json_bestand(weburl)
             foutmeldingen.extend(foutmeldingen_json)
             _logger.info("JSON-bestand opgehaald van %s", url)
     else:
         foutmelding = 'Fout bij ophalen {}: {}'.format(bestandstype, bestandsnaam)
+        foutmeldingen.append(foutmelding)
         if errorcode != 0:
-            foutmelding = foutmelding + ' (HTTP foutcode #{})'.format(errorcode)
-        if errorstr != '':
-            foutmelding = foutmelding + ' (URL fout: {})'.format(errorstr)
+            errortext = errortext.replace('Not Found', 'bestand niet gevonden')
+            foutmelding = 'HTTP fout #{}: {}'.format(errorcode, errortext)
+            errortext = ''
+        if errortext != '':
+            foutmelding = 'URL fout: {}'.format(errortext)
         foutmeldingen.append(foutmelding)
 
     if foutmeldingen:
