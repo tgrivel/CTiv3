@@ -57,21 +57,27 @@ def matrix(jsonbestand, jsonbestandsnaam):
         if fouten:
             return render_template("index.html", errormessages=fouten)
 
-        for rec in data_geaggregeerd['lasten']:
-            rec['taakveld:'] = rec.get('taakveld') + ' omschrijving'
-            rec['categorie:'] = rec.get('categorie')
-            rec['extra'] = 'extra informatie'
+        # tijdelijk wat extra details toevoegen aan de data
+        for rekening, datarek in data_geaggregeerd.items():
+            for rec in datarek:
+                detailrec = True
+                for k, v in rec.items():
+                    if 'sub_' in k:
+                        detailrec = False
+                if detailrec == True:
+                    rec['detail 1'] = 'extra informatie'
+                    rec['detail 2'] = 'bla bla'
 
         lasten = DraaiTabel(
-            data=data_geaggregeerd['lasten'], rij_naam='taakveld:', kolom_naam='categorie:')
+            data=data_geaggregeerd['lasten'], rij_naam='taakveld:', kolom_naam='categorie')
         balans_lasten = DraaiTabel(
-            data=data_geaggregeerd['balans_lasten'], rij_naam='balanscode', kolom_naam='categorie')
+            data=data_geaggregeerd['balans_lasten'], rij_naam='balanscode:', kolom_naam='categorie')
         baten = DraaiTabel(
-            data=data_geaggregeerd['baten'], rij_naam='taakveld', kolom_naam='categorie')
+            data=data_geaggregeerd['baten'], rij_naam='taakveld:', kolom_naam='categorie')
         balans_baten = DraaiTabel(
-            data=data_geaggregeerd['balans_baten'], rij_naam='balanscode', kolom_naam='categorie')
+            data=data_geaggregeerd['balans_baten'], rij_naam='balanscode:', kolom_naam='categorie')
         balans_standen = DraaiTabel(
-            data=data_geaggregeerd['balans_standen'], rij_naam='balanscode', kolom_naam='standper')
+            data=data_geaggregeerd['balans_standen'], rij_naam='balanscode:', kolom_naam='standper')
 
         # Voer controles uit
         plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'],

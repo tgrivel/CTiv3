@@ -27,7 +27,14 @@ class DraaiTabel:
         k = self.kolom_naam
         rs = r[:-1] if r[-1:] == ':' else r
         ks = k[:-1] if k[-1:] == ':' else k
-        relevante_labels = unieke_labels - {r, k, rs, ks, WAARDE_KOLOM}
+        rsub = 'sub_' + rs
+        ksub = 'sub_' + ks
+        relevante_labels = unieke_labels - {r, k, rs, ks, rsub, ksub, WAARDE_KOLOM}
 
         # Sort labels alphabetically but always put value last
-        return [rs] + [ks] + sorted(relevante_labels, key=str.lower) + [WAARDE_KOLOM]
+        if ksub in unieke_labels:
+            details = [rs] + [ks] + [rsub] + [ksub] + sorted(relevante_labels, key=str.lower) + [WAARDE_KOLOM]
+        else:
+            details = [rs] + [ks] + [rsub] + sorted(relevante_labels, key=str.lower) + [WAARDE_KOLOM]
+
+        return details

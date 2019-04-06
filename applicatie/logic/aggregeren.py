@@ -7,6 +7,8 @@ _logger = logging.getLogger(__file__)
 
 def aggregeren_volledig(data, defbestand):
     """"Volledige dataset aggregeren.
+
+
     Per rekening specificeren we de dimensies
     waarover geaggregeerd moet worden.
     """
@@ -70,15 +72,15 @@ def aggregeren_volledig(data, defbestand):
 
 
 def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
-    """
-    data voor een rekening volledig aggregeren over twee dimensies
-    we specificeren hiervoor dimensie_1 en dimensie_2, dit zijn lists:
+    """Data voor een rekening volledig aggregeren over twee dimensies
+
+    We specificeren hiervoor dimensie_1 en dimensie_2, dit zijn lists:
     [ naam dimensie, aggregatieniveau, naam codelijst ]
     """
     foutenlijst = list()
 
     # aggregeren over dimensie 1
-    vastedims = [dimensie_2[0], 'bedrag']   # we houden de tweede dimensie vast
+    vastedims = [dimensie_2[0], 'sub_'+dimensie_2[0], 'bedrag']   # we houden de tweede dimensie vast
     aggdim, aggniv, clnaam = dimensie_1
     clijst = codechecklijst.get(clnaam)
     if aggniv > -1:
@@ -86,7 +88,7 @@ def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
         foutenlijst.extend(fouten)
 
     # aggregeren over dimensie 2
-    vastedims = [dimensie_1[0], 'bedrag']   # we houden de eerste dimensie vast
+    vastedims = [dimensie_1[0], 'sub_'+dimensie_1[0], 'bedrag']   # we houden de eerste dimensie vast
     aggdim, aggniv, clnaam = dimensie_2
     clijst = codechecklijst.get(clnaam)
     data, fouten = aggregeren_data(data, aggdim, vastedims, aggniv, clijst, True)
@@ -94,12 +96,37 @@ def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
 
     data = data_opschonen(data, ['geteld', 'numgeteld'])
 
+    # toevoegen van omschrijving aan de gekozen dimensie
+    aggdim, aggniv, clnaam = dimensie_2
+    clijst = codechecklijst.get(clnaam)
+    data = data_toevoegen_omschrijving(data, aggdim, clijst)
+
     return data, foutenlijst
 
 
-def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_geteld):
-    """"aggregeren data: lijst van data records"""""
-    # Laatste wijziging 24 maart 2019 (getest in Jupyter notebook)
+def data_toevoegen_omschrijving(data, dimensie, clijst):
+    """"Toevoegen omschrijving aan codes"""
+
+    cds = clijst[0::4]  # cds: lijst van codes
+    oms = clijst[1::4]  # oms: omschrjving van codes
+
+    for rec in data:
+        k2 = ''
+        v2 = ''
+        for k, v in rec.items():
+            if k == dimensie:
+                omschrijving = oms[cds.index(v)] if v in cds else ''
+                k2 = k + ':'
+                v2 = v if omschrijving == '' else v + ' ' + omschrijving
+        if not k2 == '':
+            rec.update({k2: v2})
+
+    return data
+
+
+def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld):
+    """"aggregeren data: lijst van data records (dicts) """""
+    # Laatste wijziging 6 april 2019 (getest in Jupyter notebook)
 
     agg_data = list()
     fouten = list()
@@ -117,7 +144,7 @@ def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_ge
     niv = clijst[2::4]  # niv: niveau van codes in de codelijst (0 = hoogste niveau)
     ptc = clijst[3::4]  # ptc: lijst van parent codes behorende bij de codes
 
-    def aggregeren_record(recs, errs, record, dimensie, vastedimensies, aggniveau, cds, niv, ptc):
+    def aggregeren_record(recs, errs, record, dimensie, vastedims, aggniveau, cds, niv, ptc):
         """Recursieve functie om een record uit data 
         te aggregeren tot op het laagste niveau"""""
 
@@ -140,18 +167,22 @@ def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_ge
                     for key, val in record.items():
                         if key == dimensie:
                             # voeg dimensie toe met de code van de parent
-                            pval = ptc[cds.index(val)]
-                            if pval == '':
-                                pval = 'Totaal ' + key
+                            parentcode = ptc[cds.index(val)]
+                            pval = parentcode if not parentcode == '' else 'Totaal ' + key
                             geteld_record.update({key: pval})
+                        elif key == 'sub_' + dimensie:
+                            geteld_record.update({key: val})
                         elif key in vastedimensies:
-                            # voeg overige 'vaste' keys toe met de eigen code
+                            # neem de 'vaste' keys over met de eigen code
                             geteld_record.update({key: val})
                         elif key == 'numgeteld':
-                            # houd bij hoevaak het record is geteld
+                            # administatie: aantal keren dat het record is geteld
                             geteld_record.update({key: val+1})
                     if 'numgeteld' not in geteld_record:
                         geteld_record.update({'numgeteld': 1})
+                    subkey = 'sub_' + dimensie
+                    if subkey not in geteld_record:
+                        geteld_record.update({subkey: record.get(dimensie)})
             else:
                 # code komt niet voor in de codelijst
                 # N.B. dit zou eigenlijk niet mogen voorkomen
@@ -168,20 +199,22 @@ def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_ge
             # voeg record toe aan de lijst
             recs.append(record)
             # tel record 1 niveau omlaag (= naar bovenliggend record) voor de gekozen dimensie
-            record, telfouten = tel_record(record, dimensie, vastedimensies, aggniveau, cds, niv, ptc)
+            record, telfouten = tel_record(record, dimensie, vastedims, aggniveau, cds, niv, ptc)
             # voeg eventuele fouten toe
             errs.extend(telfouten)
             # we gaan 1 niveau omlaag (= omhoog in de codelijst)
             aggniveau = aggniveau - 1
             # aggregeer het bovenliggende record (recursie)
-            aggregeren_record(recs, errs, record, dimensie, vastedimensies, aggniveau, cds, niv, ptc)
+            aggregeren_record(recs, errs, record, dimensie, vastedims, aggniveau, cds, niv, ptc)
 
         return recs, errs
 
-    # dit is de main loop waarin de door de data lopen
+    # de MAIN loop waarin de door de data lopen
+    # ieder record uit de data wordt geaggregeerd
     for index, record in enumerate(data):
-        # ieder record uit data aggregeren
-        aggrecords, fouten_agg = aggregeren_record([], [], record, dimensie, vastedimensies, aggniveau, cds, niv, ptc)
+        # ieder record (dict) uit data aggregeren
+        aggrecords, fouten_agg = aggregeren_record([], [], record, dimensie, vastedims, aggniveau, cds, niv, ptc)
+
         if aggrecords:
             if len(aggrecords) == 1:
                 # indien 1 record terug, dan is deze 'niet geteld'
