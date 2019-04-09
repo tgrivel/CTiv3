@@ -56,48 +56,162 @@ table {
     </script>
     <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
-        <div style="position: relative;left: 5px;font-size: 17px;">
+        <div style="position: relative;left: 5px;font-size: 17px;padding: 10px;">
         <div>Bestand: {{filenaam}}</div>
         <div>Inzender: {{ meta['overheidsnaam']}}</div>
         <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
         <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
         <div>Datum : {{ meta['datum']}}</div>
         <div>Definitiebestand: {{ sjabloon['omschrijving'] }} , {{ sjabloon['overheidslaag'] }} , {{ sjabloon['boekjaar'] }}</div>
+        <div style="text-align:right; width:100%; padding-right:50px;">
+            <button class="btn btn-primary"  type="button" onclick="">Data downloaden</button>
+        </div>
         </div>
              <!-- Tab links -->
 
                 <div class="tab">
-                    <button class="tablinks" onclick="openTab(event, 'LastenLR')">Lasten</button>
-                    <button class="tablinks" onclick="openTab(event, 'BatenLR')">Baten</button>
-                    <button class="tablinks" onclick="openTab(event, 'LastenBM')">Balansmutaties lasten</button>
-                    <button class="tablinks" onclick="openTab(event, 'BatenBM')">Balansmutaties baten</button>
-                    <button class="tablinks" onclick="openTab(event, 'Balans')">Balans standen</button>
-                    <button class="tablinks" onclick="openTab(event, 'Controles')">Controles</button>
+                    <button class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'LastenLR')">Lasten</button>
+                    <button class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'BatenLR')">Baten</button>
+                    <button class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'LastenBM')">Balansmutaties lasten</button>
+                    <button class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'BatenBM')">Balansmutaties baten</button>
+                    <button class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'Balans')">Balans standen</button>
+                    <button class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'Controles')">Controles</button>
                 </div>
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            <h3 style="color:white;">Lasten</h3>
-                {{ draaitabel(lasten) }}
+            <div style="padding-left:50px;">
+                <h2 style="color:white;">Lasten</h2>
+            </div>
+            <form class="form-inline text-center" role="form">
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="rij">Taakveld:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="rij">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="kolom">Categorie:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="kolom">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="bedrag">Bedrag:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="bedrag">
+            </div>
+                <div class="form-group"><label style="width:100px;"></label></div>
+                <button class="btn btn-primary" type="button" onclick="">Mutatie verwerken</button>
+            </form>
+
+            <div style="clear:both;height:2em;"></div>
+
+            {{ draaitabel(lasten) }}
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            <h3 style="color:white;">Baten</h3>
+            <div style="padding-left:50px;">
+                <h2 style="color:white;">Baten</h2>
+            </div>
+            <form class="form-inline text-center" role="form">
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="rij">Taakveld:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="rij">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="kolom">Categorie:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="kolom">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="bedrag">Bedrag:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="bedrag">
+            </div>
+                <div class="form-group"><label style="width:100px;"></label></div>
+                <button class="btn btn-primary" type="button" onclick="">Mutatie verwerken</button>
+            </form>
+
+            <div style="clear:both;height:2em;"></div>
+
             {{ draaitabel(baten) }}
         </div>
 
         <div id="LastenBM" class="tabcontent">
-            <h3 style="color:white;">Balansmutaties lasten</h3>
+            <div style="padding-left:50px;">
+                <h2 style="color:white;">Balansmutaties lasten</h2>
+            </div>
+            <form class="form-inline text-center" role="form">
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="rij">Balanscode:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="rij">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="kolom">Categorie:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="kolom">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="bedrag">Bedrag:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="bedrag">
+            </div>
+                <div class="form-group"><label style="width:100px;"></label></div>
+                <button class="btn btn-primary" type="button" onclick="">Mutatie verwerken</button>
+            </form>
+
+            <div style="clear:both;height:2em;"></div>
+
             {{ draaitabel(balans_lasten) }}
         </div>
 
         <div id='BatenBM' class="tabcontent">
-            <h3 style="color:white;">Balansmutaties baten</h3>
+            <div style="padding-left:50px;">
+                <h2 style="color:white;">Balansmutaties baten</h2>
+            </div>
+            <form class="form-inline text-center" role="form">
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="rij">Balanscode:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="rij">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="kolom">Categorie:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="kolom">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="bedrag">Bedrag:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="bedrag">
+            </div>
+                <div class="form-group"><label style="width:100px;"></label></div>
+                <button class="btn btn-primary" type="button" onclick="">Mutatie verwerken</button>
+            </form>
+
+            <div style="clear:both;height:2em;"></div>
+
             {{ draaitabel(balans_baten) }}
         </div>
 
         <div id="Balans" class="tabcontent">
-            <h3 style="color:white;">Balans standen</h3>
+            <div style="padding-left:50px;">
+                <h2 style="color:white;">Balans standen</h2>
+            </div>
+            <form class="form-inline text-center" role="form">
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="rij">Balanscode:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="rij">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="kolom">Standper:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="kolom">
+            </div>
+            <div class="form-group" style="padding-right: 50px;">
+                <label for="bedrag">Bedrag:&nbsp; </label>
+	            <input class="form-control" style="width:100px;" id="bedrag">
+            </div>
+                <div class="form-group"><label style="width:100px;"></label></div>
+                <button class="btn btn-primary" type="button" onclick="">Mutatie verwerken</button>
+            </form>
+
+            <div style="clear:both;height:2em;"></div>
+
             {{ draaitabel(balans_standen) }}
         </div>
 
@@ -112,17 +226,6 @@ table {
             <table id="Detail" class="pvtTable" border="1" style="opacity: 1">
                 <thead> <tr></tr> </thead>
                 <tbody></tbody>
-            </table>
-        </div>
-
-        <div id="LastenDetail">
-            <table>
-                <thead>
-
-                </thead>
-                <tbody>
-
-                </tbody>
             </table>
         </div>
 
