@@ -67,7 +67,8 @@ def laad_json_bestand(bestand):
         except UnicodeDecodeError:
             continue  # Probeer de volgende
         except JSONDecodeError as e:
-            foutmeldingen.append(f"{bestand} is geen json-bestand")
+            foutmeldingen.append(f"{bestand.filename} is geen json-bestand")
+            foutmeldingen.append("Fout gevonden op regel {}, kolom {}".format(e.lineno, e.colno))
             break
     else:
         foutmeldingen.append('Het bestand kon niet gelezen worden. '
