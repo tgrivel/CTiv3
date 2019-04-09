@@ -98,7 +98,9 @@ def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
 
 
 def aggregeren_data(data, dimensie, vastedimensies, aggniveau, clijst, alleen_geteld):
-    """"aggregeren data: lijst van data records"""""
+    """"
+    aggregeren data: lijst van data records
+    """
     # Laatste wijziging 24 maart 2019 (getest in Jupyter notebook)
 
     agg_data = list()

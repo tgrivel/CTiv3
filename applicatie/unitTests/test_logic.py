@@ -102,3 +102,34 @@ class MaakMatrix(TestCase):
 
 
         self.assertDictEqual(result, exp_result)
+
+    def testPivotTable_02(self):
+        from applicatie.logic.maak_matrix import pivot_table
+
+        data                = [dict(zip(self._KOLOMMEN, rij)) for rij in self._PRE_DATA]
+        aggregeer_kolommen  = ['Bedrijf', 'Jaar']
+        waarde_kolom        = 'Omzet'
+
+        _, result           = pivot_table(data, aggregeer_kolommen, waarde_kolom)
+
+        exp_result          = {('Q8', 2018): 2926078.602636799,
+                               ('Q8', 2015): 2662075.3621729854,
+                               ('BP', 2015): 4232291.874580168,
+                               ('Esso', 2016): 1957971.5954897502,
+                               ('Esso', 2017): 3797907.731047401,
+                               ('Shell', 2018): 1598156.3037510505,
+                               ('Shell', 2017): 3481464.358927252,
+                               ('Q8', 2017): 3651076.6947338246,
+                               ('Esso', 2015): 3718592.7667392665,
+                               ('Shell', 2016): 1199274.3938869417,
+                               ('BP', 2018): 4209454.334463468,
+                               ('Shell', 2015): 1063835.3049253835,
+                               ('Esso', 2018): 1479911.8010709987,
+                               ('BP', 2017): 1600609.0877543855,
+                               ('BP', 2016): 762526.1885139364,
+                               ('Q8', 2016): 1201753.852640027}
+
+
+        #self.assertDictEqual(result, exp_result)
+
+        print('\n'.join(str(x) for x in sorted(exp_result.items())))

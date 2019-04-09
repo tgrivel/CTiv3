@@ -12,7 +12,8 @@ _logger = logging.getLogger(__file__)
 
 
 def ophalen_en_controleren_databestand(jsonbestand):
-    """Haal JSON-bestand op. Voer controles uit.
+    """
+    Haal JSON-bestand op. Voer controles uit.
     Geef JSON-bestand terug of een lijst met foutmeldingen.
     De volgende stappen worden doorlopen:
         - json data bestand inlezen

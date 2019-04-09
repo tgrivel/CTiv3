@@ -5,10 +5,13 @@ _logger = logging.getLogger(__file__)
 
 
 def controle_met_schema(json_bestand, json_schema):
-    """"Controleer een json data bestand
+    """
+    Controleer een json data bestand
     aan de hand van een json schema.
     We gebruiken hierbij het jsonschema package
-    zie https://pypi.org/project/jsonschema/ """
+    zie https://pypi.org/project/jsonschema/
+    """
+
     foutmeldingen = []
     v = Draft4Validator(json_schema)
     errors = sorted(v.iter_errors(instance=json_bestand), key=lambda e: e.path)
@@ -75,19 +78,26 @@ def extract_values_from_json(obj: object, key: str, key2: str, detail: bool):
 
 
 def geef_codechecklijst(codelijst):
-    """"maak per codelijst-item een lijst van alle voorkomende codes
+    """
+    maak per codelijst-item een lijst van alle voorkomende codes
     hierbij gebruiken we een hulpfunctie extract_values_from_json.
     iedere code krijgt 4 items in de lijst in deze volgorde:
-    [code, omschrijving, niveau, parentcode]"""
+    [code, omschrijving, niveau, parentcode]
+    """
+
     codechecklijst = {}
+
     for k in list(codelijst.keys()):
         codechecklijst.update({k: extract_values_from_json(codelijst[k], 'code', 'description', True)})
+
     return codechecklijst
 
 
 def controle_met_defbestand(json_bestand, json_definities):
-    """"Controleer een json data bestand
-    aan de hand van de codelijsten in het definitiebestand"""
+    """
+    Controleer een json data bestand
+    aan de hand van de codelijsten in het definitiebestand
+    """
     codefouten = []
 
     # codelijsten ophalen uit definitiebestand
