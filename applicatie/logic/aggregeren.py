@@ -125,7 +125,7 @@ def data_toevoegen_omschrijving(data, dimensie, clijst):
 
 
 def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld):
-    """"aggregeren data: lijst van data records (dicts) """""
+    """aggregeren data: lijst van data records (dicts)."""
     # Laatste wijziging 6 april 2019 (getest in Jupyter notebook)
 
     agg_data = list()

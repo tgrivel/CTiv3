@@ -36,14 +36,15 @@ class PlausibiliteitsControle(object):
 
             if "formule" in expressie:
                 try:
-                    formule = bereken(expressie['formule'], omgeving)
+                    uitkomst = bereken(expressie['formule'], omgeving)
                 except RekenFout as e:
-                    rapportage.append(e.melding)
+                    melding = f"Kan `{variabele}' niet berekenen: {e.melding}"
+                    rapportage.append(melding)
                     is_geslaagd = False
                     break
                 else:
-                    omgeving[variabele] = formule
-                    rapportage.append(f"{variabele} = {totaal_bedrag}")
+                    omgeving[variabele] = uitkomst
+                    rapportage.append(f"{variabele} = {uitkomst}")
             else:
                 query = expressie
                 rekeningkant = query.pop('rekeningsoort')
@@ -52,7 +53,9 @@ class PlausibiliteitsControle(object):
                            if all(rij[key] == query[key] for key in query)]
 
                 if not matches:
-                    rapportage.append(f'Er is geen record met eigenschappen {dict(query)}!')
+                    melding = (f"Kan variabele `{variabele}' niet ophalen: "
+                               f"Er is geen record met eigenschappen {dict(query)}!)")
+                    rapportage.append(melding)
 
                 totaal_bedrag = sum(match['bedrag'] for match in matches)
                 omgeving[variabele] = totaal_bedrag
