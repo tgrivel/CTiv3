@@ -40,6 +40,19 @@ class TestPlausibeleBerekening(TestCase):
         resultaat = bereken(formule, omgeving)
         self.assertEqual(0.5, resultaat)
 
+    skip("TODO Deze test slaagt nog niet")
+    def test_delen2(self):
+        # ARRANGE
+        formule = "(Absoluut_verschil / Totaal_lasten_LR)"
+        omgeving = {
+            'Absoluut_verschil': 38254,
+            'Totaal_lasten_LR': 4801
+        }
+
+        # ACT
+        resultaat = bereken(formule, omgeving)
+        self.assertAlmostEqual(7.967923349302229, resultaat)
+
     def test_absoluut_aftrekken(self):
         # ARRANGE
         formule = "ABS(Emu_saldo_LR - Emu_saldo_FR)"
@@ -51,6 +64,18 @@ class TestPlausibeleBerekening(TestCase):
         # ACT
         resultaat = bereken(formule, omgeving)
         self.assertEqual(50, resultaat)
+
+    def test_absoluut_aftrekken2(self):
+        # ARRANGE
+        formule = "ABS(Emu_saldo_LR - Emu_saldo_FR)"
+        omgeving = {
+            'Emu_saldo_LR': 546,
+            'Emu_saldo_FR': 0
+        }
+
+        # ACT
+        resultaat = bereken(formule, omgeving)
+        self.assertEqual(546, resultaat)
 
     # @skip
     def test_kleiner_dan(self):
