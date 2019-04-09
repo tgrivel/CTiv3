@@ -33,8 +33,9 @@ class PlausibiliteitsControle(object):
                         rapportage.append(f'Controle {formule} is waar')
                     else:
                         rapportage.append(f'Controle {formule} is onwaar')
+                        is_geslaagd = False
 
-            if "formule" in expressie:
+            elif "formule" in expressie:
                 try:
                     uitkomst = bereken(expressie['formule'], omgeving)
                 except RekenFout as e:
@@ -56,6 +57,7 @@ class PlausibiliteitsControle(object):
                     melding = (f"Kan variabele `{variabele}' niet ophalen: "
                                f"Er is geen record met eigenschappen {dict(query)}!)")
                     rapportage.append(melding)
+                    break
 
                 totaal_bedrag = sum(match['bedrag'] for match in matches)
                 omgeving[variabele] = totaal_bedrag
