@@ -57,16 +57,34 @@ def matrix(jsonbestand, jsonbestandsnaam):
         if fouten:
             return render_template("index.html", errormessages=fouten)
 
+        # per rekening de data aggregeren over de opgegeven dimensies
+        # N.B. de dimensies eindigend op ':' bevatten de code + de omschrijving van de code
+        # in de rijen van de matrix willen we namelijk ook de omschrijving tonen
+
         lasten = DraaiTabel(
-            data=data_geaggregeerd['lasten'], rij_naam='taakveld:', kolom_naam='categorie')
+            data=data_geaggregeerd['lasten'],
+            rij_naam='taakveld' + ':',              # taakveld inclusief omschrijving
+            kolom_naam='categorie')
+
         balans_lasten = DraaiTabel(
-            data=data_geaggregeerd['balans_lasten'], rij_naam='balanscode:', kolom_naam='categorie')
+            data=data_geaggregeerd['balans_lasten'],
+            rij_naam='balanscode' + ':',            # balanscode inclusief omschrijving
+            kolom_naam='categorie')
+
         baten = DraaiTabel(
-            data=data_geaggregeerd['baten'], rij_naam='taakveld:', kolom_naam='categorie')
+            data=data_geaggregeerd['baten'],
+            rij_naam='taakveld' + ':',              # taakveld inclusief omschrijving
+            kolom_naam='categorie')
+
         balans_baten = DraaiTabel(
-            data=data_geaggregeerd['balans_baten'], rij_naam='balanscode:', kolom_naam='categorie')
+            data=data_geaggregeerd['balans_baten'],
+            rij_naam='balanscode' + ':',            # balanscode inclusief omschrijving
+            kolom_naam='categorie')
+
         balans_standen = DraaiTabel(
-            data=data_geaggregeerd['balans_standen'], rij_naam='balanscode:', kolom_naam='standper')
+            data=data_geaggregeerd['balans_standen'],
+            rij_naam='balanscode' + ':',            # balanscode inclusief omschrijving
+            kolom_naam='standper')
 
         # Voer controles uit
         plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'],
