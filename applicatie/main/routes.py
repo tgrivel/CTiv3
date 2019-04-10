@@ -57,17 +57,6 @@ def matrix(jsonbestand, jsonbestandsnaam):
         if fouten:
             return render_template("index.html", errormessages=fouten)
 
-        # tijdelijk wat extra details toevoegen aan de data
-        for rekening, datarek in data_geaggregeerd.items():
-            for rec in datarek:
-                detailrec = True
-                for k, v in rec.items():
-                    if 'sub_' in k:
-                        detailrec = False
-                if detailrec == True:
-                    rec['detail 1'] = 'extra informatie'
-                    rec['detail 2'] = 'bla bla'
-
         lasten = DraaiTabel(
             data=data_geaggregeerd['lasten'], rij_naam='taakveld:', kolom_naam='categorie')
         balans_lasten = DraaiTabel(

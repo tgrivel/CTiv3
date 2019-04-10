@@ -18,7 +18,7 @@ def aggregeren_volledig(data, defbestand):
     cl = defbestand['codelijsten']
     codechecklijst = geef_codechecklijst(cl)
 
-    # rekening lasten aggregeren
+    # 1: rekening 'lasten' aggregeren
     data_agg, fouten = aggregeren_rekening(
         data['lasten'],
         ['categorie', 2, 'categorie_lasten'],
@@ -28,7 +28,7 @@ def aggregeren_volledig(data, defbestand):
     data_geaggregeerd['lasten'] = data_agg
     fouten_aggregeren.extend(fouten)
 
-    # rekening balans_lasten aggregeren
+    # 2: rekening 'balans_lasten' aggregeren
     data_agg, fouten = aggregeren_rekening(
         data['balans_lasten'],
         ['categorie', 2, 'categorie_lasten'],
@@ -38,7 +38,7 @@ def aggregeren_volledig(data, defbestand):
     data_geaggregeerd['balans_lasten'] = data_agg
     fouten_aggregeren.extend(fouten)
 
-    # rekening baten aggregeren
+    # 3: rekening 'baten' aggregeren
     data_agg, fouten = aggregeren_rekening(
         data['baten'],
         ['categorie', 2, 'categorie_baten'],
@@ -48,7 +48,7 @@ def aggregeren_volledig(data, defbestand):
     data_geaggregeerd['baten'] = data_agg
     fouten_aggregeren.extend(fouten)
 
-    # rekening balans_baten aggregeren
+    # 4: rekening 'balans_baten' aggregeren
     data_agg, fouten = aggregeren_rekening(
         data['balans_baten'],
         ['categorie', 2, 'categorie_baten'],
@@ -58,7 +58,7 @@ def aggregeren_volledig(data, defbestand):
     data_geaggregeerd['balans_baten'] = data_agg
     fouten_aggregeren.extend(fouten)
 
-    # rekening balans_standen aggregeren
+    # 5: rekening 'balans_standen' aggregeren
     data_agg, fouten = aggregeren_rekening(
         data['balans_standen'],
         ['standper', -1, 'standper'],  # aggregatieniveau -1 betekent niet aggregeren
@@ -104,8 +104,18 @@ def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
     return data, foutenlijst
 
 
+def data_opschonen(data, keylist):
+    # data is een list van records (dicts)
+    # verwijder de opgegeven keys uit alle records
+
+    data_schoon = [{k: v for (k, v) in record.items() if k not in keylist}
+                   for record in data]
+
+    return data_schoon
+
+
 def data_toevoegen_omschrijving(data, dimensie, clijst):
-    """"Toevoegen omschrijving aan codes"""
+    """"Toevoegen van een omschrijving aan codes"""
 
     cds = clijst[0::4]  # cds: lijst van codes
     oms = clijst[1::4]  # oms: omschrjving van codes
@@ -244,13 +254,3 @@ def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld)
         fouten.extend(fouten_agg)
 
     return agg_data, fouten
-
-
-def data_opschonen(data, keylist):
-    # data is een list van records (dicts)
-    # verwijder de opgegeven keys uit alle records
-
-    data_schoon = [{k: v for (k, v) in record.items() if k not in keylist}
-                   for record in data]
-
-    return data_schoon
