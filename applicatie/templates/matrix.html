@@ -108,7 +108,8 @@ table {
             {% endfor %}
         </div>
 
-        <div class="container">
+        <div id="DetailScherm" class="container">
+            <p id="DetailHeader" style="color:white;margin-top: 10px;"></p>
             <table id="Detail" class="pvtTable default" border="1" style="opacity: 1">
                 <thead> <tr></tr> </thead>
                 <tbody></tbody>
@@ -123,6 +124,7 @@ table {
       var i, tabcontent, tablinks;
 
       // Verberg tabel met details
+      $("#DetailHeader").text("");
       $("#Detail").hide(0);
 
       // Get all elements with class="tabcontent" and hide them
@@ -142,7 +144,6 @@ table {
       evt.currentTarget.className += " active";
     }
     </script>
-
 
     </body>
 
