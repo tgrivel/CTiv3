@@ -20,6 +20,13 @@ function vul_detail(element, rij_naam, kolom_naam) {
     tabel.find('td').removeClass("selected");
     element.addClass("selected");
 
+    var rij_naam_kort = rij_naam.split(":")[0];
+    var rij_waarde_kort = rij_waarde.split(" ")[0];
+    var header_text = 'Details voor cel:' + '\xa0 \xa0';
+    header_text = header_text + '[ ' + rij_naam_kort + ': ' + rij_waarde_kort + '\xa0\xa0 | \xa0\xa0';
+    header_text = header_text + kolom_naam + ': ' + kolom_waarde + ' ]';
+    d3.select('#DetailScherm').selectAll("p").text(header_text);
+
     // Delete the existing data and recreate table
     // I know this is not "reactive programming" but it's convenient for now
     d3.select('#Detail')

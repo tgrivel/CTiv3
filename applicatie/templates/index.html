@@ -25,7 +25,8 @@
 							<span class="btn btn-primary btn-block">
             				Kies een JSON-bestand&hellip;
 							<input id="file" accept=".json" name="file" type="file" style="display:none;"
-								   onchange="$('#upload-file-info').val($(this).val().split('\\').pop());">
+								   onchange="$('#upload-file-info').val($(this).val().split('\\').pop());
+								   				$('div#error_messages').empty();">
 							</span>
 						</label>
 						<input type="text" class="form-control text-center" id="upload-file-info" readonly>
@@ -41,9 +42,11 @@
 
                     <br/>
 
+					<div id="error_messages">
                     {% for errormessage in errormessages %}
 						<div class="error">{{ errormessage }}</div>
                     {% endfor %}
+					</div>
 
 					</form>
 					<!--

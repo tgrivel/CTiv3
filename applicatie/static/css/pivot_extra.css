@@ -1,8 +1,12 @@
 // Modificaties bovenop pivot.css
 
-td.pvtVal.selected {
-    background-color: #AAAAAA;
-    color: #FFFFFF;
+table.pvtTable tbody tr td {
+}
+.default {
+    background-color: #FFFFFF;
+}
+.selected {
+    background-color: #999999;
 }
 
 table.pvtTable thead tr th, table.pvtTable tbody tr th {
