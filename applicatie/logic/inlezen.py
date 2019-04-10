@@ -114,12 +114,12 @@ def ophalen_bestand_van_web(url, bestandsnaam, bestandstype):
         if errorcode != 0:
             errortext = errortext.replace('Not Found', 'bestand niet gevonden')
             foutmelding = 'HTTP fout #{}: {}'.format(errorcode, errortext)
-            errortext = ''
-        if errortext != '':
+            foutmeldingen.append(foutmelding)
+        elif errorcode == 0 and errortext != '':
             foutmelding = 'URL fout: {}'.format(errortext)
-        foutmeldingen.append(foutmelding)
+            foutmeldingen.append(foutmelding)
 
     if foutmeldingen:
-        _logger.info("Fout bij ophalen Iv3-definitiebestand")
+        _logger.info("Fout bij ophalen van het Iv3-definitiebestand")
 
     return bestand, foutmeldingen
