@@ -57,16 +57,24 @@ table {
     <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
         <div style="position: relative;left: 5px;font-size: 17px;padding: 10px;">
-        <div>Bestand: {{filenaam}}</div>
-        <div>Inzender: {{ meta['overheidsnaam']}}</div>
-        <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
-        <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
-        <div>Datum : {{ meta['datum']}}</div>
-        <div>Definitiebestand: {{ sjabloon['omschrijving'] }} , {{ sjabloon['overheidslaag'] }} , {{ sjabloon['boekjaar'] }}</div>
-        <div style="text-align:right; width:100%; padding-right:50px;">
-            <button class="btn btn-primary" type="button" title="Functionaliteit is nog niet beschikbaar!" onclick="">
-                Data downloaden</button>
-        </div>
+            <div>Bestand: {{filenaam}}</div>
+            <div>Inzender: {{ meta['overheidsnaam']}}</div>
+            <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
+            <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
+            <div>Datum : {{ meta['datum']}}</div>
+
+            <div>
+                Definitiebestand: {{ sjabloon['omschrijving'] }}, {{ sjabloon['overheidslaag'] }}, {{ sjabloon['boekjaar'] }}
+
+                <button
+                        class="btn btn-primary"
+                        type="button"
+                        title="Functionaliteit is nog niet beschikbaar!"
+                        onclick="alert('Downloadfunctionaliteit is nog niet beschikbaar.');"
+                        style="float: right" >
+                    Data downloaden
+                </button>
+            </div>
         </div>
              <!-- Tab links -->
 
