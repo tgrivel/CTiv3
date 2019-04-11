@@ -69,6 +69,7 @@ def matrix(jsonbestand, jsonbestandsnaam):
         # N.B. de dimensies eindigend op ':' bevatten de code + de omschrijving van de code
         # in de rijen van de matrix willen we namelijk ook de omschrijving tonen
 
+        # TODO Hier geen dubbele punt erin zetten, ergens anders oplossen
         lasten = DraaiTabel(
             data=data_geaggregeerd['lasten'],
             rij_naam='taakveld' + ':',              # taakveld inclusief omschrijving
