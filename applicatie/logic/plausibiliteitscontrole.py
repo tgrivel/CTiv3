@@ -13,11 +13,12 @@ class PlausibiliteitsControle(object):
         omgeving = dict()
         rapportage = []
 
-        is_geslaagd = True  # Tot tegendeel bewezen is
+        resultaat = ControleResultaat(self)
 
         for stap in self.definitie:
             variabele = stap['variabele']
             expressie = stap['expressie']
+            omschrijving = stap['omschrijving']
 
             if "check" in expressie:
                 formule = expressie['formule'] + ' ' + expressie['check']
@@ -25,27 +26,24 @@ class PlausibiliteitsControle(object):
                 try:
                     controle_resultaat = bool(bereken(formule, omgeving))
                 except RekenFout as e:
-                    rapportage.append(e.melding)
-                    is_geslaagd = False
+                    resultaat.toevoegen_opmerking(e.melding, omschrijving, is_fout=True)
                     break
                 else:
                     if controle_resultaat:
-                        rapportage.append(f'Controle {formule} is waar')
+                        resultaat.toevoegen_opmerking(f'Controle {formule} is waar.', omschrijving)
                     else:
-                        rapportage.append(f'Controle {formule} is onwaar')
-                        is_geslaagd = False
+                        resultaat.toevoegen_opmerking(f'Controle {formule} is onwaar.', omschrijving, is_fout=True)
 
             elif "formule" in expressie:
                 try:
                     uitkomst = bereken(expressie['formule'], omgeving)
                 except RekenFout as e:
-                    melding = f"Kan `{variabele}' niet berekenen: {e.melding}"
-                    rapportage.append(melding)
-                    is_geslaagd = False
+                    melding = f"Kan `{variabele}' niet berekenen: {e.melding}."
+                    resultaat.toevoegen_opmerking(melding, omschrijving, is_fout=True)
                     break
                 else:
                     omgeving[variabele] = uitkomst
-                    rapportage.append(f"{variabele} = {uitkomst}")
+                    resultaat.toevoegen_opmerking(f"{variabele} = {uitkomst}", omschrijving)
             else:
                 query = expressie
                 rekeningkant = query.pop('rekeningsoort')
@@ -55,33 +53,35 @@ class PlausibiliteitsControle(object):
 
                 if not matches:
                     melding = (f"Kan variabele `{variabele}' niet ophalen: "
-                               f"Er is geen record met eigenschappen {dict(query)}!)")
-                    rapportage.append(melding)
+                               f"Er is geen record met eigenschappen {dict(query)}.")
+                    resultaat.toevoegen_opmerking(melding, omschrijving, is_fout=True)
                     break
 
                 totaal_bedrag = sum(match['bedrag'] for match in matches)
                 omgeving[variabele] = totaal_bedrag
                 rapportage.append(f"{variabele} = {totaal_bedrag}")
+                resultaat.toevoegen_opmerking(f"{variabele} = {totaal_bedrag}", omschrijving)
 
-        return ControleResultaat(self, omgeving, is_geslaagd, rapportage)
+        return resultaat
 
 
 class ControleResultaat(object):
-    def __init__(self, controle, omgeving, is_geslaagd, rapportage):
+    def __init__(self, controle):
         self.controle = controle
-        self.omgeving = omgeving
-        self._is_geslaagd = is_geslaagd
-        self._rapportage = rapportage
+        self.is_geslaagd = True  # Tot tegendeel bewezen is
+        self._rapportage = []
 
-    def is_geslaagd(self):
-        """Retoerneer of de controle geslaagd is."""
-        return self._is_geslaagd
+    def toevoegen_opmerking(self, opmerking, omschrijving="", is_fout=False):
+        """Voeg een opmerking toe.
+
+        Opmerking bevat extra informatie over de uit te voeren controle.
+        is_fout vermeld of de opmerking inhoud dat de controle gefaald is.
+        """
+        self._rapportage.append((opmerking, omschrijving))
+
+        if is_fout:
+            self.is_geslaagd = False
 
     def rapportage(self):
         """Uitgebreide rapportage om de tussenstappen van de contole te printen."""
         return self._rapportage
-        # return [
-        #     "a = 6",
-        #     "b = 4",
-        #     "De check is gefaald. Er moet gelden a > b, maar a = 6 en b = 4"
-        # ]

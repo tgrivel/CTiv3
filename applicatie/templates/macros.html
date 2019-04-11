@@ -54,14 +54,14 @@
 {% macro controle_resultaat(resultaat) %}
 <h4>Uitvoer van {{ resultaat.controle.omschrijving }}</h4>
 
-{% if resultaat.is_geslaagd() %}
+{% if resultaat.is_geslaagd %}
 <p class="success">De controle is geslaagd.</p>
 {% else %}
 <p class="error">De controle is gefaald. Zie onderstaande rapportage:</p>
 
 <ol>
-    {% for opmerking in resultaat.rapportage() %}
-    <li>{{ opmerking }}</li>
+    {% for (opmerking, omschrijving) in resultaat.rapportage() %}
+    <li title="{{ omschrijving }}">{{ opmerking }}</li>
     {% endfor %}
 </ol>
 
