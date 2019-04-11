@@ -15,11 +15,19 @@ def index():
         if not request.files.get('file', None):
             return render_template("index.html", errormessages=['Geen json bestand geselecteerd'])
         else:
+            browsertype = request.user_agent.browser
+            if browsertype not in ['firefox', 'chrome']:
+                fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
+                return render_template("index.html", errormessages=fouten)
             jsonfile = request.files['file']
             jsonfilename = jsonfile.filename
             return matrix(jsonbestand=jsonfile, jsonbestandsnaam=jsonfilename)
     elif request.method == 'GET':
-        return render_template("index.html", errormessages=[])
+        fouten = []
+        browsertype = request.user_agent.browser
+        if browsertype not in ['firefox', 'chrome']:
+            fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
+        return render_template("index.html", errormessages=fouten)
 
 
 @bp.route("/matrix", methods=['GET', 'POST'])
