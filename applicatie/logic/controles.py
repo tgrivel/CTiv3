@@ -88,7 +88,7 @@ def geef_codechecklijst(codelijst):
     codechecklijst = {}
 
     for k in list(codelijst.keys()):
-        codechecklijst.update({k: extract_values_from_json(codelijst[k], 'code', 'description', True)})
+        codechecklijst.update({k: extract_values_from_json(codelijst[k], 'code', 'omschrijving', True)})
 
     return codechecklijst
 
