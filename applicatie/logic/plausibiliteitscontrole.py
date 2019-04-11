@@ -30,15 +30,15 @@ class PlausibiliteitsControle(object):
                     break
                 else:
                     if controle_resultaat:
-                        resultaat.toevoegen_opmerking(f'Controle {formule} is waar', omschrijving)
+                        resultaat.toevoegen_opmerking(f'Controle {formule} is waar.', omschrijving)
                     else:
-                        resultaat.toevoegen_opmerking(f'Controle {formule} is onwaar', omschrijving, is_fout=True)
+                        resultaat.toevoegen_opmerking(f'Controle {formule} is onwaar.', omschrijving, is_fout=True)
 
             elif "formule" in expressie:
                 try:
                     uitkomst = bereken(expressie['formule'], omgeving)
                 except RekenFout as e:
-                    melding = f"Kan `{variabele}' niet berekenen: {e.melding}"
+                    melding = f"Kan `{variabele}' niet berekenen: {e.melding}."
                     resultaat.toevoegen_opmerking(melding, omschrijving, is_fout=True)
                     break
                 else:
@@ -53,7 +53,7 @@ class PlausibiliteitsControle(object):
 
                 if not matches:
                     melding = (f"Kan variabele `{variabele}' niet ophalen: "
-                               f"Er is geen record met eigenschappen {dict(query)}!)")
+                               f"Er is geen record met eigenschappen {dict(query)}.")
                     resultaat.toevoegen_opmerking(melding, omschrijving, is_fout=True)
                     break
 
@@ -68,7 +68,7 @@ class PlausibiliteitsControle(object):
 class ControleResultaat(object):
     def __init__(self, controle):
         self.controle = controle
-        self._is_geslaagd = True  # Tot tegendeel bewezen is
+        self.is_geslaagd = True  # Tot tegendeel bewezen is
         self._rapportage = []
 
     def toevoegen_opmerking(self, opmerking, omschrijving="", is_fout=False):
@@ -77,20 +77,11 @@ class ControleResultaat(object):
         Opmerking bevat extra informatie over de uit te voeren controle.
         is_fout vermeld of de opmerking inhoud dat de controle gefaald is.
         """
-        self._rapportage.append(opmerking)
+        self._rapportage.append((opmerking, omschrijving))
 
         if is_fout:
-            self._is_geslaagd = False
-
-    def is_geslaagd(self):
-        """Retoerneer of de controle geslaagd is."""
-        return self._is_geslaagd
+            self.is_geslaagd = False
 
     def rapportage(self):
         """Uitgebreide rapportage om de tussenstappen van de contole te printen."""
         return self._rapportage
-        # return [
-        #     "a = 6",
-        #     "b = 4",
-        #     "De check is gefaald. Er moet gelden a > b, maar a = 6 en b = 4"
-        # ]
