@@ -63,3 +63,21 @@ function vul_detail(element, rij_naam, kolom_naam) {
                     .classed('pvtVal', true)
                     .text(value => value);
 }
+
+function voeg_mutatie_toe(el) {
+    var form = $(el).closest('form.muteerknoppen');
+    var form_groups = form.find('.form-group');
+
+    var mutatie_velden = {};
+    for(var i=0; i < form_groups.length; i++) {
+        var form_group = $(form_groups[i]);
+        var variabele = form_group.attr('naam');
+        var value = form_group.find('input').val();
+
+        if (variabele !== undefined ) {
+            mutatie_velden[variabele] = value;
+        }
+    }
+
+    console.log('mutatie', mutatie_velden);
+}
