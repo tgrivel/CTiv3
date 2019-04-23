@@ -54,21 +54,21 @@ def matrix(jsonbestand, jsonbestandsnaam):
             # Controle databestand met definitiebestand
             fouten = controle_met_defbestand(data_bestand, definitie_bestand)
 
-        if fouten:
-            return render_template("index.html", errormessages=fouten)
+        if not fouten:
+            # json bestand is opgehaald en geen fouten zijn gevonden
+            # vervolgens data aggregeren en tonen op het scherm
+            data = data_bestand['data']
 
-        # json bestand is opgehaald en geen fouten zijn gevonden
-        # vervolgens data aggregeren en tonen op het scherm
-        data = data_bestand['data']
+            # de data volledig aggregeren
+            data_geaggregeerd, fouten = aggregeren_volledig(data, definitie_bestand)
 
-        # de data volledig aggregeren
-        data_geaggregeerd, fouten = aggregeren_volledig(data, definitie_bestand)
         if fouten:
             return render_template("index.html", errormessages=fouten)
 
         # Zoek omschrijvingen bij de codes zodat we deze in de tabel kunnen tonen
         omschrijvingen = {}
 
+        # TODO Misschien goed idee om een klasse Codelijst te maken
         for naam, codelijst in definitie_bestand['codelijsten'].items():
             omschrijvingen[naam] = maak_codelijst(codelijst['codelijst'])
 
