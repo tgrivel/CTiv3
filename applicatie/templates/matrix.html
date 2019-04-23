@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% from 'macros.html' import draaitabel, controle_resultaat %}
+{% from 'macros.html' import draaitabel, controle_resultaat, record_toevoegen %}
 
 {% block content %}
 <style>
@@ -97,25 +97,7 @@ table {
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            <form class="form-inline text-center" role="form">
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="rij">Taakveld:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="rij">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="kolom">Categorie:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="kolom">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="bedrag">Bedrag:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="bedrag">
-            </div>
-                <div class="form-group"><label style="width:100px;"></label></div>
-                <button class="btn btn-primary" type="button"
-                        title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="alert('Muteren functionaliteit is nog niet beschikbaar.');">
-                        Mutatie verwerken</button>
-            </form>
+            {{ record_toevoegen(lasten) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -123,25 +105,7 @@ table {
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            <form class="form-inline text-center" role="form">
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="rij">Taakveld:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="rij">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="kolom">Categorie:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="kolom">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="bedrag">Bedrag:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="bedrag">
-            </div>
-                <div class="form-group"><label style="width:100px;"></label></div>
-                <button class="btn btn-primary" type="button"
-                        title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="alert('Muteren functionaliteit is nog niet beschikbaar.');">
-                        Mutatie verwerken</button>
-            </form>
+            {{ record_toevoegen(lasten) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -149,25 +113,7 @@ table {
         </div>
 
         <div id="LastenBM" class="tabcontent">
-            <form class="form-inline text-center" role="form">
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="rij">Balanscode:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="rij">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="kolom">Categorie:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="kolom">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="bedrag">Bedrag:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="bedrag">
-            </div>
-                <div class="form-group"><label style="width:100px;"></label></div>
-                <button class="btn btn-primary" type="button"
-                        title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="alert('Muteren functionaliteit is nog niet beschikbaar.');">
-                        Mutatie verwerken</button>
-            </form>
+            {{ record_toevoegen(balans_lasten) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -175,25 +121,7 @@ table {
         </div>
 
         <div id='BatenBM' class="tabcontent">
-            <form class="form-inline text-center" role="form">
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="rij">Balanscode:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="rij">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="kolom">Categorie:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="kolom">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="bedrag">Bedrag:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="bedrag">
-            </div>
-                <div class="form-group"><label style="width:100px;"></label></div>
-                <button class="btn btn-primary" type="button"
-                        title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="alert('Muteren functionaliteit is nog niet beschikbaar.');">
-                        Mutatie verwerken</button>
-            </form>
+            {{ record_toevoegen(balans_baten) }}
 
             <div style="clear:both;height:2em;"></div>
 
