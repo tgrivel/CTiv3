@@ -64,10 +64,14 @@ function vul_detail(element, rij_naam, kolom_naam) {
                     .text(value => value);
 }
 
-function voeg_mutatie_toe(el) {
+function toevoegen_mutatie(el) {
+    /**
+    Make sure that what is entered as a mutation is entered correctly
+    */
     var form = $(el).closest('form.muteerknoppen');
     var form_groups = form.find('.form-group');
 
+    // Make dict out of entered input fields
     var mutatie_velden = {};
     for(var i=0; i < form_groups.length; i++) {
         var form_group = $(form_groups[i]);
@@ -79,5 +83,20 @@ function voeg_mutatie_toe(el) {
         }
     }
 
-    console.log('mutatie', mutatie_velden);
+    // Mark mutation as created by us
+    mutatie_velden['opmerking'] = "Mutatie toegevoegd met CTiv3.";
+    mutatie_velden['ctiv_mutatie'] = 1;
+
+    console.log('Mutatie toevoegen met waarden', mutatie_velden);
+
+    // Update data-attribuut in html tabel
+    var tabblad = $(el).closest('.tabcontent');
+    var pivotTabel = $($(tabblad).find('table.pvtTable'));
+    var data = JSON.parse(pivotTabel.attr('data'));
+    console.log(data);
+    data.push(mutatie_velden);
+    pivotTabel.attr('data', JSON.stringify(data));
+
+    // TODO Update waarden in pivot table
+    // Hiervoor heb ik informatie nodig over de hierarchie van rijen en kolommen
 }
