@@ -1,5 +1,4 @@
 from functools import reduce
-from typing import Iterable, Tuple
 
 from applicatie.logic.maak_matrix import pivot_table
 
@@ -7,7 +6,10 @@ WAARDE_KOLOM = 'bedrag'
 
 
 class DraaiTabel:
-   def __init__(self, data, rij_naam, kolom_naam, rij_omschrijvingen, kolom_omschrijvingen):
+   waarde_naam = WAARDE_KOLOM
+
+   def __init__(self, naam, data, rij_naam, kolom_naam, rij_omschrijvingen, kolom_omschrijvingen):
+       self.naam = naam
        indices, self.tabel = pivot_table(data, aggregeer_kolommen=[rij_naam, kolom_naam],
                                          waarde_kolom=WAARDE_KOLOM)
        self.rij_naam, self.kolom_naam = rij_naam, kolom_naam

@@ -74,6 +74,7 @@ def matrix(jsonbestand, jsonbestandsnaam):
 
         # TODO Hier geen dubbele punt erin zetten, ergens anders oplossen
         lasten = DraaiTabel(
+            naam='lasten',
             data=data_geaggregeerd['lasten'],
             rij_naam='taakveld',
             kolom_naam='categorie',
@@ -81,6 +82,7 @@ def matrix(jsonbestand, jsonbestandsnaam):
             kolom_omschrijvingen=omschrijvingen['categorie_lasten'])
 
         balans_lasten = DraaiTabel(
+            naam='balans_lasten',
             data=data_geaggregeerd['balans_lasten'],
             rij_naam='balanscode',
             kolom_naam='categorie',
@@ -88,6 +90,7 @@ def matrix(jsonbestand, jsonbestandsnaam):
             kolom_omschrijvingen=omschrijvingen['categorie_baten'])
 
         baten = DraaiTabel(
+            naam='baten',
             data=data_geaggregeerd['baten'],
             rij_naam='taakveld',
             kolom_naam='categorie',
@@ -95,6 +98,7 @@ def matrix(jsonbestand, jsonbestandsnaam):
             kolom_omschrijvingen=omschrijvingen['categorie_baten'])
 
         balans_baten = DraaiTabel(
+            naam='balans_baten',
             data=data_geaggregeerd['balans_baten'],
             rij_naam='balanscode',
             kolom_naam='categorie',
@@ -102,6 +106,7 @@ def matrix(jsonbestand, jsonbestandsnaam):
             kolom_omschrijvingen=omschrijvingen['categorie_lasten'])
 
         balans_standen = DraaiTabel(
+            naam='balans_standen',
             data=data_geaggregeerd['balans_standen'],
             rij_naam='balanscode',
             kolom_naam='standper',
