@@ -32,3 +32,8 @@ padding:12px;
     vertical-align:middle;
 }
 
+// Als je bijvoorbeeld in een numeriek veld letters typt, maak het veld rood
+// TODO werkt niet bij mij
+input:invalid {
+  border:1px solid red;
+}

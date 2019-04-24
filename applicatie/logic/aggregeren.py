@@ -104,7 +104,7 @@ def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
     foutenlijst.extend(fouten)
 
     # TODO Ik wil eigenlijk juist kunnen achterhalen of iets geteld is of niet
-    # data = data_opschonen(data, [GETELD_KEY, NUMGETELD_KEY])
+    data = data_opschonen(data, [GETELD_KEY, NUMGETELD_KEY])
 
     # toevoegen van omschrijving aan de gekozen dimensie
     aggdim, aggniv, clnaam = dimensie_2

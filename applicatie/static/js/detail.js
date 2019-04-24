@@ -76,12 +76,16 @@ function toevoegen_mutatie(el) {
     for(var i=0; i < form_groups.length; i++) {
         var form_group = $(form_groups[i]);
         var variabele = form_group.attr('naam');
-        var value = form_group.find('input').val();
+        var invoer_veld = form_group.find('.mutatie-invoer');
+        var value = invoer_veld.val();
 
         if (variabele !== undefined ) {
             mutatie_velden[variabele] = value;
         }
     }
+
+    // Clear losse input velden
+    form.find('input').val(0);
 
     // Mark mutation as created by us
     mutatie_velden['opmerking'] = "Mutatie toegevoegd met CTiv3.";
@@ -99,4 +103,6 @@ function toevoegen_mutatie(el) {
 
     // TODO Update waarden in pivot table
     // Hiervoor heb ik informatie nodig over de hierarchie van rijen en kolommen
+    // Extra probleem: Er kunnen ook kolommen en rijen bij komen
+
 }
