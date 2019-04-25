@@ -15,11 +15,10 @@ function download_data() {
         data[tabel_naam] = tabel_data;
     }
 
-    // TODO metadata
-    // TODO contact
+
     json_bestand = {
-        'metadata': 'TODO includen',
-        'contact': 'TODO includen',
+        'metadata': meta,
+        'contact': contact,
         'data': data
     }
 

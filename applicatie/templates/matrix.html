@@ -53,6 +53,9 @@ table {
     <script src="{{ url_for('static', filename='js/detail.js') }}"/>
     <script>
         var data = {{ data | tojson }};
+        var meta = {{ meta | tojson }};
+        var contact = {{ contact | tojson }};
+        var filename = {{ filename }};
     </script>
     <body bgcolor="#1a1aff">
     <font color="#FFFFFF">

@@ -120,6 +120,7 @@ def matrix(jsonbestand, jsonbestandsnaam):
         controle_resultaten = [controle.run(data_geaggregeerd) for controle in plausibiliteitscontroles]
 
         metadata = data_bestand['metadata']
+        contact = data_bestand['contact']
         sjabloon_meta = definitie_bestand['metadata']
 
         # Render sjabloon
@@ -130,11 +131,12 @@ def matrix(jsonbestand, jsonbestandsnaam):
             'balans_baten': balans_baten,
             'balans_standen': balans_standen,
             'controle_resultaten': controle_resultaten,
+            'filenaam': jsonbestandsnaam,
+            'meta': metadata,
+            'contact': contact,
 
             # hebben we onderstaande nog nodig?
-            'filenaam': jsonbestandsnaam,
             'data': data_bestand,
-            'meta': metadata,
             'sjabloon': sjabloon_meta,
             'errormessage': "",  # TODO bij foutmeldingen geven we index terug
         }
