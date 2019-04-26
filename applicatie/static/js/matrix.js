@@ -15,6 +15,9 @@ function download_data() {
         data[tabel_naam] = tabel_data;
     }
 
+    // FIXME Deze variabelen doorgeven aan deze functie lukt mij niet
+    var meta = 'lukt niet om meta op te halen'
+    var contact = 'lukt niet om contact op te halen'
 
     json_bestand = {
         'metadata': meta,

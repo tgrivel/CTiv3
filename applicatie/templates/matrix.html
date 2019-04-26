@@ -52,15 +52,16 @@ table {
 <body>
     <script src="{{ url_for('static', filename='js/detail.js') }}"/>
     <script>
-        var data = {{ data | tojson }};
-        var meta = {{ meta | tojson }};
-        var contact = {{ contact | tojson }};
-        var filename = {{ filename }};
+        data = {{ data | tojson }};
+        meta = {{ meta | tojson }};
+        contact = {{ contact | tojson }};
+        filename = {{ bestandsnaam | tojson }};
+
     </script>
     <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
         <div style="position: relative;left: 5px;font-size: 17px;padding: 10px;">
-            <div>Bestand: {{filenaam}}</div>
+            <div>Bestand: {{ bestandsnaam }}</div>
             <div>Inzender: {{ meta['overheidsnaam']}}</div>
             <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
             <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>

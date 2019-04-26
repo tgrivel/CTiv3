@@ -131,7 +131,7 @@ def matrix(jsonbestand, jsonbestandsnaam):
             'balans_baten': balans_baten,
             'balans_standen': balans_standen,
             'controle_resultaten': controle_resultaten,
-            'filenaam': jsonbestandsnaam,
+            'bestandsnaam': jsonbestandsnaam,
             'meta': metadata,
             'contact': contact,
 
