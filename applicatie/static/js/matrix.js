@@ -1,3 +1,5 @@
+var IS_TUSSENTOTAAL = '_is_tussentotaal';
+
 function download_data(filename, meta, contact) {
 
     // TODO Dit is een beginnetje, maar bevat nu nog alleen de data (alles op een hoop)
@@ -12,17 +14,8 @@ function download_data(filename, meta, contact) {
         // This is like extend in Python (Javascript is weird!)
         // According to https://jsperf.com/concat-array-in-place it's very fast
         // Array.prototype.push.apply(data, tabel_data);
-        data[tabel_naam] = tabel_data;
+        data[tabel_naam] = data_opschonen(tabel_data);
     }
-
-    // Haal globale variabele op
-    // var meta = window.meta;
-    // var contact = window.contact;
-    // var filename = window.filename;
-
-    // FIXME Deze variabelen doorgeven aan deze functie lukt mij niet
-    // var meta = 'lukt niet om meta op te halen'
-    // var contact = 'lukt niet om contact op te halen'
 
     json_bestand = {
         'metadata': meta,
@@ -48,4 +41,9 @@ function download(filename, text) {
     element.click();
 
     document.body.removeChild(element);
+}
+
+function data_opschonen(data) {
+    // Verwijder aggregaten uit de data
+    return data.filter(record => record[IS_TUSSENTOTAAL] === undefined)
 }

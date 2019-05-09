@@ -7,9 +7,9 @@ _logger = logging.getLogger(__file__)
 # Definieer keys gebruikt in algoritme
 GETELD_KEY = '_geteld'
 NUMGETELD_KEY = '_numgeteld'
+IS_TUSSENTOTAAL = '_is_tussentotaal'
 
 # TODO Misschien ook de volgende attributen aan elk record toevoegen ivm nog te bouwen mutatiefunctionaliteit:
-# _is_tussentotaal
 # _parent_rijcode
 # _parent_kolomcode
 
@@ -204,6 +204,9 @@ def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld)
                     subkey = 'sub_' + dimensie
                     if subkey not in geteld_record:
                         geteld_record.update({subkey: record.get(dimensie)})
+
+                    # Markeer record als aggregaat zijnde
+                    geteld_record[IS_TUSSENTOTAAL] = True
             else:
                 # code komt niet voor in de codelijst
                 # N.B. dit zou eigenlijk niet mogen voorkomen
@@ -252,6 +255,7 @@ def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld)
                         # indien eerder ook geteld (beide True)
                         geteld = geteld and True
                         rec.update({GETELD_KEY: geteld})
+
             if alleen_geteld is True:
                 # alleen getelde records teruggeven
                 for rec in aggrecords:
