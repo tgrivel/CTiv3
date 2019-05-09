@@ -3,6 +3,9 @@
 
 {% block content %}
 <style>
+
+// TODO Css moet niet hier maar in css-file komen te staan.
+
 body {font-family: Arial;}
 
 /* Style the tab */
@@ -50,14 +53,15 @@ table {
 
 
 <body>
-    <script src="{{ url_for('static', filename='js/detail.js') }}"/>
+    <script src="{{ url_for('static', filename='js/detail.js') }}"></script>
+
     <script>
         data = {{ data | tojson }};
         meta = {{ meta | tojson }};
         contact = {{ contact | tojson }};
         filename = {{ bestandsnaam | tojson }};
-
     </script>
+
     <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
         <div style="position: relative;left: 5px;font-size: 17px;padding: 10px;">
@@ -74,7 +78,7 @@ table {
                         class="btn btn-primary"
                         type="button"
                         title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="download_data();"
+                        onclick="download_data(filename, meta, contact);"
                         style="float: right" >
                     Data downloaden
                 </button>
