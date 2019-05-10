@@ -109,7 +109,9 @@ def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
     # toevoegen van omschrijving aan de gekozen dimensie
     aggdim, aggniv, clnaam = dimensie_2
     clijst = codechecklijst.get(clnaam)
-    data = data_toevoegen_omschrijving(data, aggdim, clijst)
+
+    # Ik denk dat het toevoegen van een omschrijving niet nodig is
+    # data = data_toevoegen_omschrijving(data, aggdim, clijst)
 
     return data, foutenlijst
 
