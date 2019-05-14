@@ -70,16 +70,17 @@
 
 {% endmacro %}
 
-{% macro record_toevoegen(draaitabel) %}
+{% macro record_toevoegen(draaitabel, data) %}
 
-<form class="form-inline text-center muteerknoppen" role="form">
+<form class="form-inline text-center muteerknoppen"
+      role="form"
+      method="post"
+>
     <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.rij_naam }}">
         <label for="rij">{{ draaitabel.rij_naam.title() }}:&nbsp; </label>
-        <!-- <input class="form-control"
-               style="width:100px;"
-               id="rij"> -->
         <select class='form-control mutatie-invoer'
-                style="width:100px;">
+                style="width:100px;"
+                name="{{ draaitabel.rij_naam }}">
             {% for rij, omschrijving in draaitabel.rij_omschrijvingen.items() %}
             <option value="{{ rij }}">{{ rij }}: {{ omschrijving.title() }}</option>
             {% endfor %}
@@ -88,7 +89,8 @@
     <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.kolom_naam }}">
         <label for="kolom">{{ draaitabel.kolom_naam.title() }}:&nbsp; </label>
         <select class='form-control mutatie-invoer'
-                style="width:100px;">
+                style="width:100px;"
+                name="{{ draaitabel.kolom_naam }}" >
             {% for kolom, omschrijving in draaitabel.kolom_omschrijvingen.items() %}
             <option value="{{ kolom }}">{{ kolom }}: {{ omschrijving.title() }}</option>
             {% endfor %}
@@ -100,15 +102,26 @@
                style="width:100px;"
                id="bedrag"
                type="number"
+               name="bedrag"
                value="0"
                oninput="this.value=this.value.replace(/(?![0-9-])./gmi,'')"
         />
     </div>
+
+    <input type="hidden"
+           name="waarde_naam"
+           value='lasten' />
+
+    <input type="hidden"
+           name="data"
+           value='{{ data | tojson }}'/>
+
     <div class="form-group"><label style="width:100px;"></label></div>
-    <button class="btn btn-primary" type="button"
-            title="Functionaliteit is nog niet beschikbaar!"
-            onclick="toevoegen_mutatie(this);">
+    <button class="btn btn-primary" type="submit"
+            title="Functionaliteit is nog niet beschikbaar!">
         Mutatie verwerken</button>
 </form>
 
 {% endmacro %}
+
+<!-- onclick="toevoegen_mutatie(this);"> -->

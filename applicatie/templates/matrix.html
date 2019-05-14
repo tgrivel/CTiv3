@@ -53,9 +53,9 @@ table {
 
 
 <body>
-
-    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" />
-    <script type="text/javascript" src="{{ url_for('static', filename='js/muteren.js') }}" />
+    <!-- Tabellen met detail -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" ></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/muteren.js') }}" ></script>
 
     <script>
         data = {{ data | tojson }};
@@ -112,7 +112,7 @@ table {
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            {{ record_toevoegen(lasten) }}
+            {{ record_toevoegen(lasten, data) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -120,7 +120,7 @@ table {
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            {{ record_toevoegen(lasten) }}
+            {{ record_toevoegen(lasten, data) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -128,7 +128,7 @@ table {
         </div>
 
         <div id="LastenBM" class="tabcontent">
-            {{ record_toevoegen(balans_lasten) }}
+            {{ record_toevoegen(balans_lasten, data) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -136,7 +136,7 @@ table {
         </div>
 
         <div id='BatenBM' class="tabcontent">
-            {{ record_toevoegen(balans_baten) }}
+            {{ record_toevoegen(balans_baten, data) }}
 
             <div style="clear:both;height:2em;"></div>
 
