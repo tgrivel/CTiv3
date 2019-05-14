@@ -1,3 +1,6 @@
+import io
+import json
+
 from flask import render_template, request
 
 from applicatie.logic.codelijst import maak_codelijst
@@ -12,7 +15,18 @@ from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
 
 @bp.route("/", methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
+    if request.form:
+        # TODO Hack Mutatie verwerken (quick and dirty)
+        mutatie = dict(request.form)
+        data = json.loads(mutatie.pop('data'))
+        waarde_naam = mutatie.pop('waarde_naam')
+        mutatie['bedrag'] = float(mutatie['bedrag'])
+        data['data'][waarde_naam].append(mutatie)
+        jsonbestandsnaam = "gemuteerd.json"
+        jsonbestand = io.BytesIO(json.dumps(data).encode('utf-8'))
+        return matrix(jsonbestand, jsonbestandsnaam)
+
+    elif request.method == 'POST':
         if not request.files.get('file', None):
             return render_template("index.html", errormessages=['Geen json bestand geselecteerd'])
         else:
@@ -37,9 +51,17 @@ def matrix(jsonbestand, jsonbestandsnaam):
     Indien geen fouten, laad de pagina met een overzicht van de data.
     """
 
+    print("jsonbestandsnaam = {!r}".format(jsonbestandsnaam))
+    print("jsonbestand = {!r}".format(jsonbestand))
+
     if jsonbestand:
         # json data bestand ophalen en evt. fouten teruggeven
+
         data_bestand, fouten = ophalen_en_controleren_databestand(jsonbestand)
+        # if isinstance(jsonbestand, str):
+        # else:
+        #     data_bestand = jsonbestand
+        #     fouten = []
 
         # json definitie bestand ophalen van web
         # in de controles bij het inlezen is al bepaald dat dit bestaat
