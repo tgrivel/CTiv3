@@ -110,7 +110,9 @@ def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
     aggdim, aggniv, clnaam = dimensie_2
     clijst = codechecklijst.get(clnaam)
 
-    # Ik denk dat het toevoegen van een omschrijving niet nodig is
+    # TODO Moet het toevoegen van een omschrijving hier gebeuren?
+    # Omschrijving staat nu in tabel via een andere oplossing
+    # Weggehaald omdat deze omschrijving ook in de download terechtkwam
     # data = data_toevoegen_omschrijving(data, aggdim, clijst)
 
     return data, foutenlijst
