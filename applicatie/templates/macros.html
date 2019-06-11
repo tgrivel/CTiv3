@@ -72,24 +72,42 @@
 
 {% macro record_toevoegen(draaitabel) %}
 
-<form class="form-inline text-center" role="form">
-    <div class="form-group" style="padding-right: 50px;">
-        <!-- TODO rstrip(:) is tijdelijk nodig om dubbele dubbele punt weg te halen. -->
-        <label for="rij">{{ draaitabel.rij_naam.title().rstrip(':') }}:&nbsp; </label>
-        <input class="form-control" style="width:100px;" id="rij">
+<form class="form-inline text-center muteerknoppen" role="form">
+    <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.rij_naam }}">
+        <label for="rij">{{ draaitabel.rij_naam.title() }}:&nbsp; </label>
+        <!-- <input class="form-control"
+               style="width:100px;"
+               id="rij"> -->
+        <select class='form-control mutatie-invoer'
+                style="width:100px;">
+            {% for rij, omschrijving in draaitabel.rij_omschrijvingen.items() %}
+            <option value="{{ rij }}">{{ rij }}: {{ omschrijving.title() }}</option>
+            {% endfor %}
+        </select>
     </div>
-    <div class="form-group" style="padding-right: 50px;">
-        <label for="kolom">{{ draaitabel.kolom_naam.title().rstrip(':') }}:&nbsp; </label>
-        <input class="form-control" style="width:100px;" id="kolom">
+    <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.kolom_naam }}">
+        <label for="kolom">{{ draaitabel.kolom_naam.title() }}:&nbsp; </label>
+        <select class='form-control mutatie-invoer'
+                style="width:100px;">
+            {% for kolom, omschrijving in draaitabel.kolom_omschrijvingen.items() %}
+            <option value="{{ kolom }}">{{ kolom }}: {{ omschrijving.title() }}</option>
+            {% endfor %}
+        </select>
     </div>
-    <div class="form-group" style="padding-right: 50px;">
-        <label for="bedrag">Bedrag:&nbsp; </label>
-        <input class="form-control" style="width:100px;" id="bedrag">
+    <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.waarde_naam }}">
+        <label for="bedrag">{{ draaitabel.waarde_naam.title() }}:&nbsp; </label>
+        <input class="form-control mutatie-invoer"
+               style="width:100px;"
+               id="bedrag"
+               type="number"
+               value="0"
+               oninput="this.value=this.value.replace(/(?![0-9-])./gmi,'')"
+        />
     </div>
     <div class="form-group"><label style="width:100px;"></label></div>
     <button class="btn btn-primary" type="button"
             title="Functionaliteit is nog niet beschikbaar!"
-            onclick="alert('Deze functionaliteit is nog niet gebouwd.');">
+            onclick="toevoegen_mutatie(this);">
         Mutatie verwerken</button>
 </form>
 

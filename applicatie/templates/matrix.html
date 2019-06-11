@@ -53,8 +53,10 @@ table {
 
 
 <body>
-    <script src="{{ url_for('static', filename='js/detail.js') }}"></script>
 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='js/muteren.js') }}" />
+    
     <script>
         data = {{ data | tojson }};
         meta = {{ meta | tojson }};

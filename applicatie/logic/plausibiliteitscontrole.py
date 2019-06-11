@@ -11,8 +11,6 @@ class PlausibiliteitsControle(object):
         """Voer de controles uit en retourneer een ControleResultaat."""
 
         omgeving = dict()
-        rapportage = []
-
         resultaat = ControleResultaat(self)
 
         for stap in self.definitie:
@@ -51,16 +49,15 @@ class PlausibiliteitsControle(object):
                 matches = [rij for rij in rekening_data
                            if all(rij[key] == query[key] for key in query)]
 
+                # Geen een waarschuwing als er geen records gevonden zijn
                 if not matches:
-                    melding = (f"Kan variabele `{variabele}' niet ophalen: "
-                               f"Er is geen record met eigenschappen {dict(query)}.")
-                    resultaat.toevoegen_opmerking(melding, omschrijving, is_fout=True)
-                    break
+                    extra_opmerking = " (geen records gevonden)"
+                else:
+                    extra_opmerking = ""
 
                 totaal_bedrag = sum(match['bedrag'] for match in matches)
                 omgeving[variabele] = totaal_bedrag
-                rapportage.append(f"{variabele} = {totaal_bedrag}")
-                resultaat.toevoegen_opmerking(f"{variabele} = {totaal_bedrag}", omschrijving)
+                resultaat.toevoegen_opmerking(f"{variabele} = {totaal_bedrag}" + extra_opmerking, omschrijving)
 
         return resultaat
 
