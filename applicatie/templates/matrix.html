@@ -50,8 +50,11 @@ table {
 
 
 <body>
-    <script src="{{ url_for('static', filename='js/detail.js') }}"/>
-    <script>
+    <!-- Tabellen met detail -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='js/muteren.js') }}" />
+
+    <script type="text/javascript">
         var data = {{ data | tojson }};
     </script>
     <body bgcolor="#1a1aff">
