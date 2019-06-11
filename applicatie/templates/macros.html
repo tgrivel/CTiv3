@@ -13,7 +13,7 @@
         <thead>
         <tr>
             <th colspan="1" rowspan="1"></th>
-            <th class="pvtAxisLabel">{{ tabel.kolom_naam }}</th>
+            <th class="pvtAxisLabel">{{ tabel.kolom_naam.title() }}</th>
 
             {% for kolom in tabel.kolommen %}
             <th class="pvtTable pvtColLabel" colspan="1" rowspan="2">
@@ -22,7 +22,7 @@
             {% endfor %}
         </tr>
         <tr>
-            <th class="pvtAxisLabel">{{ tabel.rij_naam }}</th>
+            <th class="pvtAxisLabel">{{ tabel.rij_naam.title() }}</th>
         </tr>
         </thead>
         <tbody>
@@ -30,7 +30,7 @@
         {% for rij in tabel.rijen %}
         <tr>
             <th class="pvtRowLabel" rowspan="1" colspan="2">
-                {{ rij }}
+                {{ rij }} {{ tabel.rij_omschrijvingen[rij] }}
             </th>
             {% for kolom in tabel.kolommen %}
             <td class="td default"

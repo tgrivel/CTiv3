@@ -4,6 +4,15 @@ from applicatie.logic.controles import geef_codechecklijst
 
 _logger = logging.getLogger(__file__)
 
+# Definieer keys gebruikt in algoritme
+GETELD_KEY = '_geteld'
+NUMGETELD_KEY = '_numgeteld'
+
+# TODO Misschien ook de volgende attributen aan elk record toevoegen ivm nog te bouwen mutatiefunctionaliteit:
+# _is_tussentotaal
+# _parent_rijcode
+# _parent_kolomcode
+
 
 def aggregeren_volledig(data, defbestand):
     """"Volledige dataset aggregeren.
@@ -94,7 +103,8 @@ def aggregeren_rekening(data, dimensie_1, dimensie_2, codechecklijst):
     data, fouten = aggregeren_data(data, aggdim, vastedims, aggniv, clijst, True)
     foutenlijst.extend(fouten)
 
-    data = data_opschonen(data, ['geteld', 'numgeteld'])
+    # TODO Ik wil eigenlijk juist kunnen achterhalen of iets geteld is of niet
+    # data = data_opschonen(data, [GETELD_KEY, NUMGETELD_KEY])
 
     # toevoegen van omschrijving aan de gekozen dimensie
     aggdim, aggniv, clnaam = dimensie_2
@@ -147,6 +157,7 @@ def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld)
 
     if aggniveau < 0:
         # stoppen indien aggregatieniveau negatief
+        # TODO: Maar -1 betekende toch niet aggregeren??
         fouten.append("Aggregatieniveau mag niet negatief zijn.")
         return agg_data, fouten
 
@@ -164,9 +175,9 @@ def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld)
             if aggniv == 0:
                 # niveau waarop we stoppen met doortellen
                 return geteld_record, telfouten
-            if 'geteld' in record:
+            if GETELD_KEY in record:
                 # stoppen indien record eerder als 'niet geteld' is gemarkeerd
-                if record.get('geteld') is False:
+                if record.get(GETELD_KEY) is False:
                     return geteld_record, telfouten
             if dimensie not in record:
                 telfouten.append("Sleutel '{}' komt niet voor in record {}".format(dimensie, str(record)))
@@ -185,11 +196,11 @@ def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld)
                         elif key in vastedimensies:
                             # neem de 'vaste' keys over met de eigen code
                             geteld_record.update({key: val})
-                        elif key == 'numgeteld':
+                        elif key == NUMGETELD_KEY:
                             # administatie: aantal keren dat het record is geteld
                             geteld_record.update({key: val+1})
-                    if 'numgeteld' not in geteld_record:
-                        geteld_record.update({'numgeteld': 1})
+                    if NUMGETELD_KEY not in geteld_record:
+                        geteld_record.update({NUMGETELD_KEY: 1})
                     subkey = 'sub_' + dimensie
                     if subkey not in geteld_record:
                         geteld_record.update({subkey: record.get(dimensie)})
@@ -197,7 +208,7 @@ def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld)
                 # code komt niet voor in de codelijst
                 # N.B. dit zou eigenlijk niet mogen voorkomen
                 # omdat we eerder een codelijst check hebben uitgevoerd
-                if 'numgeteld' not in record:
+                if NUMGETELD_KEY not in record:
                     record_kort = dict()
                     for k, v in record.items():
                         if k == dimensie or k in vastedimensies:
@@ -228,23 +239,23 @@ def aggregeren_data(data, dimensie, vastedims, aggniveau, clijst, alleen_geteld)
         if aggrecords:
             if len(aggrecords) == 1:
                 # indien 1 record terug, dan is deze 'niet geteld'
-                aggrecords[0].update({'geteld': False})
+                aggrecords[0].update({GETELD_KEY: False})
             else:
-                # indien meer dan 1 record terug, dan zijn deze 'geteld'
+                # indien meer dan 1 record terug, dan zijn deze GETELD_KEY
                 # tenzij deze in een eerdere aggregatie 'niet geteld' zijn
                 for rec in aggrecords:
-                    if 'geteld' not in rec:
-                        rec.update({'geteld': True})
+                    if GETELD_KEY not in rec:
+                        rec.update({GETELD_KEY: True})
                     else:
-                        geteld = rec.get('geteld')
-                        # record alleen als 'geteld' aanmerken
+                        geteld = rec.get(GETELD_KEY)
+                        # record alleen als GETELD_KEY aanmerken
                         # indien eerder ook geteld (beide True)
                         geteld = geteld and True
-                        rec.update({'geteld': geteld})
+                        rec.update({GETELD_KEY: geteld})
             if alleen_geteld is True:
                 # alleen getelde records teruggeven
                 for rec in aggrecords:
-                    if rec.get('geteld') is True:
+                    if rec.get(GETELD_KEY) is True:
                         # enkel element toevoegen: append
                         agg_data.append(rec)
             else:

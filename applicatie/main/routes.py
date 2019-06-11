@@ -1,5 +1,6 @@
 from flask import render_template, request
 
+from applicatie.logic.codelijst import maak_codelijst
 from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
@@ -47,53 +48,65 @@ def matrix(jsonbestand, jsonbestandsnaam):
             overheidslaag = meta['overheidslaag']
             boekjaar = meta['boekjaar']
             bestandsnaam = IV3_DEF_FILE.format(overheidslaag, boekjaar)
-            definitie_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebetand')
+            definitie_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebestand')
 
         if not fouten:
             # Controle databestand met definitiebestand
             fouten = controle_met_defbestand(data_bestand, definitie_bestand)
 
+        if not fouten:
+            # json bestand is opgehaald en geen fouten zijn gevonden
+            # vervolgens data aggregeren en tonen op het scherm
+            data = data_bestand['data']
+
+            # de data volledig aggregeren
+            data_geaggregeerd, fouten = aggregeren_volledig(data, definitie_bestand)
+
         if fouten:
             return render_template("index.html", errormessages=fouten)
 
-        # json bestand is opgehaald en geen fouten zijn gevonden
-        # vervolgens data aggregeren en tonen op het scherm
-        data = data_bestand['data']
+        # Zoek omschrijvingen bij de codes zodat we deze in de tabel kunnen tonen
+        omschrijvingen = {}
 
-        # de data volledig aggregeren
-        data_geaggregeerd, fouten = aggregeren_volledig(data, definitie_bestand)
-        if fouten:
-            return render_template("index.html", errormessages=fouten)
-
-        # per rekening de data aggregeren over de opgegeven dimensies
-        # N.B. de dimensies eindigend op ':' bevatten de code + de omschrijving van de code
-        # in de rijen van de matrix willen we namelijk ook de omschrijving tonen
+        # TODO Misschien goed idee om een klasse Codelijst te maken
+        for naam, codelijst in definitie_bestand['codelijsten'].items():
+            omschrijvingen[naam] = maak_codelijst(codelijst['codelijst'])
 
         # TODO Hier geen dubbele punt erin zetten, ergens anders oplossen
         lasten = DraaiTabel(
             data=data_geaggregeerd['lasten'],
-            rij_naam='taakveld' + ':',              # taakveld inclusief omschrijving
-            kolom_naam='categorie')
+            rij_naam='taakveld',
+            kolom_naam='categorie',
+            rij_omschrijvingen=omschrijvingen['taakveld'],
+            kolom_omschrijvingen=omschrijvingen['categorie_lasten'])
 
         balans_lasten = DraaiTabel(
             data=data_geaggregeerd['balans_lasten'],
-            rij_naam='balanscode' + ':',            # balanscode inclusief omschrijving
-            kolom_naam='categorie')
+            rij_naam='balanscode',
+            kolom_naam='categorie',
+            rij_omschrijvingen=omschrijvingen['balanscode'],
+            kolom_omschrijvingen=omschrijvingen['categorie_baten'])
 
         baten = DraaiTabel(
             data=data_geaggregeerd['baten'],
-            rij_naam='taakveld' + ':',              # taakveld inclusief omschrijving
-            kolom_naam='categorie')
+            rij_naam='taakveld',
+            kolom_naam='categorie',
+            rij_omschrijvingen=omschrijvingen['taakveld'],
+            kolom_omschrijvingen=omschrijvingen['categorie_baten'])
 
         balans_baten = DraaiTabel(
             data=data_geaggregeerd['balans_baten'],
-            rij_naam='balanscode' + ':',            # balanscode inclusief omschrijving
-            kolom_naam='categorie')
+            rij_naam='balanscode',
+            kolom_naam='categorie',
+            rij_omschrijvingen=omschrijvingen['balanscode'],
+            kolom_omschrijvingen=omschrijvingen['categorie_lasten'])
 
         balans_standen = DraaiTabel(
             data=data_geaggregeerd['balans_standen'],
-            rij_naam='balanscode' + ':',            # balanscode inclusief omschrijving
-            kolom_naam='standper')
+            rij_naam='balanscode',
+            kolom_naam='standper',
+            rij_omschrijvingen=omschrijvingen['balanscode'],
+            kolom_omschrijvingen=omschrijvingen['standper'])
 
         # Voer controles uit
         plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'],
