@@ -40,7 +40,6 @@ class TestPlausibeleBerekening(TestCase):
         resultaat = bereken(formule, omgeving)
         self.assertEqual(0.5, resultaat)
 
-    skip("TODO Deze test slaagt nog niet")
     def test_delen2(self):
         # ARRANGE
         formule = "(Absoluut_verschil / Totaal_lasten_LR)"
@@ -77,7 +76,6 @@ class TestPlausibeleBerekening(TestCase):
         resultaat = bereken(formule, omgeving)
         self.assertEqual(546, resultaat)
 
-    # @skip
     def test_kleiner_dan(self):
         # ARRANGE
         formule = "(relatief_verschil) <= 0.01"
@@ -88,3 +86,27 @@ class TestPlausibeleBerekening(TestCase):
         # ACT
         resultaat = bereken(formule, omgeving)
         self.assertEqual(False, resultaat)
+
+    def test_complexe_expressie(self):
+        # ARRANGE
+        formule = "alpha * alpha + beta * beta"
+        omgeving = {
+            'alpha': 3,
+            'beta': 4,
+        }
+
+        # ACT
+        resultaat = bereken(formule, omgeving)
+        self.assertEqual(25, resultaat)
+
+    def test_complexe_expressie2(self):
+        # ARRANGE
+        formule = "alpha * (alpha + beta) * beta"
+        omgeving = {
+            'alpha': 3,
+            'beta': 4,
+        }
+
+        # ACT
+        resultaat = bereken(formule, omgeving)
+        self.assertEqual(84, resultaat)

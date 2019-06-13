@@ -1,7 +1,7 @@
 import operator
 from typing import Dict
 
-from pyparsing import Literal, Word, ZeroOrMore, Forward, alphas, Regex, Suppress, oneOf, Optional
+from pyparsing import Literal, Word, ZeroOrMore, Forward, alphas, Regex, Suppress, oneOf, Optional, Group
 
 __all__ = 'berekenen'
 
@@ -60,7 +60,8 @@ class Rekenmachine(object):
 
     def _make_bnf(self):
         expr = Forward()
-        atom = (fnumber | (ident + lpar + expr + rpar) | ident | (lpar + expr + rpar)).setParseAction(self._push_stack)
+        atom = ((fnumber | (ident + lpar + expr + rpar) | ident).setParseAction(self._push_stack) |
+                Suppress(Group(lpar + expr + rpar)))
         term = atom + ZeroOrMore((multop + atom).setParseAction(self._push_stack))
         expr << term + ZeroOrMore((addop + term).setParseAction(self._push_stack))
         comp = Literal('>=') | Literal('<=') | Literal('>') | Literal('<') | Literal('=')
@@ -81,7 +82,6 @@ class Rekenmachine(object):
         Eigenlijk is dit RPN-notatie:
         http://concatenative.org/wiki/view/Factor/Examples
         """
-        
         op = self._stack.pop()
         if op in unary_op:
             return unary_op[op](self._reduce_stack())
