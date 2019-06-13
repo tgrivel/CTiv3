@@ -3,6 +3,9 @@
 
 {% block content %}
 <style>
+
+// TODO Css moet niet hier maar in css-file komen te staan.
+
 body {font-family: Arial;}
 
 /* Style the tab */
@@ -50,17 +53,21 @@ table {
 
 
 <body>
-    <!-- Tabellen met detail -->
+
     <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" />
     <script type="text/javascript" src="{{ url_for('static', filename='js/muteren.js') }}" />
 
-    <script type="text/javascript">
-        var data = {{ data | tojson }};
+    <script>
+        data = {{ data | tojson }};
+        meta = {{ meta | tojson }};
+        contact = {{ contact | tojson }};
+        filename = {{ bestandsnaam | tojson }};
     </script>
+
     <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
         <div style="position: relative;left: 5px;font-size: 17px;padding: 10px;">
-            <div>Bestand: {{filenaam}}</div>
+            <div>Bestand: {{ bestandsnaam }}</div>
             <div>Inzender: {{ meta['overheidsnaam']}}</div>
             <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
             <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
@@ -69,11 +76,16 @@ table {
             <div>
                 Definitiebestand: {{ sjabloon['omschrijving'] }}, {{ sjabloon['overheidslaag'] }}, {{ sjabloon['boekjaar'] }}
 
+                <!-- Opmerking Vincent, 13-6-2019: -->
+                <!-- onderstaande werkte niet, gaf foutmelding: -->
+                <!-- ReferenceError: ... is not defined -->
+                <!-- onclick="download_data(filename, meta, contact);" -->
+                <!-- ik weet op dit moment niet hoe we dit kunnen fixen -->
                 <button
                         class="btn btn-primary"
                         type="button"
                         title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="alert('Downloadfunctionaliteit is nog niet beschikbaar.');"
+                        onclick="download_data('', '', '');"
                         style="float: right" >
                     Data downloaden
                 </button>

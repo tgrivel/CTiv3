@@ -1,40 +1,51 @@
-console.log('begin')
-console.log(data)
-console.log('end')
+var IS_TUSSENTOTAAL = '_is_tussentotaal';
 
-var sumOverSum = $.pivotUtilities.aggregators["Sum over Sum"]
+function download_data(filename, meta, contact) {
 
-$("#overzicht").pivotUI(
-    data['waarden'], // .filter(function(cell) {return cell.rekeningkant == "lasten"}),
-    {
-        rows: ['taakveld'],
-        cols: ['categorie'],
-        vals: ['bedrag'],
-        // aggregator: [sumOverSum],
-        showUI: false,
-        // renderers: $.pivotUtilities.d3_renderers
+    // TODO Dit is een beginnetje, maar bevat nu nog alleen de data (alles op een hoop)
+    var data = {};
+    var meta = JSON.parse('{"gemeente": "CBS-dorp", "id":"XYZ12345"}');
+    var contact = JSON.parse('{"naam": "Vincent", "e-mail":"vs.ohm@cbs.nl"}');
+
+    var tabellen = $('table.pvtTable.draaitabel');
+    for (var i = 0; i < tabellen.length; i++) {
+        var tabel = $(tabellen[i]);
+        var tabel_naam = tabel.attr('naam');
+        var tabel_data = JSON.parse(tabel.attr('data'));
+
+        // This is like extend in Python (Javascript is weird!)
+        // According to https://jsperf.com/concat-array-in-place it's very fast
+        // Array.prototype.push.apply(data, tabel_data);
+        data[tabel_naam] = data_opschonen(tabel_data);
     }
-);
 
+    json_bestand = {
+        'metadata': meta,
+        'contact': contact,
+        'data': data
+    };
 
-// d3.select("#detail")
-// 	.selectAll('th')
-// 	.data(Object.keys(dida['waarden'][0]))
-// 	.enter()
-// 	.append('th').text(function(x) {return x})
-//
-// 	//.data([1, 2, 3, 4, 4])
-// d3.select('#detail')
-// 	.selectAll("tr")
-// 	//.data(dida['waarden'].map(function(x) {return x.bedrag}))
-// 	.data(dida['waarden'])
-// 	.enter()
-// 	.append("tr")
-// 	.selectAll('td')
-//         .data(function(waarde) {return Object.values(waarde)})
-// 	.enter()
-// 	.append('td')
-// 	.text(function(value) {return (value)});
+    // Generate download link
+    var text = JSON.stringify(json_bestand, null, 2);
+    download('data.json', text);
+}
 
-// d3.select('#overzicht').text("overzicht")
+function download(filename, text) {
+    // Code overgenomen van mikemaccana (sic)
+    // https://stackoverflow.com/questions/3665115
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
 
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+function data_opschonen(data) {
+    // Verwijder aggregaten uit de data
+    return data.filter(record => record[IS_TUSSENTOTAAL] === undefined)
+}
