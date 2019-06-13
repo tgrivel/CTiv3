@@ -56,7 +56,7 @@ table {
 
     <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" />
     <script type="text/javascript" src="{{ url_for('static', filename='js/muteren.js') }}" />
-    
+
     <script>
         data = {{ data | tojson }};
         meta = {{ meta | tojson }};
@@ -76,11 +76,16 @@ table {
             <div>
                 Definitiebestand: {{ sjabloon['omschrijving'] }}, {{ sjabloon['overheidslaag'] }}, {{ sjabloon['boekjaar'] }}
 
+                <!-- Opmerking Vincent, 13-6-2019: -->
+                <!-- onderstaande werkte niet, gaf foutmelding: -->
+                <!-- ReferenceError: ... is not defined -->
+                <!-- onclick="download_data(filename, meta, contact);" -->
+                <!-- ik weet op dit moment niet hoe we dit kunnen fixen -->
                 <button
                         class="btn btn-primary"
                         type="button"
                         title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="download_data(filename, meta, contact);"
+                        onclick="download_data('', '', '');"
                         style="float: right" >
                     Data downloaden
                 </button>
