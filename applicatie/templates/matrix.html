@@ -61,7 +61,7 @@ table {
         data = {{ data | tojson }};
         meta = {{ meta | tojson }};
         contact = {{ contact | tojson }};
-        filename = {{ bestandsnaam | tojson }};
+        bestandsnaam = {{ bestandsnaam | tojson }};
     </script>
 
     <body bgcolor="#1a1aff">
@@ -80,7 +80,7 @@ table {
                         class="btn btn-primary"
                         type="button"
                         title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="download_data(filename, meta, contact);"
+                        onclick="download_data(bestandsnaam, meta, contact);"
                         style="float: right" >
                     Data downloaden
                 </button>
@@ -107,7 +107,7 @@ table {
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            {{ record_toevoegen(lasten, data) }}
+            {{ record_toevoegen(lasten, data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -115,7 +115,7 @@ table {
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            {{ record_toevoegen(baten, data) }}
+            {{ record_toevoegen(baten, data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -123,7 +123,7 @@ table {
         </div>
 
         <div id="LastenBM" class="tabcontent">
-            {{ record_toevoegen(balans_lasten, data) }}
+            {{ record_toevoegen(balans_lasten, data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -131,7 +131,7 @@ table {
         </div>
 
         <div id='BatenBM' class="tabcontent">
-            {{ record_toevoegen(balans_baten, data) }}
+            {{ record_toevoegen(balans_baten, data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 

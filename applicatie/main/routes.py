@@ -19,8 +19,9 @@ def index():
         # Mutatie verwerken
         mutatie = dict(request.form)
         data = json.loads(mutatie.pop('data'))
-        waarde_naam = mutatie.pop('waarde_naam')
+
         waarde_kant = mutatie.pop('waarde_kant')
+        bestandsnaam = mutatie.pop('bestandsnaam')
 
         if '.' in mutatie['bedrag']:
             bedrag = float(mutatie['bedrag'])
@@ -28,14 +29,11 @@ def index():
             bedrag = int(mutatie['bedrag'])
 
         mutatie['bedrag'] = bedrag
-
-        # Annoteer mutatie
         mutatie['opmerking'] = "Mutatie toegevoegd met CTiv3."
 
         data['data'][waarde_kant].append(mutatie)
-        jsonbestandsnaam = "gemuteerd.json"
         jsonbestand = io.BytesIO(json.dumps(data).encode('utf-8'))
-        return matrix(jsonbestand, jsonbestandsnaam)
+        return matrix(jsonbestand, bestandsnaam)
 
     elif request.method == 'POST':
         if not request.files.get('file', None):
@@ -61,9 +59,6 @@ def matrix(jsonbestand, jsonbestandsnaam):
     """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
     Indien geen fouten, laad de pagina met een overzicht van de data.
     """
-
-    print("jsonbestandsnaam = {!r}".format(jsonbestandsnaam))
-    print("jsonbestand = {!r}".format(jsonbestand))
 
     if jsonbestand:
         # json data bestand ophalen en evt. fouten teruggeven

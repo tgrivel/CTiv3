@@ -70,7 +70,7 @@
 
 {% endmacro %}
 
-{% macro record_toevoegen(draaitabel, data) %}
+{% macro record_toevoegen(draaitabel, data, bestandsnaam) %}
 
 <form class="form-inline text-center muteerknoppen"
       role="form"
@@ -109,12 +109,12 @@
     </div>
 
     <input type="hidden"
-           name="waarde_naam"
-           value='{{ draaitabel.waarde_naam }}' />
-
-    <input type="hidden"
            name="waarde_kant"
            value="{{ draaitabel.naam }}" />
+
+    <input type="hidden"
+           name="bestandsnaam"
+           value='{{ bestandsnaam }}'/>
 
     <!-- TODO Onderstaande invoer is eigenlijk voor elke draaitabel hetzelfde -->
     <!-- Netter zou zijn om dit via een javascript functie op te halen. -->
