@@ -110,8 +110,14 @@
 
     <input type="hidden"
            name="waarde_naam"
-           value='lasten' />
+           value='{{ draaitabel.waarde_naam }}' />
 
+    <input type="hidden"
+           name="waarde_kant"
+           value="{{ draaitabel.naam }}" />
+
+    <!-- TODO Onderstaande invoer is eigenlijk voor elke draaitabel hetzelfde -->
+    <!-- Netter zou zijn om dit via een javascript functie op te halen. -->
     <input type="hidden"
            name="data"
            value='{{ data | tojson }}'/>

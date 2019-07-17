@@ -16,12 +16,23 @@ from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
 @bp.route("/", methods=['GET', 'POST'])
 def index():
     if request.form:
-        # TODO Hack Mutatie verwerken (quick and dirty)
+        # Mutatie verwerken
         mutatie = dict(request.form)
         data = json.loads(mutatie.pop('data'))
         waarde_naam = mutatie.pop('waarde_naam')
-        mutatie['bedrag'] = float(mutatie['bedrag'])
-        data['data'][waarde_naam].append(mutatie)
+        waarde_kant = mutatie.pop('waarde_kant')
+
+        if '.' in mutatie['bedrag']:
+            bedrag = float(mutatie['bedrag'])
+        else:
+            bedrag = int(mutatie['bedrag'])
+
+        mutatie['bedrag'] = bedrag
+
+        # Annoteer mutatie
+        mutatie['opmerking'] = "Mutatie toegevoegd met CTiv3."
+
+        data['data'][waarde_kant].append(mutatie)
         jsonbestandsnaam = "gemuteerd.json"
         jsonbestand = io.BytesIO(json.dumps(data).encode('utf-8'))
         return matrix(jsonbestand, jsonbestandsnaam)
