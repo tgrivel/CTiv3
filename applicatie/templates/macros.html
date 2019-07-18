@@ -82,7 +82,9 @@
                 style="width:100px;"
                 name="{{ draaitabel.rij_naam }}">
             {% for code in draaitabel.rij_codelijst.geef_terminals() %}
-            <option value="{{ code }}">{{ code }}: {{ draaitabel.rij_codelijst.geef_omschrijving(code).title() }}</option>
+            <option value="{{ code }}">
+                {{ code }}: {{ draaitabel.rij_codelijst.geef_omschrijving(code).title() }}
+            </option>
             {% endfor %}
         </select>
     </div>
@@ -92,7 +94,9 @@
                 style="width:100px;"
                 name="{{ draaitabel.kolom_naam }}" >
             {% for code in draaitabel.kolom_codelijst.geef_terminals() %}
-            <option value="{{ code }}">{{ code }}: {{ draaitabel.kolom_codelijst.geef_omschrijving(code).title() }}</option>
+            <option value="{{ code }}">
+                {{ code }}: {{ draaitabel.kolom_codelijst.geef_omschrijving(code).title() }}
+            </option>
             {% endfor %}
         </select>
     </div>
@@ -129,5 +133,3 @@
 </form>
 
 {% endmacro %}
-
-<!-- onclick="toevoegen_mutatie(this);"> -->

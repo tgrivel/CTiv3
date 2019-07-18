@@ -3,11 +3,11 @@ import json
 
 from flask import render_template, request
 
-from applicatie.logic.codelijst import _maak_omschrijving_tabel, Codelijst
+from applicatie.logic.aggregeren import aggregeren_volledig
+from applicatie.logic.codelijst import Codelijst
 from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
-from applicatie.logic.aggregeren import aggregeren_volledig
 from applicatie.logic.plausibiliteitscontrole import PlausibiliteitsControle
 from applicatie.main import bp
 from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
@@ -110,7 +110,6 @@ def matrix(jsonbestand, jsonbestandsnaam, tabnaam=None):
         for naam, codelijst in definitie_bestand['codelijsten'].items():
             codelijsten[naam] = Codelijst(codelijst['codelijst'])
 
-        # TODO Hier geen dubbele punt erin zetten, ergens anders oplossen
         lasten = DraaiTabel(
             naam='lasten',
             data=data_geaggregeerd['lasten'],
