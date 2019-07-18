@@ -204,8 +204,18 @@ table {
 
       // Show the current tab, and add an "active" class to the button that opened the tab
       document.getElementById(tabnaam).style.display = "block";
-      evt.currentTarget.className += " active";
+
+      if (evt)
+          evt.currentTarget.className += " active";
     }
+
+    {% if tabnaam %}
+    openTab(event, "{{ tabnaam }}");
+    /* $(document).ready(function() {
+        openTab(event, "{{ tabnaam }}");
+    }); */
+    {% endif %}
+
     </script>
 
     </body>

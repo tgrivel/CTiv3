@@ -23,6 +23,22 @@ def index():
         waarde_kant = mutatie.pop('waarde_kant')
         bestandsnaam = mutatie.pop('bestandsnaam')
 
+        # Automatisch open bijbehorende tab
+        if waarde_kant == 'lasten':
+            tabnaam = 'LastenLR'
+        elif waarde_kant == 'baten':
+            tabnaam = 'BatenLR'
+        elif waarde_kant == 'balans_lasten':
+            tabnaam = 'LastenBM'
+        elif waarde_kant == 'balans_baten':
+            tabnaam = 'BatenBM'
+        elif waarde_kant == 'balans':
+            tabnaam = 'Balans'
+        else:
+            # Foutafhandeling
+            print('Fout: Onbekende waarde_kant', waarde_kant)
+            tabnaam = None
+
         if '.' in mutatie['bedrag']:
             bedrag = float(mutatie['bedrag'])
         else:
@@ -33,7 +49,7 @@ def index():
 
         data['data'][waarde_kant].append(mutatie)
         jsonbestand = io.BytesIO(json.dumps(data).encode('utf-8'))
-        return matrix(jsonbestand, bestandsnaam)
+        return matrix(jsonbestand, bestandsnaam, tabnaam)
 
     elif request.method == 'POST':
         if not request.files.get('file', None):
@@ -55,7 +71,7 @@ def index():
 
 
 @bp.route("/matrix", methods=['GET', 'POST'])
-def matrix(jsonbestand, jsonbestandsnaam):
+def matrix(jsonbestand, jsonbestandsnaam, tabnaam=None):
     """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
     Indien geen fouten, laad de pagina met een overzicht van de data.
     """
@@ -162,6 +178,7 @@ def matrix(jsonbestand, jsonbestandsnaam):
             'bestandsnaam': jsonbestandsnaam,
             'meta': metadata,
             'contact': contact,
+            'tabnaam': tabnaam,
 
             # hebben we onderstaande nog nodig?
             'data': data_bestand,
