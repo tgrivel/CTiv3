@@ -3,7 +3,7 @@ import json
 
 from flask import render_template, request
 
-from applicatie.logic.codelijst import maak_codelijst
+from applicatie.logic.codelijst import _maak_omschrijving_tabel, Codelijst
 from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
@@ -78,12 +78,7 @@ def matrix(jsonbestand, jsonbestandsnaam, tabnaam=None):
 
     if jsonbestand:
         # json data bestand ophalen en evt. fouten teruggeven
-
         data_bestand, fouten = ophalen_en_controleren_databestand(jsonbestand)
-        # if isinstance(jsonbestand, str):
-        # else:
-        #     data_bestand = jsonbestand
-        #     fouten = []
 
         # json definitie bestand ophalen van web
         # in de controles bij het inlezen is al bepaald dat dit bestaat
@@ -110,11 +105,10 @@ def matrix(jsonbestand, jsonbestandsnaam, tabnaam=None):
             return render_template("index.html", errormessages=fouten)
 
         # Zoek omschrijvingen bij de codes zodat we deze in de tabel kunnen tonen
-        omschrijvingen = {}
+        codelijsten = {}
 
-        # TODO Misschien goed idee om een klasse Codelijst te maken
         for naam, codelijst in definitie_bestand['codelijsten'].items():
-            omschrijvingen[naam] = maak_codelijst(codelijst['codelijst'])
+            codelijsten[naam] = Codelijst(codelijst['codelijst'])
 
         # TODO Hier geen dubbele punt erin zetten, ergens anders oplossen
         lasten = DraaiTabel(
@@ -122,40 +116,40 @@ def matrix(jsonbestand, jsonbestandsnaam, tabnaam=None):
             data=data_geaggregeerd['lasten'],
             rij_naam='taakveld',
             kolom_naam='categorie',
-            rij_omschrijvingen=omschrijvingen['taakveld'],
-            kolom_omschrijvingen=omschrijvingen['categorie_lasten'])
+            rij_codelijst=codelijsten['taakveld'],
+            kolom_codelijst=codelijsten['categorie_lasten'])
 
         balans_lasten = DraaiTabel(
             naam='balans_lasten',
             data=data_geaggregeerd['balans_lasten'],
             rij_naam='balanscode',
             kolom_naam='categorie',
-            rij_omschrijvingen=omschrijvingen['balanscode'],
-            kolom_omschrijvingen=omschrijvingen['categorie_baten'])
+            rij_codelijst=codelijsten['balanscode'],
+            kolom_codelijst=codelijsten['categorie_baten'])
 
         baten = DraaiTabel(
             naam='baten',
             data=data_geaggregeerd['baten'],
             rij_naam='taakveld',
             kolom_naam='categorie',
-            rij_omschrijvingen=omschrijvingen['taakveld'],
-            kolom_omschrijvingen=omschrijvingen['categorie_baten'])
+            rij_codelijst=codelijsten['taakveld'],
+            kolom_codelijst=codelijsten['categorie_baten'])
 
         balans_baten = DraaiTabel(
             naam='balans_baten',
             data=data_geaggregeerd['balans_baten'],
             rij_naam='balanscode',
             kolom_naam='categorie',
-            rij_omschrijvingen=omschrijvingen['balanscode'],
-            kolom_omschrijvingen=omschrijvingen['categorie_lasten'])
+            rij_codelijst=codelijsten['balanscode'],
+            kolom_codelijst=codelijsten['categorie_lasten'])
 
         balans_standen = DraaiTabel(
             naam='balans_standen',
             data=data_geaggregeerd['balans_standen'],
             rij_naam='balanscode',
             kolom_naam='standper',
-            rij_omschrijvingen=omschrijvingen['balanscode'],
-            kolom_omschrijvingen=omschrijvingen['standper'])
+            rij_codelijst=codelijsten['balanscode'],
+            kolom_codelijst=codelijsten['standper'])
 
         # Voer controles uit
         plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'],

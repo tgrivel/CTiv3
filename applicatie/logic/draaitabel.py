@@ -8,7 +8,7 @@ WAARDE_KOLOM = 'bedrag'
 class DraaiTabel:
     waarde_naam = WAARDE_KOLOM
 
-    def __init__(self, naam, data, rij_naam, kolom_naam, rij_omschrijvingen, kolom_omschrijvingen):
+    def __init__(self, naam, data, rij_naam, kolom_naam, rij_codelijst, kolom_codelijst):
         self.naam = naam
         indices, self.tabel = pivot_table(data, aggregeer_kolommen=[rij_naam, kolom_naam],
                                          waarde_kolom=WAARDE_KOLOM)
@@ -21,8 +21,8 @@ class DraaiTabel:
         self.data = data
 
         # Onthoud omschrijvingen
-        self.rij_omschrijvingen = rij_omschrijvingen
-        self.kolom_omschrijvingen = kolom_omschrijvingen
+        self.rij_codelijst = rij_codelijst
+        self.kolom_codelijst = kolom_codelijst
 
     def __getitem__(self, args):
         """Geef een specifieke waarde uit de draaitabel terug."""
