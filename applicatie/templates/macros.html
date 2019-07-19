@@ -31,7 +31,7 @@
         {% for rij in tabel.rijen %}
         <tr>
             <th class="pvtRowLabel" rowspan="1" colspan="2">
-                {{ rij }} {{ tabel.rij_codelijst.geef_omschrijving(rij) }}
+                {{ rij }} {{ tabel.geef_rij_omschrijving(rij) }}
             </th>
             {% for kolom in tabel.kolommen %}
             <td class="td default"
@@ -81,9 +81,9 @@
         <select class='form-control mutatie-invoer'
                 style="width:100px;"
                 name="{{ draaitabel.rij_naam }}">
-            {% for code in draaitabel.rij_codelijst.geef_terminals() %}
+            {% for code in draaitabel.geef_rij_keuzes() %}
             <option value="{{ code }}">
-                {{ code }}: {{ draaitabel.rij_codelijst.geef_omschrijving(code).title() }}
+                {{ code }}: {{ draaitabel.geef_rij_omschrijving(code).title() }}
             </option>
             {% endfor %}
         </select>
@@ -93,9 +93,9 @@
         <select class='form-control mutatie-invoer'
                 style="width:100px;"
                 name="{{ draaitabel.kolom_naam }}" >
-            {% for code in draaitabel.kolom_codelijst.geef_terminals() %}
+            {% for code in draaitabel.geef_kolom_keuzes() %}
             <option value="{{ code }}">
-                {{ code }}: {{ draaitabel.kolom_codelijst.geef_omschrijving(code).title() }}
+                {{ code }}: {{ draaitabel.geef_kolom_omschrijving(code).title() }}
             </option>
             {% endfor %}
         </select>

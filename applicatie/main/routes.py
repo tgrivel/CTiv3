@@ -32,7 +32,7 @@ def index():
             tabnaam = 'LastenBM'
         elif waarde_kant == 'balans_baten':
             tabnaam = 'BatenBM'
-        elif waarde_kant == 'balans':
+        elif waarde_kant == 'balans_standen':
             tabnaam = 'Balans'
         else:
             # Foutafhandeling
@@ -124,7 +124,7 @@ def matrix(jsonbestand, jsonbestandsnaam, tabnaam=None):
             rij_naam='balanscode',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
-            kolom_codelijst=codelijsten['categorie_baten'])
+            kolom_codelijst=codelijsten['categorie_lasten'])
 
         baten = DraaiTabel(
             naam='baten',
@@ -140,7 +140,7 @@ def matrix(jsonbestand, jsonbestandsnaam, tabnaam=None):
             rij_naam='balanscode',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
-            kolom_codelijst=codelijsten['categorie_lasten'])
+            kolom_codelijst=codelijsten['categorie_baten'])
 
         balans_standen = DraaiTabel(
             naam='balans_standen',

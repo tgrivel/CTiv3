@@ -1,5 +1,6 @@
 from functools import reduce
 
+from applicatie.logic.codelijst import Codelijst
 from applicatie.logic.maak_matrix import pivot_table
 
 WAARDE_KOLOM = 'bedrag'
@@ -8,7 +9,8 @@ WAARDE_KOLOM = 'bedrag'
 class DraaiTabel:
     waarde_naam = WAARDE_KOLOM
 
-    def __init__(self, naam, data, rij_naam, kolom_naam, rij_codelijst, kolom_codelijst):
+    def __init__(self, naam: str, data, rij_naam: str, kolom_naam: str,
+                 rij_codelijst: Codelijst, kolom_codelijst: Codelijst):
         self.naam = naam
         indices, self.tabel = pivot_table(data, aggregeer_kolommen=[rij_naam, kolom_naam],
                                          waarde_kolom=WAARDE_KOLOM)
@@ -21,12 +23,28 @@ class DraaiTabel:
         self.data = data
 
         # Onthoud omschrijvingen
-        self.rij_codelijst = rij_codelijst
-        self.kolom_codelijst = kolom_codelijst
+        self._rij_codelijst = rij_codelijst
+        self._kolom_codelijst = kolom_codelijst
 
     def __getitem__(self, args):
         """Geef een specifieke waarde uit de draaitabel terug."""
         return self.tabel[args]
+
+    def geef_rij_keuzes(self):
+        """Geef keuzemogelijkheden voor rij bij een mutatie."""
+        return self._rij_codelijst.geef_terminals()
+
+    def geef_kolom_keuzes(self):
+        """Geef keuzemogelijkheden voor kolom bij een mutatie."""
+        return self._kolom_codelijst.geef_terminals()
+
+    def geef_rij_omschrijving(self, code):
+        """Geef een omschrijving bij een rij-code."""
+        return self._rij_codelijst.geef_omschrijving(code)
+
+    def geef_kolom_omschrijving(self, code):
+        """Geef een omschrijving bij een kolom-code."""
+        return self._kolom_codelijst.geef_omschrijving(code)
 
     def geef_detail_kolommen(self):
          unieke_labels = reduce(set.union, [rij.keys() for rij in self.data], set())
