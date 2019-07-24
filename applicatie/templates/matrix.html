@@ -52,19 +52,18 @@ table {
 </style>
 
 
-<body>
+<body bgcolor="#1a1aff">
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" />
-    <script type="text/javascript" src="{{ url_for('static', filename='js/muteren.js') }}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/muteren.js') }}"></script>
 
-    <script>
-        data = {{ data | tojson }};
-        meta = {{ meta | tojson }};
-        contact = {{ contact | tojson }};
-        filename = {{ bestandsnaam | tojson }};
+    <script type="text/javascript">
+        var data = {{ data | tojson }};
+        var meta = {{ meta | tojson }};
+        var contact = {{ contact | tojson }};
+        var filename = {{ bestandsnaam | tojson }};
     </script>
 
-    <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
         <div style="position: relative;left: 5px;font-size: 17px;padding: 10px;">
             <div>Bestand: {{ bestandsnaam }}</div>
@@ -77,16 +76,11 @@ table {
             <div>
                 Definitiebestand: {{ sjabloon['omschrijving'] }}, {{ sjabloon['overheidslaag'] }}, {{ sjabloon['boekjaar'] }}
 
-                <!-- Opmerking Vincent, 13-6-2019: -->
-                <!-- onderstaande werkte niet, gaf foutmelding: -->
-                <!-- ReferenceError: ... is not defined -->
-                <!-- onclick="download_data(filename, meta, contact);" -->
-                <!-- ik weet op dit moment niet hoe we dit kunnen fixen -->
                 <button
                         class="btn btn-primary"
                         type="button"
-                        title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="download_data('', '', '');"
+                        title="Klik hier om json bestand te downloaden"
+                        onclick="download_data(filename, meta, contact);"
                         style="float: right" >
                     Data downloaden
                 </button>
@@ -186,6 +180,7 @@ table {
         </div>
 
     </font>
+
     <script>
 
     function openTab(evt, tabnaam) {
