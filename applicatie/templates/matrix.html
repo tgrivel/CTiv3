@@ -72,6 +72,7 @@ table {
             <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
             <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
             <div>Datum : {{ meta['datum']}}</div>
+            <div>Software: {{ meta.get('software', 'onbekend') }}</div>
 
             <div>
                 Definitiebestand: {{ sjabloon['omschrijving'] }}, {{ sjabloon['overheidslaag'] }}, {{ sjabloon['boekjaar'] }}
