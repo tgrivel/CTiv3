@@ -5,8 +5,8 @@ import urllib.request
 from collections import OrderedDict
 from json import JSONDecodeError
 from urllib.error import URLError, HTTPError
-from applicatie.logic.controles import controle_met_schema, controle_met_defbestand
-from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE, IV3_SCHEMA_FILE
+from applicatie.logic.controles import controle_met_schema
+from config.configurations import IV3_REPO_PATH, IV3_SCHEMA_FILE
 
 _logger = logging.getLogger(__file__)
 
@@ -28,7 +28,7 @@ def ophalen_en_controleren_databestand(jsonbestand):
 
     if not fouten:
         # json schema ophalen van web
-        versie = "1_0"
+        versie = "1_1"
         bestandsnaam = IV3_SCHEMA_FILE.format(versie)
         schema_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'schemabestand')
 
