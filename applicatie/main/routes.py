@@ -1,5 +1,6 @@
 import io
 import json
+import sys
 
 from flask import render_template, request
 
@@ -36,13 +37,17 @@ def index():
             tabnaam = 'Balans'
         else:
             # Foutafhandeling
-            print('Fout: Onbekende waarde_kant', waarde_kant)
+            print('Fout: Onbekende waarde_kant', waarde_kant, file=sys.stderr)
             tabnaam = None
 
-        if '.' in mutatie['bedrag']:
-            bedrag = float(mutatie['bedrag'])
-        else:
-            bedrag = int(mutatie['bedrag'])
+        try:
+            if '.' in mutatie['bedrag']:
+                bedrag = float(mutatie['bedrag'])
+            else:
+                bedrag = int(mutatie['bedrag'])
+        except ValueError:
+            print(f"Fout: bedrag is geen numerieke waarde {mutatie['bedrag']})", file=sys.stderr)
+            bedrag = 0
 
         mutatie['bedrag'] = bedrag
         mutatie['opmerking'] = "Mutatie toegevoegd met CTiv3."
