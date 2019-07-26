@@ -16,49 +16,58 @@ from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
 
 @bp.route("/", methods=['GET', 'POST'])
 def index():
-    if request.form:
-        # Mutatie verwerken
-        mutatie = dict(request.form)
-        data = json.loads(mutatie.pop('data'))
 
-        waarde_kant = mutatie.pop('waarde_kant')
-        bestandsnaam = mutatie.pop('bestandsnaam')
+    """ Hoofdpagina. We controleren het type van de browser
+    en of er een bestand is geselecteerd.
+    Ook is hier de logica ondergebracht voor het
+    verwerken van een mutatie zodat deze zichtbaar wordt
+    door het verversen van het scherm.
+    """
+    if request.method == 'POST':
+        reqform = request.form.to_dict()
+        if (not request.files.get('file', None)) and 'data' in reqform:
+            # Mutatie verwerken
+            mutatie = reqform
+            data = json.loads(mutatie.pop('data'))
 
-        # Automatisch open bijbehorende tab
-        if waarde_kant == 'lasten':
-            tabnaam = 'LastenLR'
-        elif waarde_kant == 'baten':
-            tabnaam = 'BatenLR'
-        elif waarde_kant == 'balans_lasten':
-            tabnaam = 'LastenBM'
-        elif waarde_kant == 'balans_baten':
-            tabnaam = 'BatenBM'
-        elif waarde_kant == 'balans_standen':
-            tabnaam = 'Balans'
-        else:
-            # Foutafhandeling
-            print('Fout: Onbekende waarde_kant', waarde_kant, file=sys.stderr)
-            tabnaam = None
+            waarde_kant = mutatie.pop('waarde_kant')
+            bestandsnaam = mutatie.pop('bestandsnaam')
 
-        try:
-            if '.' in mutatie['bedrag']:
-                bedrag = float(mutatie['bedrag'])
+            # Automatisch open bijbehorende tab
+            if waarde_kant == 'lasten':
+                tabnaam = 'LastenLR'
+            elif waarde_kant == 'baten':
+                tabnaam = 'BatenLR'
+            elif waarde_kant == 'balans_lasten':
+                tabnaam = 'LastenBM'
+            elif waarde_kant == 'balans_baten':
+                tabnaam = 'BatenBM'
+            elif waarde_kant == 'balans_standen':
+                tabnaam = 'Balans'
             else:
-                bedrag = int(mutatie['bedrag'])
-        except ValueError:
-            print(f"Fout: bedrag is geen numerieke waarde {mutatie['bedrag']})", file=sys.stderr)
-            bedrag = 0
+                # Foutafhandeling
+                print('Fout: Onbekende waarde_kant', waarde_kant)
+                tabnaam = None
 
-        mutatie['bedrag'] = bedrag
-        mutatie['opmerking'] = "Mutatie toegevoegd met CTiv3."
+            try:
+                if '.' in mutatie['bedrag']:
+                    bedrag = float(mutatie['bedrag'])
+                else:
+                    bedrag = int(mutatie['bedrag'])
+            except ValueError:
+                print(f"Fout: bedrag is geen numerieke waarde {mutatie['bedrag']})", file=sys.stderr)
+                bedrag = 0
 
-        data['data'][waarde_kant].append(mutatie)
-        jsonbestand = io.BytesIO(json.dumps(data).encode('utf-8'))
-        return matrix(jsonbestand, bestandsnaam, tabnaam)
+            mutatie['bedrag'] = bedrag
+            mutatie['opmerking'] = "Mutatie toegevoegd met CTiv3."
 
-    elif request.method == 'POST':
-        if not request.files.get('file', None):
+            data['data'][waarde_kant].append(mutatie)
+            jsonbestand = io.BytesIO(json.dumps(data).encode('utf-8'))
+            return matrix(jsonbestand, bestandsnaam, tabnaam)
+
+        elif not request.files.get('file', None):
             return render_template("index.html", errormessages=['Geen json bestand geselecteerd'])
+
         else:
             browsertype = request.user_agent.browser
             if browsertype not in ['firefox', 'chrome']:
@@ -67,6 +76,7 @@ def index():
             jsonfile = request.files['file']
             jsonfilename = jsonfile.filename
             return matrix(jsonbestand=jsonfile, jsonbestandsnaam=jsonfilename)
+
     elif request.method == 'GET':
         fouten = []
         browsertype = request.user_agent.browser
@@ -75,12 +85,12 @@ def index():
         return render_template("index.html", errormessages=fouten)
 
 
-@bp.route("/matrix", methods=['GET', 'POST'])
+# opmerking: we staan alleen de POST-methode toe, anders krijg je een fout.
+@bp.route("/matrix", methods=['POST'])
 def matrix(jsonbestand, jsonbestandsnaam, tabnaam=None):
     """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
     Indien geen fouten, laad de pagina met een overzicht van de data.
     """
-
     if jsonbestand:
         # json data bestand ophalen en evt. fouten teruggeven
         data_bestand, fouten = ophalen_en_controleren_databestand(jsonbestand)
