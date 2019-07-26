@@ -53,15 +53,14 @@ table {
 
 
 <body>
-
-    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" />
-    <script type="text/javascript" src="{{ url_for('static', filename='js/muteren.js') }}" />
+    <!-- Tabellen met detail -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" ></script>
 
     <script>
         data = {{ data | tojson }};
         meta = {{ meta | tojson }};
         contact = {{ contact | tojson }};
-        filename = {{ bestandsnaam | tojson }};
+        bestandsnaam = {{ bestandsnaam | tojson }};
     </script>
 
     <body bgcolor="#1a1aff">
@@ -76,16 +75,11 @@ table {
             <div>
                 Definitiebestand: {{ sjabloon['omschrijving'] }}, {{ sjabloon['overheidslaag'] }}, {{ sjabloon['boekjaar'] }}
 
-                <!-- Opmerking Vincent, 13-6-2019: -->
-                <!-- onderstaande werkte niet, gaf foutmelding: -->
-                <!-- ReferenceError: ... is not defined -->
-                <!-- onclick="download_data(filename, meta, contact);" -->
-                <!-- ik weet op dit moment niet hoe we dit kunnen fixen -->
                 <button
                         class="btn btn-primary"
                         type="button"
                         title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="download_data('', '', '');"
+                        onclick="download_data(bestandsnaam, meta, contact);"
                         style="float: right" >
                     Data downloaden
                 </button>
@@ -112,7 +106,7 @@ table {
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            {{ record_toevoegen(lasten) }}
+            {{ record_toevoegen(lasten, data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -120,7 +114,7 @@ table {
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            {{ record_toevoegen(lasten) }}
+            {{ record_toevoegen(baten, data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -128,7 +122,7 @@ table {
         </div>
 
         <div id="LastenBM" class="tabcontent">
-            {{ record_toevoegen(balans_lasten) }}
+            {{ record_toevoegen(balans_lasten, data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -136,7 +130,7 @@ table {
         </div>
 
         <div id='BatenBM' class="tabcontent">
-            {{ record_toevoegen(balans_baten) }}
+            {{ record_toevoegen(balans_baten, data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -144,25 +138,7 @@ table {
         </div>
 
         <div id="Balans" class="tabcontent">
-            <form class="form-inline text-center" role="form">
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="rij">Balanscode:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="rij">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="kolom">Standper:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="kolom">
-            </div>
-            <div class="form-group" style="padding-right: 50px;">
-                <label for="bedrag">Bedrag:&nbsp; </label>
-	            <input class="form-control" style="width:100px;" id="bedrag">
-            </div>
-                <div class="form-group"><label style="width:100px;"></label></div>
-                <button class="btn btn-primary" type="button"
-                        title="Functionaliteit is nog niet beschikbaar!"
-                        onclick="alert('Muteren functionaliteit is nog niet beschikbaar.');">
-                        Mutatie verwerken</button>
-            </form>
+            {{ record_toevoegen(balans_standen, data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
@@ -209,8 +185,18 @@ table {
 
       // Show the current tab, and add an "active" class to the button that opened the tab
       document.getElementById(tabnaam).style.display = "block";
-      evt.currentTarget.className += " active";
+
+      if (evt)
+          evt.currentTarget.className += " active";
     }
+
+    {% if tabnaam %}
+    openTab(event, "{{ tabnaam }}");
+    /* $(document).ready(function() {
+        openTab(event, "{{ tabnaam }}");
+    }); */
+    {% endif %}
+
     </script>
 
     </body>

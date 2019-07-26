@@ -2,11 +2,7 @@ var IS_TUSSENTOTAAL = '_is_tussentotaal';
 
 function download_data(filename, meta, contact) {
 
-    // TODO Dit is een beginnetje, maar bevat nu nog alleen de data (alles op een hoop)
     var data = {};
-    var meta = JSON.parse('{"gemeente": "CBS-dorp", "id":"XYZ12345"}');
-    var contact = JSON.parse('{"naam": "Vincent", "e-mail":"vs.ohm@cbs.nl"}');
-
     var tabellen = $('table.pvtTable.draaitabel');
     for (var i = 0; i < tabellen.length; i++) {
         var tabel = $(tabellen[i]);
@@ -27,7 +23,14 @@ function download_data(filename, meta, contact) {
 
     // Generate download link
     var text = JSON.stringify(json_bestand, null, 2);
-    download('data.json', text);
+
+    // Zorg dat downloads altijd eindigen op '.aangepast.json'
+    var toevoeging = '.iv3_aangepast'
+    var filename_new = (filename.replace('.json', "")
+                                .replace(toevoeging, "")
+                                .concat(toevoeging)
+                                .concat('.json'));
+    download(filename_new, text);
 }
 
 function download(filename, text) {

@@ -31,7 +31,7 @@
         {% for rij in tabel.rijen %}
         <tr>
             <th class="pvtRowLabel" rowspan="1" colspan="2">
-                {{ rij }} {{ tabel.rij_omschrijvingen[rij] }}
+                {{ rij }} {{ tabel.geef_rij_omschrijving(rij) }}
             </th>
             {% for kolom in tabel.kolommen %}
             <td class="td default"
@@ -70,27 +70,33 @@
 
 {% endmacro %}
 
-{% macro record_toevoegen(draaitabel) %}
+{% macro record_toevoegen(draaitabel, data, bestandsnaam) %}
 
-<form class="form-inline text-center muteerknoppen" role="form">
+<form class="form-inline text-center muteerknoppen"
+      role="form"
+      method="post"
+>
     <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.rij_naam }}">
         <label for="rij">{{ draaitabel.rij_naam.title() }}:&nbsp; </label>
-        <!-- <input class="form-control"
-               style="width:100px;"
-               id="rij"> -->
         <select class='form-control mutatie-invoer'
-                style="width:100px;">
-            {% for rij, omschrijving in draaitabel.rij_omschrijvingen.items() %}
-            <option value="{{ rij }}">{{ rij }}: {{ omschrijving.title() }}</option>
+                style="width:100px;"
+                name="{{ draaitabel.rij_naam }}">
+            {% for code in draaitabel.geef_rij_keuzes() %}
+            <option value="{{ code }}">
+                {{ code }}: {{ draaitabel.geef_rij_omschrijving(code).title() }}
+            </option>
             {% endfor %}
         </select>
     </div>
     <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.kolom_naam }}">
         <label for="kolom">{{ draaitabel.kolom_naam.title() }}:&nbsp; </label>
         <select class='form-control mutatie-invoer'
-                style="width:100px;">
-            {% for kolom, omschrijving in draaitabel.kolom_omschrijvingen.items() %}
-            <option value="{{ kolom }}">{{ kolom }}: {{ omschrijving.title() }}</option>
+                style="width:100px;"
+                name="{{ draaitabel.kolom_naam }}" >
+            {% for code in draaitabel.geef_kolom_keuzes() %}
+            <option value="{{ code }}">
+                {{ code }}: {{ draaitabel.geef_kolom_omschrijving(code).title() }}
+            </option>
             {% endfor %}
         </select>
     </div>
@@ -100,14 +106,28 @@
                style="width:100px;"
                id="bedrag"
                type="number"
+               name="bedrag"
                value="0"
-               oninput="this.value=this.value.replace(/(?![0-9-])./gmi,'')"
         />
     </div>
+
+    <input type="hidden"
+           name="waarde_kant"
+           value="{{ draaitabel.naam }}" />
+
+    <input type="hidden"
+           name="bestandsnaam"
+           value='{{ bestandsnaam }}'/>
+
+    <!-- TODO Onderstaande invoer is eigenlijk voor elke draaitabel hetzelfde -->
+    <!-- Netter zou zijn om dit via een javascript functie op te halen. -->
+    <input type="hidden"
+           name="data"
+           value='{{ data | tojson }}'/>
+
     <div class="form-group"><label style="width:100px;"></label></div>
-    <button class="btn btn-primary" type="button"
-            title="Functionaliteit is nog niet beschikbaar!"
-            onclick="toevoegen_mutatie(this);">
+    <button class="btn btn-primary" type="submit"
+            title="Functionaliteit is nog niet beschikbaar!">
         Mutatie verwerken</button>
 </form>
 
