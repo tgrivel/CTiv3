@@ -51,8 +51,6 @@ table {
 }
 </style>
 
-
-<body>
     <!-- Tabellen met detail -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" ></script>
 
@@ -78,7 +76,7 @@ table {
                 <button
                         class="btn btn-primary"
                         type="button"
-                        title="Functionaliteit is nog niet beschikbaar!"
+                        title="Klik om json-bestand te downloaden"
                         onclick="download_data(bestandsnaam, meta, contact);"
                         style="float: right" >
                     Data downloaden
@@ -88,17 +86,17 @@ table {
              <!-- Tab links -->
 
                 <div class="tab">
-                    <button class="tablinks" style="min-width:100px;"
+                    <button name="tab_LastenLR" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'LastenLR')">Lasten</button>
-                    <button class="tablinks" style="min-width:100px;"
+                    <button name="tab_BatenLR" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'BatenLR')">Baten</button>
-                    <button class="tablinks" style="min-width:100px;"
+                    <button name="tab_LastenBM" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'LastenBM')">Balansmutaties lasten</button>
-                    <button class="tablinks" style="min-width:100px;"
+                    <button name="tab_BatenBM" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'BatenBM')">Balansmutaties baten</button>
-                    <button class="tablinks" style="min-width:100px;"
+                    <button name="tab_Balans" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'Balans')">Balans standen</button>
-                    <button class="tablinks" style="min-width:100px;"
+                    <button name="tab_Controles" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'Controles')">Controles</button>
                 </div>
 
@@ -164,6 +162,9 @@ table {
     <script>
 
     function openTab(evt, tabnaam) {
+      // Note: we don't use evt (event) anymore,
+      // could be removed from function arguments
+
       // Declare all variables
       var i, tabcontent, tablinks;
 
@@ -181,17 +182,18 @@ table {
       tablinks = document.getElementsByClassName("tablinks");
       for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
+        if (tablinks[i].getAttribute("name") == "tab_" + tabnaam) {
+            // make selected tablink active (grey)
+            tablinks[i].className += " active";
+        }
       }
 
       // Show the current tab, and add an "active" class to the button that opened the tab
       document.getElementById(tabnaam).style.display = "block";
-
-      if (evt)
-          evt.currentTarget.className += " active";
     }
 
     {% if tabnaam %}
-    openTab(event, "{{ tabnaam }}");
+    openTab(true, "{{ tabnaam }}");
     /* $(document).ready(function() {
         openTab(event, "{{ tabnaam }}");
     }); */
