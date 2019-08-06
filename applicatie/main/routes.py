@@ -4,14 +4,8 @@ import sys
 
 from flask import render_template, request
 
-from applicatie.logic.aggregeren import aggregeren_volledig
-from applicatie.logic.codelijst import Codelijst
-from applicatie.logic.controles import controle_met_defbestand
-from applicatie.logic.draaitabel import DraaiTabel
-from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
-from applicatie.logic.plausibiliteitscontrole import PlausibiliteitsControle
 from applicatie.main import bp
-from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
+from applicatie.main.verwerking import Verwerking
 
 
 @bp.route("/", methods=['GET', 'POST'])
@@ -29,41 +23,9 @@ def index():
             # Mutatie verwerken
             mutatie = reqform
             data = json.loads(mutatie.pop('data'))
-
-            waarde_kant = mutatie.pop('waarde_kant')
             bestandsnaam = mutatie.pop('bestandsnaam')
-
-            # Automatisch open bijbehorende tab
-            if waarde_kant == 'lasten':
-                tabnaam = 'LastenLR'
-            elif waarde_kant == 'baten':
-                tabnaam = 'BatenLR'
-            elif waarde_kant == 'balans_lasten':
-                tabnaam = 'LastenBM'
-            elif waarde_kant == 'balans_baten':
-                tabnaam = 'BatenBM'
-            elif waarde_kant == 'balans_standen':
-                tabnaam = 'Balans'
-            else:
-                # Foutafhandeling
-                print('Fout: Onbekende waarde_kant', waarde_kant)
-                tabnaam = None
-
-            try:
-                if '.' in mutatie['bedrag']:
-                    bedrag = float(mutatie['bedrag'])
-                else:
-                    bedrag = int(mutatie['bedrag'])
-            except ValueError:
-                print(f"Fout: bedrag is geen numerieke waarde {mutatie['bedrag']})", file=sys.stderr)
-                bedrag = 0
-
-            mutatie['bedrag'] = bedrag
-            mutatie['opmerking'] = "Mutatie toegevoegd met CTiv3."
-
-            data['data'][waarde_kant].append(mutatie)
             jsonbestand = io.BytesIO(json.dumps(data).encode('utf-8'))
-            return matrix(jsonbestand, bestandsnaam, tabnaam)
+            return matrix(jsonbestand, bestandsnaam, mutatie)
 
         elif not request.files.get('file', None):
             return render_template("index.html", errormessages=['Geen json bestand geselecteerd'])
@@ -85,113 +47,75 @@ def index():
         return render_template("index.html", errormessages=fouten)
 
 
+def geef_tabnaam(waarde_kant):
+    # Automatisch open bijbehorende tab
+    if waarde_kant == 'lasten':
+        tabnaam = 'LastenLR'
+    elif waarde_kant == 'baten':
+        tabnaam = 'BatenLR'
+    elif waarde_kant == 'balans_lasten':
+        tabnaam = 'LastenBM'
+    elif waarde_kant == 'balans_baten':
+        tabnaam = 'BatenBM'
+    elif waarde_kant == 'balans_standen':
+        tabnaam = 'Balans'
+    else:
+        # Foutafhandeling
+        print('Fout: Onbekende waarde_kant', waarde_kant)
+        tabnaam = None
+    return tabnaam
+
+
 # opmerking: we staan alleen de POST-methode toe, anders krijg je een fout.
 @bp.route("/matrix", methods=['POST'])
-def matrix(jsonbestand, jsonbestandsnaam, tabnaam=None):
+def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
     """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
     Indien geen fouten, laad de pagina met een overzicht van de data.
     """
-    if jsonbestand:
-        # json data bestand ophalen en evt. fouten teruggeven
-        data_bestand, fouten = ophalen_en_controleren_databestand(jsonbestand)
 
-        # json definitie bestand ophalen van web
-        # in de controles bij het inlezen is al bepaald dat dit bestaat
-        if not fouten:
-            meta = data_bestand['metadata']
-            overheidslaag = meta['overheidslaag']
-            boekjaar = meta['boekjaar']
-            bestandsnaam = IV3_DEF_FILE.format(overheidslaag, boekjaar)
-            definitie_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebestand')
+    verwerking = Verwerking(jsonbestand)
 
-        if not fouten:
-            # Controle databestand met definitiebestand
-            fouten = controle_met_defbestand(data_bestand, definitie_bestand)
+    if mutatie and not verwerking.fouten:
+        waarde_kant = mutatie.pop('waarde_kant')
+        tabnaam = geef_tabnaam(waarde_kant)
 
-        if not fouten:
-            # json bestand is opgehaald en geen fouten zijn gevonden
-            # vervolgens data aggregeren en tonen op het scherm
-            data = data_bestand['data']
+        try:
+            if '.' in mutatie['bedrag']:
+                bedrag = float(mutatie['bedrag'])
+            else:
+                bedrag = int(mutatie['bedrag'])
+        except ValueError:
+            print(f"Fout: bedrag is geen numerieke waarde {mutatie['bedrag']})", file=sys.stderr)
+            bedrag = 0
 
-            # de data volledig aggregeren
-            data_geaggregeerd, fouten = aggregeren_volledig(data, definitie_bestand)
+        mutatie['bedrag'] = bedrag
+        mutatie['opmerking'] = "Mutatie toegevoegd met CTiv3."
+        verwerking.muteer(waarde_kant, mutatie)
+    else:
+        tabnaam = None
 
-        if fouten:
-            return render_template("index.html", errormessages=fouten)
+    verwerking.run()
 
-        # Zoek omschrijvingen bij de codes zodat we deze in de tabel kunnen tonen
-        codelijsten = {}
+    if verwerking.fouten:
+        return render_template("index.html", errormessages=verwerking.fouten)
 
-        for naam, codelijst in definitie_bestand['codelijsten'].items():
-            codelijsten[naam] = Codelijst(codelijst['codelijst'])
+    # Render sjabloon
+    params = {
+        'lasten': verwerking.lasten,
+        'balans_lasten': verwerking.balans_lasten,
+        'baten': verwerking.baten,
+        'balans_baten': verwerking.balans_baten,
+        'balans_standen': verwerking.balans_standen,
+        'controle_resultaten': verwerking.controle_resultaten,
+        'bestandsnaam': jsonbestandsnaam,
+        'meta': verwerking.metadata,
+        'contact': verwerking.contact,
+        'tabnaam': tabnaam,
 
-        lasten = DraaiTabel(
-            naam='lasten',
-            data=data_geaggregeerd['lasten'],
-            rij_naam='taakveld',
-            kolom_naam='categorie',
-            rij_codelijst=codelijsten['taakveld'],
-            kolom_codelijst=codelijsten['categorie_lasten'])
-
-        balans_lasten = DraaiTabel(
-            naam='balans_lasten',
-            data=data_geaggregeerd['balans_lasten'],
-            rij_naam='balanscode',
-            kolom_naam='categorie',
-            rij_codelijst=codelijsten['balanscode'],
-            kolom_codelijst=codelijsten['categorie_lasten'])
-
-        baten = DraaiTabel(
-            naam='baten',
-            data=data_geaggregeerd['baten'],
-            rij_naam='taakveld',
-            kolom_naam='categorie',
-            rij_codelijst=codelijsten['taakveld'],
-            kolom_codelijst=codelijsten['categorie_baten'])
-
-        balans_baten = DraaiTabel(
-            naam='balans_baten',
-            data=data_geaggregeerd['balans_baten'],
-            rij_naam='balanscode',
-            kolom_naam='categorie',
-            rij_codelijst=codelijsten['balanscode'],
-            kolom_codelijst=codelijsten['categorie_baten'])
-
-        balans_standen = DraaiTabel(
-            naam='balans_standen',
-            data=data_geaggregeerd['balans_standen'],
-            rij_naam='balanscode',
-            kolom_naam='standper',
-            rij_codelijst=codelijsten['balanscode'],
-            kolom_codelijst=codelijsten['standper'])
-
-        # Voer controles uit
-        plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'],
-                                                            controle['definitie'])
-                                    for controle in definitie_bestand['controlelijst']['controles']]
-        controle_resultaten = [controle.run(data_geaggregeerd) for controle in plausibiliteitscontroles]
-
-        metadata = data_bestand['metadata']
-        contact = data_bestand['contact']
-        sjabloon_meta = definitie_bestand['metadata']
-
-        # Render sjabloon
-        params = {
-            'lasten': lasten,
-            'balans_lasten': balans_lasten,
-            'baten': baten,
-            'balans_baten': balans_baten,
-            'balans_standen': balans_standen,
-            'controle_resultaten': controle_resultaten,
-            'bestandsnaam': jsonbestandsnaam,
-            'meta': metadata,
-            'contact': contact,
-            'tabnaam': tabnaam,
-
-            # hebben we onderstaande nog nodig?
-            'data': data_bestand,
-            'sjabloon': sjabloon_meta,
-            'errormessage': "",  # TODO bij foutmeldingen geven we index terug
-        }
+        # hebben we onderstaande nog nodig?
+        'data': verwerking.data_bestand,
+        'sjabloon': verwerking.sjabloon_meta,
+        'errormessage': "",
+    }
 
     return render_template("matrix.html", **params)
