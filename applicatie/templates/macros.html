@@ -34,7 +34,7 @@
                 {{ rij }} {{ tabel.geef_rij_omschrijving(rij) }}
             </th>
             {% for kolom in tabel.kolommen %}
-            <td class="td default"
+            <td class="td default" nowrap="true"
                 {{ tabel.rij_naam }}="{{ rij }}"
                 {{ tabel.kolom_naam }}="{{ kolom }}"
                 onclick="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
