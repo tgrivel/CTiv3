@@ -14,11 +14,7 @@ class Verwerking(object):
         self._codelijsten = {}
 
         # Draaitabellen
-        self.lasten = None
-        self.balans_lasten = None
-        self.baten = None
-        self.balans_baten = None
-        self.balans_standen = None
+        self.draaitabellen = {}
 
         # Anders
         self.controle_resultaten = None
@@ -81,7 +77,7 @@ class Verwerking(object):
     def _maken_draaitabellen(self, codelijsten, data_geaggregeerd):
         """Maak alle draaitabellen."""
 
-        self.lasten = DraaiTabel(
+        self.draaitabellen['lasten'] = DraaiTabel(
             naam='lasten',
             data=data_geaggregeerd['lasten'],
             rij_naam='taakveld',
@@ -89,7 +85,7 @@ class Verwerking(object):
             rij_codelijst=codelijsten['taakveld'],
             kolom_codelijst=codelijsten['categorie_lasten'])
 
-        self.balans_lasten = DraaiTabel(
+        self.draaitabellen['balans_lasten'] = DraaiTabel(
             naam='balans_lasten',
             data=data_geaggregeerd['balans_lasten'],
             rij_naam='balanscode',
@@ -97,7 +93,7 @@ class Verwerking(object):
             rij_codelijst=codelijsten['balanscode'],
             kolom_codelijst=codelijsten['categorie_lasten'])
 
-        self.baten = DraaiTabel(
+        self.draaitabellen['baten'] = DraaiTabel(
             naam='baten',
             data=data_geaggregeerd['baten'],
             rij_naam='taakveld',
@@ -105,7 +101,7 @@ class Verwerking(object):
             rij_codelijst=codelijsten['taakveld'],
             kolom_codelijst=codelijsten['categorie_baten'])
 
-        self.balans_baten = DraaiTabel(
+        self.draaitabellen['balans_baten'] = DraaiTabel(
             naam='balans_baten',
             data=data_geaggregeerd['balans_baten'],
             rij_naam='balanscode',
@@ -113,7 +109,7 @@ class Verwerking(object):
             rij_codelijst=codelijsten['balanscode'],
             kolom_codelijst=codelijsten['categorie_baten'])
 
-        self.balans_standen = DraaiTabel(
+        self.draaitabellen['balans_standen'] = DraaiTabel(
             naam='balans_standen',
             data=data_geaggregeerd['balans_standen'],
             rij_naam='balanscode',

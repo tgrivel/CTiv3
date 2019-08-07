@@ -101,20 +101,16 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
 
     # Render sjabloon
     params = {
-        'lasten': verwerking.lasten,
-        'balans_lasten': verwerking.balans_lasten,
-        'baten': verwerking.baten,
-        'balans_baten': verwerking.balans_baten,
-        'balans_standen': verwerking.balans_standen,
-        'controle_resultaten': verwerking.controle_resultaten,
         'bestandsnaam': jsonbestandsnaam,
-        'meta': verwerking.metadata,
-        'contact': verwerking.contact,
         'tabnaam': tabnaam,
-
-        # hebben we onderstaande nog nodig?
         'data': verwerking.data_bestand,
         'sjabloon': verwerking.sjabloon_meta,
+        'draaitabellen': verwerking.draaitabellen,
+        'controle_resultaten': verwerking.controle_resultaten,
+        'meta': verwerking.metadata,
+        'contact': verwerking.contact,
+
+        # hebben we onderstaande nog nodig?
         'errormessage': "",
     }
 

@@ -104,43 +104,43 @@ table {
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            {{ record_toevoegen(lasten, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['lasten'], data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
-            {{ draaitabel(lasten) }}
+            {{ draaitabel(draaitabellen['lasten']) }}
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            {{ record_toevoegen(baten, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['baten'], data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
-            {{ draaitabel(baten) }}
+            {{ draaitabel(draaitabellen['baten']) }}
         </div>
 
         <div id="LastenBM" class="tabcontent">
-            {{ record_toevoegen(balans_lasten, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['balans_lasten'], data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
-            {{ draaitabel(balans_lasten) }}
+            {{ draaitabel(draaitabellen['balans_lasten']) }}
         </div>
 
         <div id='BatenBM' class="tabcontent">
-            {{ record_toevoegen(balans_baten, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['balans_baten'], data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
-            {{ draaitabel(balans_baten) }}
+            {{ draaitabel(draaitabellen['balans_baten']) }}
         </div>
 
         <div id="Balans" class="tabcontent">
-            {{ record_toevoegen(balans_standen, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['balans_standen'], data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
-            {{ draaitabel(balans_standen) }}
+            {{ draaitabel(draaitabellen['balans_standen']) }}
         </div>
 
         <div id="Controles" class="tabcontent">
