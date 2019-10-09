@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
 
-    <link href="{{url_for('static', filename='css/main.css') }}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/ctiv.css') }}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pivot.css') }}">
+    <!-- <link href="{{url_for('static', filename='css/main.css') }}" rel="stylesheet"> -->
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/bootstrap.min.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/bootstrap-theme.min.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/pivot.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/pivot_extra.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/cbs-style.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/ctiv.css') }}" >
     <meta charset="utf-8">
     <title>Check iv3</title>
 
@@ -19,23 +23,23 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js"></script>
     <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
     <!-- Pivot table -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/pivot.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/d3_renderers.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plotly_renderers.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/export_renderers.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/matrix.js') }}"></script>
 
 </head>
-<body class="body" style = "background-color:#0066ff">
-    <div class="container-fluid" style="minheight:95%; ">
+<body class="body" style="background-color: #00A1CD">
+    <div class="container-fluid" style="min-height:95%; ">
         <div class ="row">
-            <div class="col-sm-10">
+            <div class="col-sm-12">
                 <br>
                 <center>
-                    <font color="#FFFFFF">
-                        <h1> CBS Controle hulpmiddel voor iv3 bestanden</h1>
-                    </font>
+                    <h1> CBS Controle hulpmiddel voor iv3 bestanden</h1>
                 </center>
             </div>
         </div>

@@ -6,38 +6,45 @@
 
 {% block content %}
 
-<form action="" class="form form-horizontal margin-medium" enctype="multipart/form-data" method="post">
-
-	<body>
-		<!-- <body bgcolor="#0080FF"> -->
-		<body bgcolor="#0066FF">
-		<font color="#FFFFFF">
+	<form class="form form-horizontal margin-medium" enctype="multipart/form-data" method="post">
 		<div class="col-sm-12">
 			<br>
 				<center>
 					<h2>Welkom bij de controletool voor iv3-leveringen aan het CBS V1.1</h2>
-					<p>Een hulpmiddel om te controleren of uw json bestand voldoet aan de plausibiliteitstoetsen van het CBS</p>
-						<p>Dit hulpmiddel is bedoeld voor overheidsinstanties die de eigen financiële gegevens <br/>
-							beschikbaar willen stellen voor download door het CBS.</p>
-						<p>Het is niet mogelijk om gegevens direct aan het CBS te zenden.</p>
-					<form method="post" enctype="multipart/form-data">
-					 <div>
-					   <label for="file">Kies een JSON-bestand ter controle</label><br/>
-					   <input type="file" id="file" accept=".json" name="file" multiple>
-					 </div>
-						<br/>
+					<h4>Een hulpmiddel om te controleren of uw json bestand voldoet aan de plausibiliteitstoetsen van het CBS</h4>
+						<h4>Dit hulpmiddel is bedoeld voor overheidsinstanties die de eigen financiële gegevens<br/>
+							beschikbaar willen stellen voor download door het CBS.</h4>
+						<h4>Het is niet mogelijk om gegevens direct aan het CBS te zenden.</h4>
+					<br/>
 
-                     <div>
-					   <button>Start controle van gekozen JSON-bestand</button>
-					 </div>
+					<div class="input-group col-sm-4 center-block">
+    					<label class="input-group-btn">
+							<span class="btn btn-primary btn-block">
+            				Kies een JSON-bestand&hellip;
+							<input id="file" accept=".json" name="file" type="file" style="display:none;"
+								   onchange="$('#upload-file-info').val($(this).val().split('\\').pop());
+								   				$('div#error_messages').empty();">
+							</span>
+						</label>
+						<input type="text" class="form-control text-center" id="upload-file-info" readonly>
+					</div>
+
+					<div style="clear:both;height:2em;"></div>
+
+					<div class="input-group col-sm-4 center-block">
+					   <button class="btn btn-primary btn-block">
+						   Start controle van gekozen JSON-bestand
+					   </button>
+					</div>
 
                     <br/>
 
+					<div id="error_messages">
                     {% for errormessage in errormessages %}
 						<div class="error">{{ errormessage }}</div>
                     {% endfor %}
+					</div>
 
-					</form>
 					<!--
                     <div>
 						<input type="text" value="8" name="mytextbox" size="1"/>
@@ -48,10 +55,7 @@
 				</center>
 			</br>
 		</div>
-		</font>
-    </body>
-
-</form>
+	</form>
 {% endblock %}
 
 <!--

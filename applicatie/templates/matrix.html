@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
-{% from 'macros.html' import draaitabel %}
+{% from 'macros.html' import draaitabel, controle_resultaat, record_toevoegen %}
 
 {% block content %}
 <style>
+
+// TODO Css moet niet hier maar in css-file komen te staan.
+
 body {font-family: Arial;}
 
 /* Style the tab */
@@ -22,6 +25,7 @@ body {font-family: Arial;}
   padding: 14px 16px;
   transition: 0.3s;
   font-size: 17px;
+  color: black;
 }
 
 /* Change background color of buttons on hover */
@@ -46,64 +50,111 @@ table {
   border-collapse: collapse;
 }
 </style>
-<body>
+
+    <!-- Tabellen met detail -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" ></script>
+
     <script>
-        /* is dit stukje nog nodig??? TG*/
-        var data = {{ data | tojson }};
+        data = {{ data | tojson }};
+        meta = {{ meta | tojson }};
+        contact = {{ contact | tojson }};
+        bestandsnaam = {{ bestandsnaam | tojson }};
     </script>
+
     <body bgcolor="#1a1aff">
     <font color="#FFFFFF">
-        <div>Inzender: {{ meta['overheidsnaam']}}</div>
-        <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
-        <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
-        <div>Datum : {{ meta['datum']}} </div>
-        <div>Definitiebestand: {{ sjabloon['omschrijving'] }} , {{ sjabloon['overheidslaag'] }} , {{ sjabloon['boekjaar'] }}   </div>
+        <div style="position: relative;left: 5px;font-size: 17px;padding: 10px;">
+            <div>Bestand: {{ bestandsnaam }}</div>
+            <div>Inzender: {{ meta['overheidsnaam']}}</div>
+            <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
+            <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
+            <div>Datum : {{ meta['datum']}}</div>
 
+            <div>
+                Definitiebestand: {{ sjabloon['omschrijving'] }}, {{ sjabloon['overheidslaag'] }}, {{ sjabloon['boekjaar'] }}
+
+                <button
+                        class="btn btn-primary"
+                        type="button"
+                        title="Klik om json-bestand te downloaden"
+                        onclick="download_data(bestandsnaam, meta, contact);"
+                        style="float: right" >
+                    Data downloaden
+                </button>
+            </div>
+        </div>
              <!-- Tab links -->
 
                 <div class="tab">
-                    <button class="tablinks" onclick="openTab(event, 'LastenLR')">Lasten lopende rekening</button>
-                    <button class="tablinks" onclick="openTab(event, 'BatenLR')">Baten lopende rekening</button>
-                    <button class="tablinks" onclick="openTab(event, 'LastenBM')">Lasten balansmutaties</button>
-                    <button class="tablinks" onclick="openTab(event, 'BatenBM')">Baten balansmutaties</button>
-                    <button class="tablinks" onclick="openTab(event, 'Balans')">Balans standen</button>
-                    <button class="tablinks" onclick="openTab(event, 'Controles')">Controles</button>
+                    <button name="tab_LastenLR" class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'LastenLR')">Lasten</button>
+                    <button name="tab_BatenLR" class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'BatenLR')">Baten</button>
+                    <button name="tab_LastenBM" class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'LastenBM')">Balansmutaties lasten</button>
+                    <button name="tab_BatenBM" class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'BatenBM')">Balansmutaties baten</button>
+                    <button name="tab_Balans" class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'Balans')">Balans standen</button>
+                    <button name="tab_Controles" class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'Controles')">Controles</button>
                 </div>
+
+        <div style="clear:both;height:1em;"></div>
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            <h3>Lasten lopende rekening</h3>
-                {{ draaitabel(lasten) }}
+            {{ record_toevoegen(lasten, data, bestandsnaam) }}
+
+            <div style="clear:both;height:2em;"></div>
+
+            {{ draaitabel(lasten) }}
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            <h3>Baten lopende rekening</h3>
+            {{ record_toevoegen(baten, data, bestandsnaam) }}
+
+            <div style="clear:both;height:2em;"></div>
+
             {{ draaitabel(baten) }}
         </div>
 
         <div id="LastenBM" class="tabcontent">
-            <h3>Balansmutaties lasten</h3>
+            {{ record_toevoegen(balans_lasten, data, bestandsnaam) }}
+
+            <div style="clear:both;height:2em;"></div>
+
             {{ draaitabel(balans_lasten) }}
         </div>
 
         <div id='BatenBM' class="tabcontent">
-            <h3>Balansmutaties baten</h3>
+            {{ record_toevoegen(balans_baten, data, bestandsnaam) }}
+
+            <div style="clear:both;height:2em;"></div>
+
             {{ draaitabel(balans_baten) }}
         </div>
 
         <div id="Balans" class="tabcontent">
-            <h3>Balans</h3>
+            {{ record_toevoegen(balans_standen, data, bestandsnaam) }}
+
+            <div style="clear:both;height:2em;"></div>
+
             {{ draaitabel(balans_standen) }}
         </div>
 
-        <div id="LastenDetail">
-            <table>
-                <thead>
+        <div id="Controles" class="tabcontent">
+            <h3 style="color:white;">Controles</h3>
+            {% for resultaat in controle_resultaten %}
+            {{ controle_resultaat(resultaat) }}
+            {% endfor %}
+        </div>
 
-                </thead>
-                <tbody>
-
-                </tbody>
+        <div id="DetailScherm" class="container">
+            <p id="DetailHeader" style="color:white;margin-top: 10px;"></p>
+            <table id="Detail" class="pvtTable default" border="1" style="opacity: 1">
+                <thead> <tr></tr> </thead>
+                <tbody></tbody>
             </table>
         </div>
 
@@ -111,8 +162,15 @@ table {
     <script>
 
     function openTab(evt, tabnaam) {
+      // Note: we don't use evt (event) anymore,
+      // could be removed from function arguments
+
       // Declare all variables
       var i, tabcontent, tablinks;
+
+      // Verberg tabel met details
+      $("#DetailHeader").text("");
+      $("#Detail").hide(0);
 
       // Get all elements with class="tabcontent" and hide them
       tabcontent = document.getElementsByClassName("tabcontent");
@@ -124,13 +182,25 @@ table {
       tablinks = document.getElementsByClassName("tablinks");
       for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
+        if (tablinks[i].getAttribute("name") == "tab_" + tabnaam) {
+            // make selected tablink active (grey)
+            tablinks[i].className += " active";
+        }
       }
 
       // Show the current tab, and add an "active" class to the button that opened the tab
       document.getElementById(tabnaam).style.display = "block";
-      evt.currentTarget.className += " active";
     }
+
+    {% if tabnaam %}
+    openTab(true, "{{ tabnaam }}");
+    /* $(document).ready(function() {
+        openTab(event, "{{ tabnaam }}");
+    }); */
+    {% endif %}
+
     </script>
+
     </body>
 
 {% endblock %}

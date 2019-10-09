@@ -4,7 +4,11 @@
 import os
 from dotenv import load_dotenv
 
-REPO_PATH = "https://raw.github.com/tgrivel/iv3_modellen/master/"
+
+# Nieuwe REPO voor schema en definitiebestand:
+IV3_REPO_PATH = "https://raw.github.com/statistiekcbs/iv3_definities/master/"
+IV3_SCHEMA_FILE = "iv3_data_schema_v{}.json"
+IV3_DEF_FILE = "iv3_definities_{}_{}.json"
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))

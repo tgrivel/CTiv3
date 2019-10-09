@@ -2,21 +2,28 @@
 
 <!-- Tab content -->
 <div class="container">
-    <table border="1" class="pvtTable" style="opacity: 1">
+    <!-- TODO Je kunt spelen met class=table of table-striped -->
+    <!-- https://getbootstrap.com/docs/3.3/css/#tables-example -->
+    <table border="1" class="table pvtTable draaitabel" style="opacity: 1"
+           naam='{{ tabel.naam }}'
+           rij_naam='{{ tabel.rij_naam }}'
+           kolom_naam='{{ tabel.kolom_naam }}'
+           data='{{ tabel.data | tojson }}'
+           detail_kolommen='{{ tabel.geef_detail_kolommen() | tojson }}'
+    >
         <thead>
         <tr>
             <th colspan="1" rowspan="1"></th>
-            <th class="pvtAxisLabel">{{ tabel.kolom_naam }}</th>
+            <th class="pvtAxisLabel">{{ tabel.kolom_naam.title() }}</th>
 
             {% for kolom in tabel.kolommen %}
             <th class="pvtTable pvtColLabel" colspan="1" rowspan="2">
                 {{' ' + kolom + ' '}}
             </th>
             {% endfor %}
-            <th class="pvtTotalLabel" rowspan="2">Totaal</th>
         </tr>
         <tr>
-            <th class="pvtAxisLabel">{{ tabel.rij_naam }}</th>
+            <th class="pvtAxisLabel">{{ tabel.rij_naam.title() }}</th>
         </tr>
         </thead>
         <tbody>
@@ -24,16 +31,104 @@
         {% for rij in tabel.rijen %}
         <tr>
             <th class="pvtRowLabel" rowspan="1" colspan="2">
-                {{ rij }}
+                {{ rij }} {{ tabel.geef_rij_omschrijving(rij) }}
             </th>
             {% for kolom in tabel.kolommen %}
-            <td class="pvtVal" {{ tabel.rij_naam }}="{{ rij }}" {{ tabel.kolom_naam }}="{{ kolom }}">
+            <td class="td default" nowrap="true"
+                {{ tabel.rij_naam }}="{{ rij }}"
+                {{ tabel.kolom_naam }}="{{ kolom }}"
+                onclick="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
+                onkeydown="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
+            >
                 {{ tabel[rij, kolom] }}
             </td>
             {% endfor %}
         </tr>
         {% endfor %}
     </table>
+
+    <p>Klik een cel aan voor detail-informatie</p>
 </div>
+
+{% endmacro %}
+
+{% macro controle_resultaat(resultaat) %}
+<h4>Uitvoer van {{ resultaat.controle.omschrijving }}</h4>
+
+{% if resultaat.is_geslaagd %}
+<p class="success">De controle is geslaagd.</p>
+{% else %}
+<p class="error">De controle is gefaald. Zie onderstaande rapportage:</p>
+
+<ol>
+    {% for (opmerking, omschrijving) in resultaat.rapportage() %}
+    <li title="{{ omschrijving }}">{{ opmerking }}</li>
+    {% endfor %}
+</ol>
+
+{% endif %}
+
+{% endmacro %}
+
+{% macro record_toevoegen(draaitabel, data, bestandsnaam) %}
+
+<form class="form-inline text-center muteerknoppen"
+      role="form"
+      method="post"
+>
+    <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.rij_naam }}">
+        <label for="rij">{{ draaitabel.rij_naam.title() }}:&nbsp; </label>
+        <select class='form-control mutatie-invoer'
+                style="width:100px;"
+                name="{{ draaitabel.rij_naam }}">
+            {% for code in draaitabel.geef_rij_keuzes() %}
+            <option value="{{ code }}">
+                {{ code }}: {{ draaitabel.geef_rij_omschrijving(code).title() }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.kolom_naam }}">
+        <label for="kolom">{{ draaitabel.kolom_naam.title() }}:&nbsp; </label>
+        <select class='form-control mutatie-invoer'
+                style="width:100px;"
+                name="{{ draaitabel.kolom_naam }}" >
+            {% for code in draaitabel.geef_kolom_keuzes() %}
+            <option value="{{ code }}">
+                {{ code }}: {{ draaitabel.geef_kolom_omschrijving(code).title() }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group" style="padding-right: 50px;" naam="{{ draaitabel.waarde_naam }}">
+        <label for="bedrag">{{ draaitabel.waarde_naam.title() }}:&nbsp; </label>
+        <input class="form-control mutatie-invoer"
+               style="width:100px;"
+               id="bedrag"
+               type="number"
+               name="bedrag"
+               value="0"
+        />
+    </div>
+
+    <input type="hidden"
+           name="waarde_kant"
+           value="{{ draaitabel.naam }}" />
+
+    <input type="hidden"
+           name="bestandsnaam"
+           value='{{ bestandsnaam }}'/>
+
+    <!-- TODO Onderstaande invoer is eigenlijk voor elke draaitabel hetzelfde -->
+    <!-- Netter zou zijn om dit via een javascript functie op te halen. -->
+    <input type="hidden"
+           name="data"
+           value='{{ data | tojson }}'/>
+
+    <div class="form-group"><label style="width:100px;"></label></div>
+    <button class="btn btn-primary" type="submit"
+            title="Klik om mutatie te verwerken">
+        Mutatie verwerken</button>
+</form>
 
 {% endmacro %}
