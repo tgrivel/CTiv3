@@ -12,5 +12,5 @@
 
     foreach ($boek in $bieb) {
         $out = $boek -split '/'
-        Invoke-WebRequest $best -UseBasicParsing -OutFile $out[-1]
+        Invoke-WebRequest $boek -UseBasicParsing -OutFile $out[-1]
     }
