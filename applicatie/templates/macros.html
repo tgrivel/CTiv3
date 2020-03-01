@@ -58,7 +58,7 @@
 {% if resultaat.is_geslaagd %}
 <p class="success">De controle is geslaagd.</p>
 {% else %}
-<p class="error">De controle is gefaald. Zie onderstaande rapportage:</p>
+<p class="error">De controle is onvoldoende. Zie onderstaande rapportage:</p>
 
 <ol>
     {% for (opmerking, omschrijving) in resultaat.rapportage() %}

@@ -7,7 +7,7 @@ Download en installeer Anaconda:
 https://www.anaconda.com/download/
 
 ```
-conda env --file requirements.txt
+conda create --file requirements.txt
 pip install -r requirements-pip.txt
 ```
 

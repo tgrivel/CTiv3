@@ -16,8 +16,8 @@ vs2015_runtime=14.15.26706=h3a45250_0
 werkzeug=0.14.1=py37_0
 wheel=0.32.3=py37_0
 wincertstore=0.2=py37_0
-flask-babel==0.11.2
+flask-babel=0.11.2
 flask_table==0.5.0
 python-dotenv==0.10.1
-pytest>=3.0.7
+pytest=5.3.5
 pyparsing==2.3.1
