@@ -3,12 +3,12 @@
 <head>
 
     <!-- <link href="{{url_for('static', filename='css/main.css') }}" rel="stylesheet"> -->
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/bootstrap.min.css') }}" >
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/bootstrap-theme.min.css') }}" >
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/pivot.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/pivot_extra.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/cbs-style.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/ctiv.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pivot.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pivot_extra.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/cbs-style.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ctiv.css') }}" >
     <meta charset="utf-8">
     <title>Check iv3</title>
 
@@ -16,30 +16,37 @@
     <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
 
     <!-- External libs -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js"></script>
-    <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/d3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/jquery.ui.touch-punch.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/papaparse.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/chosen.jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/plotly-basic-latest.min.js') }}"></script>
+    <!-- <script type="text/javascript" src="jquery-3.3.1.min.js"></script> -->
 
     <!-- Pivot table -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/pivot.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/d3_renderers.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plotly_renderers.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/export_renderers.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/matrix.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/pivot.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/d3_renderers.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/plotly_renderers.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/extern/export_renderers.js') }}"></script>
+
+    <!-- Custom -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/custom/matrix.js') }}"></script>
 
 </head>
-<body class="body" style="background-color: #00A1CD">
+<!--body class="body" style="background-color: #00A1CD"-->
+<body class="body" style="background-color: #E4E1DD ">
     <div class="container-fluid" style="min-height:95%; ">
         <div class ="row">
             <div class="col-sm-12">
                 <br>
                 <center>
-                    <h1> CBS Controle hulpmiddel voor iv3 bestanden</h1>
+                    <div style="clear: both">
+                         <img src="{{url_for('static', filename='images/cbsLogo.jpg')}}"
+                            alt="cbs logo" height="64" width="50" style="float: left">
+                        <h1 style="float: center"> Centraal Bureau voor de Statistiek </h1>
+                    </div>
                 </center>
             </div>
         </div>

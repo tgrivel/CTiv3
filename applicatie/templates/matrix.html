@@ -22,9 +22,9 @@ body {font-family: Arial;}
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 14px 16px;
+  padding: 6px 6px; /* was 14px 16px */
   transition: 0.3s;
-  font-size: 17px;
+  font-size: 14px;
   color: black;
 }
 
@@ -52,7 +52,7 @@ table {
 </style>
 
     <!-- Tabellen met detail -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/detail.js') }}" ></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/custom/detail.js') }}" ></script>
 
     <script>
         data = {{ data | tojson }};
@@ -62,30 +62,28 @@ table {
     </script>
 
     <body bgcolor="#1a1aff">
-    <font color="#FFFFFF">
-        <div style="position: relative;left: 5px;font-size: 17px;padding: 10px;">
-            <div>Bestand: {{ bestandsnaam }}</div>
-            <div>Inzender: {{ meta['overheidsnaam']}}</div>
-            <div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div>
-            <div>Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}</div>
-            <div>Datum : {{ meta['datum']}}</div>
+    <!-- font color="#FFFFFF" -->
+    <font color="#00006f">
+        <span style="position: relative;left: 5px;font-size: 14px;padding: 6px;">
+            <!-- div>Bestand: {{ bestandsnaam }}</div-->
+            <!-- div>Type: {{ meta['overheidslaag']}} nummer {{ meta['overheidsnummer']}}</div -->
+            <!-- div>Datum : {{ meta['datum']}}</div -->
+            <!-- Definitiebestand: {{ sjabloon['omschrijving'] }}, {{ sjabloon['overheidslaag'] }}, {{ sjabloon['boekjaar'] }} -->
 
-            <div>
-                Definitiebestand: {{ sjabloon['omschrijving'] }}, {{ sjabloon['overheidslaag'] }}, {{ sjabloon['boekjaar'] }}
-
-                <button
-                        class="btn btn-primary"
-                        type="button"
-                        title="Klik om json-bestand te downloaden"
-                        onclick="download_data(bestandsnaam, meta, contact);"
-                        style="float: right" >
-                    Data downloaden
-                </button>
-            </div>
-        </div>
+            <button class="btn btn-primary"
+                    type="button"
+                    title="Klik om json-bestand te downloaden"
+                    onclick="download_data(bestandsnaam, meta, contact);"
+                    style="float: right" >
+                Data downloaden
+            </button>
+            <div>Inzender: {{ meta['overheidslaag']}} {{ meta['overheidsnaam']}} {{ meta['overheidsnummer']}}
+                &nbsp; &nbsp; &nbsp; Periode: {{ meta['boekjaar']}} {{ meta['periode']}} {{meta['status']}}
+                &nbsp; &nbsp; &nbsp; Aanmaakdatum : {{ meta['datum']}}</div>
+        </span>
              <!-- Tab links -->
 
-                <div class="tab">
+                <div class="tab" >
                     <button name="tab_LastenLR" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'LastenLR')">Lasten</button>
                     <button name="tab_BatenLR" class="tablinks" style="min-width:100px;"
@@ -98,57 +96,72 @@ table {
                             onclick="openTab(event, 'Balans')">Balans standen</button>
                     <button name="tab_Controles" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'Controles')">Controles</button>
+                    <button name="tab_Kengetallen" class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'Kengetallen')">Kengetallen</button>
+                    <button name="tab_Bulk_Correcties" class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'bulk_correcties')">Correcties</button>
                 </div>
 
         <div style="clear:both;height:1em;"></div>
 
         <!-- Tab content -->
         <div id='LastenLR' class="tabcontent">
-            {{ record_toevoegen(lasten, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['lasten'], data, bestandsnaam) }}
 
-            <div style="clear:both;height:2em;"></div>
+            <div style="clear:both;height:1em;"></div>
 
-            {{ draaitabel(lasten) }}
+            {{ draaitabel(draaitabellen['lasten']) }}
         </div>
 
         <div id='BatenLR' class="tabcontent">
-            {{ record_toevoegen(baten, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['baten'], data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
-            {{ draaitabel(baten) }}
+            {{ draaitabel(draaitabellen['baten']) }}
         </div>
 
         <div id="LastenBM" class="tabcontent">
-            {{ record_toevoegen(balans_lasten, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['balans_lasten'], data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
-            {{ draaitabel(balans_lasten) }}
+            {{ draaitabel(draaitabellen['balans_lasten']) }}
         </div>
 
         <div id='BatenBM' class="tabcontent">
-            {{ record_toevoegen(balans_baten, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['balans_baten'], data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
-            {{ draaitabel(balans_baten) }}
+            {{ draaitabel(draaitabellen['balans_baten']) }}
         </div>
 
         <div id="Balans" class="tabcontent">
-            {{ record_toevoegen(balans_standen, data, bestandsnaam) }}
+            {{ record_toevoegen(draaitabellen['balans_standen'], data, bestandsnaam) }}
 
             <div style="clear:both;height:2em;"></div>
 
-            {{ draaitabel(balans_standen) }}
+            {{ draaitabel(draaitabellen['balans_standen']) }}
         </div>
 
         <div id="Controles" class="tabcontent">
-            <h3 style="color:white;">Controles</h3>
+            <h3 style="color:black;">Controles</h3>
             {% for resultaat in controle_resultaten %}
             {{ controle_resultaat(resultaat) }}
             {% endfor %}
         </div>
+
+        <div id="Kengetallen" class="tabcontent">
+            <h3 style="color:black;">Kengetallen</h3>
+            <div>Een of andere tekst</div>
+        </div>
+        <div id="bulk_correcties" class="tabcontent">
+            <h3 style="color:black;">Correcties</h3>
+            <div>hier komen alle correcties</div>
+        </div>
+
+
 
         <div id="DetailScherm" class="container">
             <p id="DetailHeader" style="color:white;margin-top: 10px;"></p>
