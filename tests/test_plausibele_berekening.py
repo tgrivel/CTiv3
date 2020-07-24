@@ -1,6 +1,6 @@
-from unittest import TestCase, skip
+from unittest import TestCase
 
-from applicatie.logic.plausibele_berekening import bereken
+from applicatie.ongebruikt.plausibele_berekening import bereken
 
 
 class TestPlausibeleBerekening(TestCase):

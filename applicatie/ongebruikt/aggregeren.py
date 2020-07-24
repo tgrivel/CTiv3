@@ -1,4 +1,6 @@
 # logica voor aggregeren van data
+# TODO Deze logica moet verplaatst worden naar een externe API
+
 import logging
 from applicatie.logic.controles import geef_codechecklijst
 

@@ -1,9 +1,7 @@
-from applicatie.logic.aggregeren import aggregeren_volledig
 from applicatie.logic.codelijst import Codelijst
 from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
-from applicatie.logic.plausibiliteitscontrole import PlausibiliteitsControle
 from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
 
 
@@ -44,22 +42,17 @@ class Verwerking(object):
             # Controle databestand met definitiebestand
             self.fouten = controle_met_defbestand(self.data_bestand, self.definitie_bestand)
 
+        # TODO Aggregeren via externe API
+        # TODO Controle moet uitgevoerd worden in een externe API
         if not self.fouten:
-            # json bestand is opgehaald en geen fouten zijn gevonden
-            # vervolgens data aggregeren en tonen op het scherm
-            # de data volledig aggregeren
-            data_geaggregeerd, self.fouten = aggregeren_volledig(self.data_bestand['data'], self.definitie_bestand)
+            self.controle_resultaten = []
 
         if not self.fouten:
             # Zoek omschrijvingen bij de codes zodat we deze in de tabel kunnen tonen
             for naam, codelijst in self.definitie_bestand['codelijsten'].items():
                 self._codelijsten[naam] = Codelijst(codelijst['codelijst'])
 
-            self._maken_draaitabellen(self._codelijsten, data_geaggregeerd)
-
-            plausibiliteitscontroles = [PlausibiliteitsControle(controle['omschrijving'], controle['definitie'])
-                                        for controle in self.definitie_bestand['controlelijst']['controles']]
-            self.controle_resultaten = [controle.run(data_geaggregeerd) for controle in plausibiliteitscontroles]
+            self._maken_draaitabellen(self._codelijsten, self.data_bestand['data'])
 
     def muteer(self, waarde_kant, mutatie):
         """Verwerk mutatie."""
@@ -74,12 +67,12 @@ class Verwerking(object):
         self.definitie_bestand, self.fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebestand')
         self.sjabloon_meta = self.definitie_bestand['metadata']
 
-    def _maken_draaitabellen(self, codelijsten, data_geaggregeerd):
+    def _maken_draaitabellen(self, codelijsten, data):
         """Maak alle draaitabellen."""
 
         self.draaitabellen['lasten'] = DraaiTabel(
             naam='lasten',
-            data=data_geaggregeerd['lasten'],
+            data=data['lasten'],
             rij_naam='taakveld',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['taakveld'],
@@ -87,7 +80,7 @@ class Verwerking(object):
 
         self.draaitabellen['balans_lasten'] = DraaiTabel(
             naam='balans_lasten',
-            data=data_geaggregeerd['balans_lasten'],
+            data=data['balans_lasten'],
             rij_naam='balanscode',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
@@ -95,7 +88,7 @@ class Verwerking(object):
 
         self.draaitabellen['baten'] = DraaiTabel(
             naam='baten',
-            data=data_geaggregeerd['baten'],
+            data=data['baten'],
             rij_naam='taakveld',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['taakveld'],
@@ -103,7 +96,7 @@ class Verwerking(object):
 
         self.draaitabellen['balans_baten'] = DraaiTabel(
             naam='balans_baten',
-            data=data_geaggregeerd['balans_baten'],
+            data=data['balans_baten'],
             rij_naam='balanscode',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
