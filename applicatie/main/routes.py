@@ -59,6 +59,10 @@ def geef_tabnaam(waarde_kant):
         tabnaam = 'BatenBM'
     elif waarde_kant == 'balans_standen':
         tabnaam = 'Balans'
+    elif waarde_kant == 'kengetallen':
+        tabnaam = 'Kengetallen'
+    elif waarde_kant == 'beleidsindicatoren':
+        tabnaam = 'Beleidsindicatoren'
     else:
         # Foutafhandeling
         print('Fout: Onbekende waarde_kant', waarde_kant)

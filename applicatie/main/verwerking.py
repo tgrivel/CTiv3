@@ -104,9 +104,24 @@ class Verwerking(object):
 
         self.draaitabellen['balans_standen'] = DraaiTabel(
             naam='balans_standen',
-            data=data_geaggregeerd['balans_standen'],
+            data=data['balans_standen'],
             rij_naam='balanscode',
             kolom_naam='standper',
             rij_codelijst=codelijsten['balanscode'],
             kolom_codelijst=codelijsten['standper'])
 
+        self.draaitabellen['kengetallen'] = DraaiTabel(
+            naam='kengetallen',
+            data=data.get('kengetallen', []),
+            rij_naam='kengetal',
+            kolom_naam='verslagperiode',
+            rij_codelijst=codelijsten['kengetallen'],
+            kolom_codelijst=codelijsten['verslagperiode'])
+
+        self.draaitabellen['beleidsindicatoren'] = DraaiTabel(
+            naam='beleidsindicatoren',
+            data=data.get('beleidsindicatoren', []),
+            rij_naam='beleidsindicator',
+            kolom_naam='verslagperiode',
+            rij_codelijst=codelijsten['beleidsindicatoren'],
+            kolom_codelijst=codelijsten['verslagperiode'])

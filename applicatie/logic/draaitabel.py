@@ -13,7 +13,7 @@ class DraaiTabel:
                  rij_codelijst: Codelijst, kolom_codelijst: Codelijst):
         self.naam = naam
         indices, self.tabel = pivot_table(data, aggregeer_kolommen=[rij_naam, kolom_naam],
-                                         waarde_kolom=WAARDE_KOLOM)
+                                          waarde_kolom=self.waarde_naam)
         self.rij_naam, self.kolom_naam = rij_naam, kolom_naam
         self.rijen, self.kolommen = indices
 

@@ -98,6 +98,8 @@ table {
                             onclick="openTab(event, 'Controles')">Controles</button>
                     <button name="tab_Kengetallen" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'Kengetallen')">Kengetallen</button>
+                    <button name="tab_Beleidsindicatoren" class="tablinks" style="min-width:100px;"
+                            onclick="openTab(event, 'Beleidsindicatoren')">Beleidsindicatoren</button>
                     <button name="tab_Bulk_Correcties" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'bulk_correcties')">Correcties</button>
                 </div>
@@ -153,9 +155,21 @@ table {
         </div>
 
         <div id="Kengetallen" class="tabcontent">
-            <h3 style="color:black;">Kengetallen</h3>
-            <div>Een of andere tekst</div>
+            {{ record_toevoegen(draaitabellen['kengetallen'], data, bestandsnaam) }}
+
+            <div style="clear:both;height:2em;"></div>
+
+            {{ draaitabel(draaitabellen['kengetallen']) }}
         </div>
+
+        <div id="Beleidsindicatoren" class="tabcontent">
+            {{ record_toevoegen(draaitabellen['beleidsindicatoren'], data, bestandsnaam) }}
+
+            <div style="clear:both;height:2em;"></div>
+
+            {{ draaitabel(draaitabellen['beleidsindicatoren']) }}
+        </div>
+
         <div id="bulk_correcties" class="tabcontent">
             <h3 style="color:black;">Correcties</h3>
             <div>hier komen alle correcties</div>

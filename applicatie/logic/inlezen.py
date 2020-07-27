@@ -33,8 +33,8 @@ def ophalen_en_controleren_databestand(jsonbestand):
         schema_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'schemabestand')
 
     # json data controleren aan json schema
-    if not fouten:
-        fouten = controle_met_schema(data_bestand, schema_bestand)
+    # if not fouten:
+    #     fouten = controle_met_schema(data_bestand, schema_bestand)
 
     # json bestand voldoet aan het schema
     # echter balans_lasten, balans_baten en/of balans_standen kunnen ontbreken
