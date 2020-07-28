@@ -118,6 +118,7 @@ class Verwerking(object):
             rij_codelijst=codelijsten['kengetallen'],
             kolom_codelijst=codelijsten['verslagperiode'],
             waarde_naam='waarde',
+            waarde_type='str',
             alles_weergeven=True,
             is_bewerkbaar=True,
             detail_weergave=False)
@@ -130,6 +131,7 @@ class Verwerking(object):
             rij_codelijst=codelijsten['beleidsindicatoren'],
             kolom_codelijst=codelijsten['verslagperiode'],
             waarde_naam='waarde',
+            waarde_type='str',
             alles_weergeven=True,
             is_bewerkbaar=True,
             detail_weergave=False)

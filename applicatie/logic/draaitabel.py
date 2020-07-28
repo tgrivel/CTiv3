@@ -7,6 +7,7 @@ from applicatie.logic.maak_matrix import pivot_table
 class DraaiTabel:
     def __init__(self, naam: str, data, rij_naam: str, kolom_naam: str,
                  rij_codelijst: Codelijst, kolom_codelijst: Codelijst, waarde_naam='bedrag',
+                 waarde_type=float,
                  alles_weergeven=False, is_bewerkbaar=False, detail_weergave=True):
         self.naam = naam
         self.waarde_naam = waarde_naam
@@ -14,7 +15,7 @@ class DraaiTabel:
         self.detail_weergave = detail_weergave
 
         indices, self.tabel = pivot_table(data, aggregeer_kolommen=[rij_naam, kolom_naam],
-                                          waarde_kolom=self.waarde_naam)
+                                          waarde_kolom=self.waarde_naam, waarde_type=waarde_type)
 
         if alles_weergeven:
             self.rijen = rij_codelijst.geef_terminals()
