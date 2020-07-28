@@ -116,7 +116,9 @@ class Verwerking(object):
             rij_naam='kengetal',
             kolom_naam='verslagperiode',
             rij_codelijst=codelijsten['kengetallen'],
-            kolom_codelijst=codelijsten['verslagperiode'])
+            kolom_codelijst=codelijsten['verslagperiode'],
+            waarde_naam='waarde',
+            alles_weergeven=True)
 
         self.draaitabellen['beleidsindicatoren'] = DraaiTabel(
             naam='beleidsindicatoren',
@@ -124,4 +126,6 @@ class Verwerking(object):
             rij_naam='beleidsindicator',
             kolom_naam='verslagperiode',
             rij_codelijst=codelijsten['beleidsindicatoren'],
-            kolom_codelijst=codelijsten['verslagperiode'])
+            kolom_codelijst=codelijsten['verslagperiode'],
+            waarde_naam='waarde',
+            alles_weergeven=True)

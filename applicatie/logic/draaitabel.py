@@ -3,19 +3,24 @@ from functools import reduce
 from applicatie.logic.codelijst import Codelijst
 from applicatie.logic.maak_matrix import pivot_table
 
-WAARDE_KOLOM = 'bedrag'
-
 
 class DraaiTabel:
-    waarde_naam = WAARDE_KOLOM
-
     def __init__(self, naam: str, data, rij_naam: str, kolom_naam: str,
-                 rij_codelijst: Codelijst, kolom_codelijst: Codelijst):
+                 rij_codelijst: Codelijst, kolom_codelijst: Codelijst, waarde_naam='bedrag',
+                 alles_weergeven=False):
         self.naam = naam
+        self.waarde_naam = waarde_naam
+
         indices, self.tabel = pivot_table(data, aggregeer_kolommen=[rij_naam, kolom_naam],
                                           waarde_kolom=self.waarde_naam)
+
+        if alles_weergeven:
+            self.rijen = rij_codelijst.geef_terminals()
+            self.kolommen = kolom_codelijst.geef_terminals()
+        else:
+            self.rijen, self.kolommen = indices
+
         self.rij_naam, self.kolom_naam = rij_naam, kolom_naam
-        self.rijen, self.kolommen = indices
 
         # Haal velden die met een underscore weg, die hebben een speciale betekenis
         self.rijen = sorted(self.rijen)
@@ -50,7 +55,7 @@ class DraaiTabel:
          unieke_labels = reduce(set.union, [rij.keys() for rij in self.data], set())
          rsub = 'sub_' + self.rij_naam
          ksub = 'sub_' + self.kolom_naam
-         relevante_labels = unieke_labels - {self.rij_naam, self.kolom_naam, rsub, ksub, WAARDE_KOLOM}
+         relevante_labels = unieke_labels - {self.rij_naam, self.kolom_naam, rsub, ksub, self.waarde_naam}
 
          # Verwijder verborgen labels
          relevante_labels = [label for label in relevante_labels if not label.startswith('_')]
@@ -59,9 +64,9 @@ class DraaiTabel:
          # TODO Waarom dit onderscheid?
          if ksub in unieke_labels:
              details = ([self.rij_naam] + [self.kolom_naam] + [rsub] + [ksub]
-                        + sorted(relevante_labels, key=str.lower) + [WAARDE_KOLOM])
+                        + sorted(relevante_labels, key=str.lower) + [self.waarde_naam])
          else:
              details = ([self.rij_naam] + [self.kolom_naam] + [rsub]
-                        + sorted(relevante_labels, key=str.lower) + [WAARDE_KOLOM])
+                        + sorted(relevante_labels, key=str.lower) + [self.waarde_naam])
 
          return details
