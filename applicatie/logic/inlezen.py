@@ -28,7 +28,7 @@ def ophalen_en_controleren_databestand(jsonbestand):
 
     if not fouten:
         # json schema ophalen van web
-        versie = "1_1"
+        versie = "2_0"
         bestandsnaam = IV3_SCHEMA_FILE.format(versie)
         schema_bestand, fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'schemabestand')
 

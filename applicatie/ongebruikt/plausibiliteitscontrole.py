@@ -1,6 +1,4 @@
-import operator
-
-from applicatie.logic.plausibele_berekening import bereken, RekenFout
+from applicatie.ongebruikt.plausibele_berekening import bereken, RekenFout
 
 class PlausibiliteitsControle(object):
     def __init__(self, omschrijving, definitie):
