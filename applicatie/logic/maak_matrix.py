@@ -1,7 +1,7 @@
 
 
 
-def pivot_table(data, aggregeer_kolommen, waarde_kolom):
+def pivot_table(data, aggregeer_kolommen, waarde_kolom, waarde_type=float):
     """Aggregeer kolom value_col over args.
 
     @param aggregeer_kolommen De kolommen waarover geaggregeerd moet worden
@@ -19,6 +19,9 @@ def pivot_table(data, aggregeer_kolommen, waarde_kolom):
             index[i].add(k)
 
         # Update tabel
-        table[key] = table.get(key, 0) + row[waarde_kolom]
+        if waarde_type is float:
+            table[key] = table.get(key, 0) + row[waarde_kolom]
+        else:
+            table[key] = table.get(key, " ") + str(row[waarde_kolom])
 
     return index, table

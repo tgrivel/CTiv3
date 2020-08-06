@@ -37,8 +37,11 @@
             <td class="td default" nowrap="true"
                 {{ tabel.rij_naam }}="{{ rij }}"
                 {{ tabel.kolom_naam }}="{{ kolom }}"
+                {% if tabel.detail_weergave %}
                 onclick="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
                 onkeydown="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
+                {% endif %}
+                contenteditable="{{ tabel.is_bewerkbaar }}"
             >
                 {{ tabel[rij, kolom] }}
             </td>
@@ -47,7 +50,11 @@
         {% endfor %}
     </table>
 
-    <p>Klik een cel aan voor detail-informatie</p>
+    {% if tabel.detail_weergave %}
+        <p>Klik een cel aan voor detail-informatie</p>
+    {% else %}
+        <p>Klik op een cel om deze te bewerken</p>
+    {% endif %}
 </div>
 
 {% endmacro %}
