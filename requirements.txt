@@ -1,3 +1,8 @@
+# oude versie (voorlopig bewaren)
+# niet gebruiken om een environment te maken
+# gebruik environment.yml
+# of requirements_ocido.txt
+#
 babel=2.6.0=py_1
 ca-certificates=2018.11.29=ha4d7672_0
 certifi=2018.11.29=py37_1000
