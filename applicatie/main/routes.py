@@ -93,7 +93,9 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
             bedrag = 0
 
         mutatie['bedrag'] = bedrag
-        mutatie['opmerking'] = "Mutatie toegevoegd met Ocido."
+
+        # omschrijving toevoegen aan het 'details' element
+        mutatie['details'] = {"omschrijving": "Mutatie toegevoegd met Ocido."}
         verwerking.muteer(waarde_kant, mutatie)
     else:
         tabnaam = None
