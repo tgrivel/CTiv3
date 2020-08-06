@@ -60,13 +60,14 @@ class DraaiTabel:
         ksub = 'sub_' + self.kolom_naam
         relevante_labels = unieke_labels - {self.rij_naam, self.kolom_naam, rsub, ksub, self.waarde_naam}
 
+        det = 'details'
         labels = list()
-        if 'details' in relevante_labels:
+        if det in relevante_labels:
             # details komt voor: details verwijderen en labels uit details toevoegen
-            relevante_labels = relevante_labels - {'details'}
+            relevante_labels = relevante_labels - {det}
             for element in self.data:
                 rij = dict(element)
-                keys = [key for key in dict(rij['details']).keys()] if 'details' in rij.keys() else []
+                keys = [key for key in dict(rij[det]).keys()] if det in rij.keys() else []
                 labels.append(keys)
         labels_uit_details = reduce(set.union, labels, set())
 
@@ -79,7 +80,7 @@ class DraaiTabel:
 
         relevante_labels.update(labels_uit_details)
 
-        # Verwijder verborgen labels
+        # Verwijder eventuele verborgen labels (deze beginnen met _ )
         relevante_labels = [label for label in relevante_labels if not label.startswith('_')]
 
         # Sort labels alphabetically but always put value last
