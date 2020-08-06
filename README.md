@@ -6,15 +6,15 @@
 Download en installeer Anaconda:
 https://www.anaconda.com/download/
 
+Open de Anaconda prompt en type:
 ```
-conda create --file requirements.txt
-pip install -r requirements-pip.txt
+conda env create -f environment.yml
 ```
 
 # Running
 
 ```
-conda activate ctiv3
+conda activate ocido
 flask run
 ```
 
