@@ -104,7 +104,7 @@ class Verwerking(object):
 
         self.draaitabellen['balans_standen'] = DraaiTabel(
             naam='balans_standen',
-            data=data_geaggregeerd['balans_standen'],
+            data=data['balans_standen'],
             rij_naam='balanscode',
             kolom_naam='standper',
             rij_codelijst=codelijsten['balanscode'],
