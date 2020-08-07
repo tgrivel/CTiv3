@@ -10,6 +10,7 @@
            kolom_naam='{{ tabel.kolom_naam }}'
            data='{{ tabel.data | tojson }}'
            detail_kolommen='{{ tabel.geef_detail_kolommen() | tojson }}'
+           contenteditable={{ tabel.is_bewerkbaar }}
     >
         <thead>
         <tr>
@@ -41,7 +42,6 @@
                 onclick="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
                 onkeydown="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
                 {% endif %}
-                contenteditable="{{ tabel.is_bewerkbaar }}"
             >
                 {{ tabel[rij, kolom] }}
             </td>

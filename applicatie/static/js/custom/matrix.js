@@ -1,4 +1,4 @@
-var IS_TUSSENTOTAAL = '_is_tussentotaal';
+const IS_TUSSENTOTAAL = '_is_tussentotaal';
 
 function download_data(filename, meta, contact) {
 
@@ -7,15 +7,11 @@ function download_data(filename, meta, contact) {
     for (var i = 0; i < tabellen.length; i++) {
         var tabel = $(tabellen[i]);
         var tabel_naam = tabel.attr('naam');
-        var tabel_data = JSON.parse(tabel.attr('data'));
-
-        // This is like extend in Python (Javascript is weird!)
-        // According to https://jsperf.com/concat-array-in-place it's very fast
-        // Array.prototype.push.apply(data, tabel_data);
+        const tabel_data = geef_data_uit_pivottabel(tabel)
         data[tabel_naam] = data_opschonen(tabel_data);
     }
 
-    json_bestand = {
+    var json_bestand = {
         'metadata': meta,
         'contact': contact,
         'data': data
@@ -51,4 +47,44 @@ function download(filename, text) {
 function data_opschonen(data) {
     // Verwijder aggregaten uit de data
     return data.filter(record => record[IS_TUSSENTOTAAL] === undefined)
+}
+
+function geef_data_uit_pivottabel(tabel) {
+    // Haal data op die in een tabel staat op en zet om naar json
+    //
+    // Dit kan op twee manieren:
+    // Niet bewerkbare tabellen:
+    // - Hier willen we de oorspronkelijke niet-geaggregeerde data teruggeven
+    // Bewerkbare tabellen:
+    // - Hier willen we de vulling weten van de tabel zoals je hem op het scherm ziet
+
+    const bewerkbaar = tabel.attr("contenteditable").toLowerCase() == "true"
+
+    if (!bewerkbaar) {
+        return JSON.parse(tabel.attr("data"))
+    } else {
+        const rij_naam = tabel.attr("rij_naam")
+        const kolom_naam = tabel.attr("kolom_naam")
+        const cellen = tabel.find('tbody').find('td')
+
+        let records = Array()
+
+        for (i = 0; i < cellen.length; i++) {
+            const row = $(cellen[i])
+            const rij_waarde = row.attr(rij_naam)
+            const kolom_waarde = row.attr(kolom_naam)
+            const waarde = row.text().trim()
+
+            // Sla lege cellen over
+            if (waarde.trim() !== "") {
+                let record = {}
+                record[kolom_naam] = kolom_waarde
+                record[rij_naam] = rij_waarde
+                record["waarde"] = waarde
+                records.push(record)
+            }
+        }
+
+        return records
+    }
 }

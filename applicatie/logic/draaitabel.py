@@ -55,21 +55,41 @@ class DraaiTabel:
         return self._kolom_codelijst.geef_omschrijving(code)
 
     def geef_detail_kolommen(self):
-         unieke_labels = reduce(set.union, [rij.keys() for rij in self.data], set())
-         rsub = 'sub_' + self.rij_naam
-         ksub = 'sub_' + self.kolom_naam
-         relevante_labels = unieke_labels - {self.rij_naam, self.kolom_naam, rsub, ksub, self.waarde_naam}
+        unieke_labels = reduce(set.union, [rij.keys() for rij in self.data], set())
+        rsub = 'sub_' + self.rij_naam
+        ksub = 'sub_' + self.kolom_naam
+        relevante_labels = unieke_labels - {self.rij_naam, self.kolom_naam, rsub, ksub, self.waarde_naam}
 
-         # Verwijder verborgen labels
-         relevante_labels = [label for label in relevante_labels if not label.startswith('_')]
+        det = 'details'
+        labels = list()
+        if det in relevante_labels:
+            # details komt voor: details verwijderen en labels uit details toevoegen
+            relevante_labels = relevante_labels - {det}
+            for element in self.data:
+                rij = dict(element)
+                keys = [key for key in dict(rij[det]).keys()] if det in rij.keys() else []
+                labels.append(keys)
+        labels_uit_details = reduce(set.union, labels, set())
 
-         # Sort labels alphabetically but always put value last
-         # TODO Waarom dit onderscheid?
-         if ksub in unieke_labels:
-             details = ([self.rij_naam] + [self.kolom_naam] + [rsub] + [ksub]
-                        + sorted(relevante_labels, key=str.lower) + [self.waarde_naam])
-         else:
-             details = ([self.rij_naam] + [self.kolom_naam] + [rsub]
-                        + sorted(relevante_labels, key=str.lower) + [self.waarde_naam])
+        oms = 'omschrijving'
+        omschrijving = list()
+        if oms in labels_uit_details:
+            # omschrijving halen we eruit omdat we die aan het eind willen plaatsen
+            labels_uit_details = labels_uit_details - {oms}
+            omschrijving = [oms]
 
-         return details
+        relevante_labels.update(labels_uit_details)
+
+        # Verwijder eventuele verborgen labels (deze beginnen met _ )
+        relevante_labels = [label for label in relevante_labels if not label.startswith('_')]
+
+        # Sort labels alphabetically but always put value last
+        # TODO Waarom dit onderscheid?
+        if ksub in unieke_labels:
+            details = ([self.rij_naam] + [self.kolom_naam] + [rsub] + [ksub]
+                       + sorted(relevante_labels, key=str.lower) + omschrijving + [self.waarde_naam])
+        else:
+            details = ([self.rij_naam] + [self.kolom_naam] + [rsub]
+                       + sorted(relevante_labels, key=str.lower) + omschrijving + [self.waarde_naam])
+
+        return details

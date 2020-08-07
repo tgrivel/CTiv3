@@ -7,7 +7,6 @@ function vul_detail(element, rij_naam, kolom_naam) {
     var tabel = element.closest('table');
     var data = JSON.parse(tabel.attr('data'));
     var kolommen = JSON.parse(tabel.attr('detail_kolommen'))
-
     var rij_naam = tabel.attr('rij_naam');
     var kolom_naam = tabel.attr('kolom_naam');
     var rij_waarde = element.attr(rij_naam);
@@ -15,6 +14,14 @@ function vul_detail(element, rij_naam, kolom_naam) {
 
     var sel = data.filter(rij => rij[rij_naam] == rij_waarde
                           && rij[kolom_naam] == kolom_waarde);
+
+    $.each(sel, function(rij, obj){
+        if ("details" in obj){
+            // details toevoegen aan het rij object in sel
+            // zodat deze ook getoond worden in de detail tabel
+            Object.assign(obj, obj["details"]);
+        };
+    });
 
     // Highlight choice
     tabel.find('td').removeClass("selected");
