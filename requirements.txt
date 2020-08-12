@@ -1,4 +1,4 @@
-# oude versie (voorlopig bewaren)
+# oudste versie (voorlopig bewaren)
 # *NIET* gebruiken om een environment te maken
 #
 # gebruik environment.yml
