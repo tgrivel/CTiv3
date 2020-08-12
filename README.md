@@ -1,5 +1,4 @@
-"# CTiv3" 
-
+"# OCIDO" 
 
 # Getting started
 
@@ -13,6 +12,7 @@ conda env create -f environment.yml
 
 # Running
 
+Lokaal:
 ```
 conda activate ocido
 flask run
@@ -24,5 +24,8 @@ python applicatie.py
 ```
 
 # Docker
+
+```
 docker build -t ctiv3 .
 docker run ctiv3
+```

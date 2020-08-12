@@ -1,5 +1,6 @@
 # oude versie (voorlopig bewaren)
-# niet gebruiken om een environment te maken
+# *NIET* gebruiken om een environment te maken
+#
 # gebruik environment.yml
 # of requirements_ocido.txt
 #
