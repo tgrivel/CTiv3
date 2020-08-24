@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% from 'macros.html' import draaitabel, controle_resultaat, record_toevoegen %}
+{% from 'macros.html' import draaitabel, controle_resultaat, record_toevoegen, correcties_toevoegen %}
 
 {% block content %}
 <style>
@@ -101,7 +101,7 @@ table {
                     <button name="tab_Beleidsindicatoren" class="tablinks" style="min-width:100px;"
                             onclick="openTab(event, 'Beleidsindicatoren')">Beleidsindicatoren</button>
                     <button name="tab_Bulk_Correcties" class="tablinks" style="min-width:100px;"
-                            onclick="openTab(event, 'bulk_correcties')">Correcties</button>
+                            onclick="openTab(event, 'Bulk_correcties')">Bulkcorrecties</button>
                 </div>
 
         <div style="clear:both;height:1em;"></div>
@@ -166,13 +166,14 @@ table {
             {{ draaitabel(draaitabellen['beleidsindicatoren']) }}
         </div>
 
-        <div id="bulk_correcties" class="tabcontent">
-            <h3 style="color:black;">Correcties</h3>
-            <div>hier komen alle correcties</div>
+        <div id="Bulk_correcties" class="tabcontent">
+            <div style="clear:both;height:2em;"></div>
+
+            {{ correcties_toevoegen(draaitabellen['balans_standen'], data, bestandsnaam, 10) }}
         </div>
 
         <div id="DetailScherm" class="container">
-            <p id="DetailHeader" style="color:white;margin-top: 10px;"></p>
+            <p id="DetailHeader" style="color: white;margin-top: 10px;"></p>
             <table id="Detail" class="pvtTable default" border="1" style="opacity: 1">
                 <thead> <tr></tr> </thead>
                 <tbody></tbody>

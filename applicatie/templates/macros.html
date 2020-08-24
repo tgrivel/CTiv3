@@ -139,3 +139,90 @@
 </form>
 
 {% endmacro %}
+
+
+{% macro correcties_toevoegen(draaitabel, data, bestandsnaam, aantal) %}
+
+{% set kolommen = {"Type": "sel"} %}
+{% set x = kolommen.update({"Rij_soort":   "sel"}) %}
+{% set x = kolommen.update({"Rij_code":    "sel"}) %}
+{% set x = kolommen.update({"Kolom_soort": "sel"}) %}
+{% set x = kolommen.update({"Kolom_code":  "sel"}) %}
+{% set x = kolommen.update({"Bedrag":      "num"}) %}
+{% set x = kolommen.update({"Opmerking":   "txt"}) %}
+
+<form class="form-inline text-center muteerknoppen"
+      role="form"
+      method="post"
+>
+
+    <div class="form-group" style="margin-bottom: 20px;float: center">
+        <input class="form-control mutatie-invoer" readonly="readonly"
+               style="width: 800px;margin-right: 200px;text-align: center;"
+               value="Voer hieronder de correcties in en klik op de knop 'Correcties verwerken'">
+        <button class="btn btn-primary" style="float: right" type="submit"
+                title="Klik om correcties te verwerken">
+            Correcties verwerken
+        </button>
+    </div>
+
+    {% for n in range(aantal) %}
+
+    <div>
+        {% for kol, type in kolommen.items() %}
+
+        <div class="form-group" style="padding-right: 20px;" naam="{{ 'corr_' + n|string }}">
+            <label for="{{ kol }}" style="display: block;margin-bottom: 10px;">{{ kol + ':' if n==0 }}</label>
+            {% if type == "sel" %}
+                <select class='form-control mutatie-invoer'
+                        style="width:150px;"
+                        id="{{ kol }}"
+                        name="{{ kol }}">
+                        {% for code in draaitabel.geef_rij_keuzes() %}
+                        <option value="{{ code }}">
+                            {{ code }}: {{ draaitabel.geef_rij_omschrijving(code).title() }}
+                        </option>
+                        {% endfor %}
+                </select>
+            {% elif type == "num" %}
+                <input class="form-control mutatie-invoer"
+                       style="width:100px;"
+                       id="{{ kol }}"
+                       name="{{ kol }}"
+                       type="number"
+                       value="0"
+                />
+            {% elif type == "txt" %}
+                <input class="form-control mutatie-invoer"
+                       style="width:300px;"
+                       id="{{ kol }}"
+                       name="{{ kol }}"
+                       type="text"
+                       value="Bulkcorrectie Ocido"
+                />
+            {% endif %}
+        </div>
+
+        {% endfor %}
+
+
+        <input type="hidden"
+               name="waarde_kant"
+               value="{{ draaitabel.naam }}" />
+
+        <input type="hidden"
+               name="bestandsnaam"
+               value='{{ bestandsnaam }}'/>
+
+        <!-- TODO Onderstaande invoer is eigenlijk voor elke draaitabel hetzelfde -->
+        <!-- Netter zou zijn om dit via een javascript functie op te halen. -->
+        <input type="hidden"
+               name="data"
+               value='{{ data | tojson }}'/>
+
+    </div>
+
+    {% endfor %}
+</form>
+
+{% endmacro %}
