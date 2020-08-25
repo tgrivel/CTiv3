@@ -141,8 +141,9 @@
 {% endmacro %}
 
 
-{% macro correcties_toevoegen(draaitabel, data, bestandsnaam, aantal) %}
+{% macro correcties_toevoegen(draaitabel, data, bestandsnaam, aantal_rijen) %}
 
+<!-- dit is een tijdelijke oplossing; wordt een dict als parameter -->
 {% set kolommen = {"Type": "sel"} %}
 {% set x = kolommen.update({"Rij_soort":   "sel"}) %}
 {% set x = kolommen.update({"Rij_code":    "sel"}) %}
@@ -151,6 +152,15 @@
 {% set x = kolommen.update({"Bedrag":      "num"}) %}
 {% set x = kolommen.update({"Opmerking":   "txt"}) %}
 
+<!-- dit is een tijdelijke oplossing; wordt een dict als parameter -->
+{% set kolomkeuzes = {"Type": ["lasten", "baten"]} %}
+{% set x = kolomkeuzes.update({"Rij_soort":   ["taakveld", "balansstand"]}) %}
+{% set x = kolomkeuzes.update({"Rij_code":    ["code_1", "code_2"]}) %}
+{% set x = kolomkeuzes.update({"Kolom_soort": ["categorie", "stand_per"]}) %}
+{% set x = kolomkeuzes.update({"Kolom_code":  ["code_3", "code_4"]}) %}
+{% set x = kolomkeuzes.update({"Bedrag":      []}) %}
+{% set x = kolomkeuzes.update({"Opmerking":   []}) %}
+
 <form class="form-inline text-center muteerknoppen"
       role="form"
       method="post"
@@ -158,57 +168,57 @@
 
     <div class="form-group" style="margin-bottom: 20px;float: center">
         <input class="form-control mutatie-invoer" readonly="readonly"
-               style="width: 800px;margin-right: 200px;text-align: center;"
+               style="color: blue;width: 600px;margin-right: 200px;text-align: center;"
                value="Voer hieronder de correcties in en klik op de knop 'Correcties verwerken'">
-        <button class="btn btn-primary" style="float: right" type="submit"
+
+        <!-- later deze button wijzigen in type="submit" -->
+        <button class="btn btn-primary" style="float: right" type="button"
                 title="Klik om correcties te verwerken">
-            Correcties verwerken
+                Correcties verwerken
         </button>
     </div>
 
-    {% for n in range(aantal) %}
+    {% for n in range(aantal_rijen) %}
 
-    <div>
+    <div style="margin-bottom: 4px">
+
         {% for kol, type in kolommen.items() %}
 
-        <div class="form-group" style="padding-right: 20px;" naam="{{ 'corr_' + n|string }}">
-            <label for="{{ kol }}" style="display: block;margin-bottom: 10px;">{{ kol + ':' if n==0 }}</label>
+        <div class="form-group" style="padding-right: 10px;" id="{{ 'corr_' + n|string }}">
+            {% if n == 0 %}
+            <label class='form-control mutatie-invoer'
+                   style="color: blue;display: block;margin-bottom: 10px;">{{ kol }}</label>
+            {% endif %}
             {% if type == "sel" %}
-                <select class='form-control mutatie-invoer'
-                        style="width:150px;"
-                        id="{{ kol }}"
-                        name="{{ kol }}">
-                        {% for code in draaitabel.geef_rij_keuzes() %}
-                        <option value="{{ code }}">
-                            {{ code }}: {{ draaitabel.geef_rij_omschrijving(code).title() }}
-                        </option>
-                        {% endfor %}
-                </select>
+            <select class='form-control mutatie-invoer'
+                    style="min-width: 150px;"
+                    id="{{ kol.lower() }}" >
+                    <option disabled selected value>...</option>
+                    {% set lijst = kolomkeuzes[kol] %}
+                    {% for code in lijst %}
+                    <option value="{{ code }}">
+                        {{ code }}
+                    </option>
+                    {% endfor %}
+            </select>
             {% elif type == "num" %}
-                <input class="form-control mutatie-invoer"
-                       style="width:100px;"
-                       id="{{ kol }}"
-                       name="{{ kol }}"
-                       type="number"
-                       value="0"
-                />
+            <input class="form-control mutatie-invoer"
+                   style="min-width: 150px;"
+                   id="{{ kol.lower() }}"
+                   type="number"
+                   value="0"
+            />
             {% elif type == "txt" %}
-                <input class="form-control mutatie-invoer"
-                       style="width:300px;"
-                       id="{{ kol }}"
-                       name="{{ kol }}"
-                       type="text"
-                       value="Bulkcorrectie Ocido"
-                />
+            <input class="form-control mutatie-invoer"
+                   style="min-width: 400px;"
+                   id="{{ kol.lower() }}"
+                   type="text"
+                   value="Bulkcorrectie Ocido"
+            />
             {% endif %}
         </div>
 
         {% endfor %}
-
-
-        <input type="hidden"
-               name="waarde_kant"
-               value="{{ draaitabel.naam }}" />
 
         <input type="hidden"
                name="bestandsnaam"
