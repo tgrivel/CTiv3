@@ -165,15 +165,22 @@
       role="form"
       method="post"
 >
+
     <div class="form-group" style="margin-bottom: 20px;float: center">
         <input class="form-control mutatie-invoer" readonly="readonly"
                style="color: blue;width: 600px;margin-right: 200px;text-align: center;"
                value="Voer hieronder de correcties in en klik op de knop 'Correcties verwerken'">
 
-        <button class="btn btn-primary" style="float: right" type="button"
+        <button class="btn btn-primary" style="margin-right: 20px;" type="button"
                 title="Klik om correcties te verwerken"
-                onclick="alert('Deze knop werkt nog niet!');">
+                onclick="knop_werkt_niet();">
                 Correcties verwerken
+        </button>
+
+        <button class="btn btn-primary" style="float: right" type="button"
+                title="Klik om formulier leeg te maken"
+                onclick="knop_werkt_niet();">
+                Formulier leegmaken
         </button>
     </div>
 
@@ -229,3 +236,4 @@
 </form>
 
 {% endmacro %}
+
