@@ -162,6 +162,7 @@
 {% set x = kolomkeuzes.update({"Opmerking":   []}) %}
 
 <form class="form-inline text-center muteerknoppen"
+      id="Form_bulkcorrecties"
       role="form"
       method="post"
 >
@@ -179,18 +180,17 @@
 
         <button class="btn btn-primary" style="float: right" type="button"
                 title="Klik om formulier leeg te maken"
-                onclick="knop_werkt_niet();">
+                onclick="formulier_bulkcorrecties_leegmaken();">
                 Formulier leegmaken
         </button>
     </div>
 
     {% for n in range(aantal_rijen) %}
 
-    <div style="margin-bottom: 4px">
+    <div style="margin-bottom: 4px" id="{{ 'bulkcorr_' + n|string }}">
 
         {% for kol, type in kolommen.items() %}
-
-        <div class="form-group" style="padding-right: 10px;" id="{{ 'corr_' + n|string }}">
+        <div class="form-group" style="padding-right: 10px;">
             {% if n == 0 %}
             <label class='form-control mutatie-invoer'
                    style="color: blue;display: block;margin-bottom: 10px;">{{ kol }}</label>
@@ -198,8 +198,9 @@
             {% if type == "sel" %}
             <select class='form-control mutatie-invoer'
                     style="min-width: 150px;"
-                    id="{{ kol.lower() }}" >
-                    <option disabled selected value>...</option>
+                    id="{{ kol.lower() }}"
+                    data-default-value="" >
+                    <option disabled selected value="">...</option>
                     {% set lijst = kolomkeuzes[kol] %}
                     {% for code in lijst %}
                     <option value="{{ code }}">
@@ -223,8 +224,8 @@
             />
             {% endif %}
         </div>
-
         {% endfor %}
+
 
         <input type="hidden"
                name="bestandsnaam"

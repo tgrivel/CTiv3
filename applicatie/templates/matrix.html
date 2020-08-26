@@ -221,6 +221,34 @@ table {
     }); */
     {% endif %}
 
+    $(document).ready(function() {
+
+        /*  javascript voor het scherm bulkcorrecties
+            om de form-controls reactief te maken */
+
+        let form_bulk = $("#Form_bulkcorrecties");
+        if (form_bulk.length){
+            alert("Form gevonden");
+
+            let bulkcorrecties = form_bulk.find("div[id^='bulkcorr_']");
+
+            $.each(bulkcorrecties, function(key, corr) {
+
+                // voeg change functies toe aan form-controls: type, rij_soort, kolom_soort
+
+                $(this).find("#type").change(function() {
+                    form_control_changed_type($(corr)); });
+
+                $(this).find("#rij_soort").change(function() {
+                    form_control_changed_rij($(corr)); });
+
+                $(this).find("#kolom_soort").change(function() {
+                    form_control_changed_kol($(corr)); });
+           });
+
+        }
+    });
+
     </script>
 
     </body>
