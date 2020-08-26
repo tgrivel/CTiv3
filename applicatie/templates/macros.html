@@ -141,7 +141,7 @@
 {% endmacro %}
 
 
-{% macro correcties_toevoegen(draaitabel, data, bestandsnaam, aantal_rijen) %}
+{% macro bulkcorrecties_toevoegen(draaitabel, data, bestandsnaam, aantal_rijen) %}
 
 <!-- dit is een tijdelijke oplossing; wordt een dict als parameter -->
 {% set kolommen = {"Type": "sel"} %}
@@ -165,15 +165,14 @@
       role="form"
       method="post"
 >
-
     <div class="form-group" style="margin-bottom: 20px;float: center">
         <input class="form-control mutatie-invoer" readonly="readonly"
                style="color: blue;width: 600px;margin-right: 200px;text-align: center;"
                value="Voer hieronder de correcties in en klik op de knop 'Correcties verwerken'">
 
-        <!-- later deze button wijzigen in type="submit" -->
         <button class="btn btn-primary" style="float: right" type="button"
-                title="Klik om correcties te verwerken">
+                title="Klik om correcties te verwerken"
+                onclick="alert('Deze knop werkt nog niet!');">
                 Correcties verwerken
         </button>
     </div>
@@ -223,12 +222,6 @@
         <input type="hidden"
                name="bestandsnaam"
                value='{{ bestandsnaam }}'/>
-
-        <!-- TODO Onderstaande invoer is eigenlijk voor elke draaitabel hetzelfde -->
-        <!-- Netter zou zijn om dit via een javascript functie op te halen. -->
-        <input type="hidden"
-               name="data"
-               value='{{ data | tojson }}'/>
 
     </div>
 

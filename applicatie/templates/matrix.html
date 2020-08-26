@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% from 'macros.html' import draaitabel, controle_resultaat, record_toevoegen, correcties_toevoegen %}
+{% from 'macros.html' import draaitabel, controle_resultaat, record_toevoegen, bulkcorrecties_toevoegen %}
 
 {% block content %}
 <style>
@@ -169,7 +169,7 @@ table {
         <div id="Bulk_correcties" class="tabcontent">
             <div style="clear:both;height:2em;"></div>
 
-            {{ correcties_toevoegen(draaitabellen, data, bestandsnaam, 9) }}
+            {{ bulkcorrecties_toevoegen(draaitabellen, data, bestandsnaam, 9) }}
         </div>
 
         <div id="DetailScherm" class="container">
