@@ -143,7 +143,7 @@
 
 {% macro bulkcorrecties_toevoegen(draaitabel, data, bestandsnaam, aantal_rijen) %}
 
-{% set kolomm = ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code", "Bedrag", "Opmerking", "Reset", "Check"] %}
+{% set kolommen = ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code", "Bedrag", "Opmerking", "Reset", "Check"] %}
 
 <!-- dit is een tijdelijke oplossing; wordt een dict als parameter -->
 {% set kolomkeuzes = {"Type": ["lasten", "baten"]} %}
@@ -151,8 +151,7 @@
 {% set x = kolomkeuzes.update({"Rij_code":    ["code_1", "code_2"]}) %}
 {% set x = kolomkeuzes.update({"Kolom_soort": []}) %}
 {% set x = kolomkeuzes.update({"Kolom_code":  ["code_3", "code_4"]}) %}
-{% set x = kolomkeuzes.update({"Bedrag":      []}) %}
-{% set x = kolomkeuzes.update({"Opmerking":   []}) %}
+
 
 <form class="form-inline text-center muteerknoppen"
       id="Form_bulkcorrecties"
@@ -184,14 +183,13 @@
 
     <div style="margin-bottom: 4px" id="{{ 'bulkcorr_' + n|string }}">
 
-        {% for kol in kolomm %}
-        {% set kol_index = kolomm.index(kol) %}
+        {% for kol in kolommen %}
         <div class="form-group" style="padding-right: 10px;">
-            {% if n == 0 and kol_index < 8 %}
+            {% if n == 0 and kol != "Check" %}
             <label class='form-control mutatie-invoer'
                    style="color: blue;display: block;margin-bottom: 10px;">{{ kol }}</label>
             {% endif %}
-            {% if kol_index < 5 %}
+            {% if kol in ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code"] %}
             <select class='form-control mutatie-invoer'
                     style="min-width: 150px;"
                     id="{{ kol.lower() }}"
@@ -204,32 +202,31 @@
                     </option>
                     {% endfor %}
             </select>
-            {% elif kol_index == 5 %}
+            {% elif kol == "Bedrag" %}
             <input class="form-control mutatie-invoer"
                    style="min-width: 150px;"
                    id="{{ kol.lower() }}"
                    type="number"
                    value="0"
             />
-            {% elif kol_index == 6 %}
+            {% elif kol == "Opmerking" %}
             <input class="form-control mutatie-invoer"
                    style="min-width: 300px;"
                    id="{{ kol.lower() }}"
                    type="text"
                    value="Bulkcorrectie Ocido"
             />
-            {% elif kol_index == 7 %}
+            {% elif kol == "Reset" %}
             <button class="btn btn-primary"
                     style="float: right" type="button"
                     id="{{ kol.lower() }}"
-                    title="Klik om correctieregel leeg te maken"
-                    >
+                    title="Klik om correctieregel leeg te maken" >
                     Wis regel
             </button>
-            {% else %}
+            {% elif kol == "Check" %}
             <input type="hidden"
-               id="check"
-               value="false"/>
+                   id="check"
+                   value="false"/>
             {% endif %}
         </div>
         {% endfor %}
