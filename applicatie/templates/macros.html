@@ -143,14 +143,30 @@
 
 {% macro bulkcorrecties_toevoegen(draaitabel, data, bestandsnaam, aantal_rijen) %}
 
-{% set kolommen = ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code", "Bedrag", "Opmerking", "Reset", "Check"] %}
+{% set kolommen = ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code"] %}
+{% set kolommen = kolommen + ["Bedrag", "Opmerking", "Reset", "Check"] %}
 
-<!-- dit is een tijdelijke oplossing; wordt een dict als parameter -->
-{% set kolomkeuzes = {"Type": ["lasten", "baten"]} %}
-{% set x = kolomkeuzes.update({"Rij_soort":   []}) %}
-{% set x = kolomkeuzes.update({"Rij_code":    ["code_1", "code_2"]}) %}
-{% set x = kolomkeuzes.update({"Kolom_soort": []}) %}
-{% set x = kolomkeuzes.update({"Kolom_code":  ["code_3", "code_4"]}) %}
+{% set type_opties = {"Type": ["lasten", "baten", "balans_lasten", "balans_baten", "balans_standen"]} %}
+
+{% set rij_soort_opties = {} %}
+{% for item in type_opties["Type"] %}
+    {% set x = rij_soort_opties.update({item: [draaitabel[item].rij_naam.title().lower()]}) %}
+{% endfor %}
+
+{% set rij_code_opties = {} %}
+{% for item in type_opties["Type"] %}
+    {% set x = rij_code_opties.update({item: draaitabel[item].geef_rij_keuzes()}) %}
+{% endfor %}
+
+{% set kolom_soort_opties = {} %}
+{% for item in type_opties["Type"] %}
+    {% set x = kolom_soort_opties.update({item: [draaitabel[item].kolom_naam.title().lower()]}) %}
+{% endfor %}
+
+{% set kolom_code_opties = {} %}
+{% for item in type_opties["Type"] %}
+    {% set x = kolom_code_opties.update({item: draaitabel[item].geef_kolom_keuzes()}) %}
+{% endfor %}
 
 
 <form class="form-inline text-center muteerknoppen"
@@ -195,8 +211,7 @@
                     id="{{ kol.lower() }}"
                     data-default-value="" >
                     <option disabled selected value="">...</option>
-                    {% set lijst = kolomkeuzes[kol] %}
-                    {% for code in lijst %}
+                    {% for code in type_opties[kol] %}
                     <option value="{{ code }}">
                         {{ code }}
                     </option>
@@ -231,14 +246,26 @@
         </div>
         {% endfor %}
 
-
-        <input type="hidden"
-               name="bestandsnaam"
-               value='{{ bestandsnaam }}'/>
-
     </div>
 
     {% endfor %}
+
+    <input type="hidden"
+           name="bestandsnaam"
+           value='{{ bestandsnaam }}'/>
+    <input type="hidden"
+           id="rij_soort_opties"
+           value='{{ rij_soort_opties }}'/>
+    <input type="hidden"
+           id="rij_code_opties"
+           value='{{ rij_code_opties }}'/>
+    <input type="hidden"
+           id="kolom_soort_opties"
+           value='{{ kolom_soort_opties }}'/>
+    <input type="hidden"
+           id="kolom_code_opties"
+           value='{{ kolom_code_opties }}'/>
+
 </form>
 
 {% endmacro %}
