@@ -143,29 +143,24 @@
 
 {% macro bulkcorrecties_toevoegen(draaitabel, data, bestandsnaam, aantal_rijen) %}
 
-{% set kolommen = ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code"] %}
-{% set kolommen = kolommen + ["Bedrag", "Opmerking", "Reset", "Check"] %}
+{% set formulier_kolommen = ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code"] %}
+{% set formulier_kolommen = formulier_kolommen + ["Bedrag", "Opmerking", "Reset", "Check"] %}
 
 {% set type_opties = {"Type": ["lasten", "baten", "balans_lasten", "balans_baten", "balans_standen"]} %}
 
 {% set rij_soort_opties = {} %}
-{% for item in type_opties["Type"] %}
-    {% set x = rij_soort_opties.update({item: [draaitabel[item].rij_naam.title().lower()]}) %}
-{% endfor %}
-
 {% set rij_code_opties = {} %}
-{% for item in type_opties["Type"] %}
-    {% set x = rij_code_opties.update({item: draaitabel[item].geef_rij_keuzes()}) %}
-{% endfor %}
-
 {% set kolom_soort_opties = {} %}
-{% for item in type_opties["Type"] %}
-    {% set x = kolom_soort_opties.update({item: [draaitabel[item].kolom_naam.title().lower()]}) %}
-{% endfor %}
-
 {% set kolom_code_opties = {} %}
+
+{# haal de opties op voor de form-controls #}
+{# rij_soort, rij_code, kolom_soort, kolom_code #}
+
 {% for item in type_opties["Type"] %}
-    {% set x = kolom_code_opties.update({item: draaitabel[item].geef_kolom_keuzes()}) %}
+    {% set foo = rij_soort_opties.update({item: [draaitabel[item].rij_naam.title().lower()]}) %}
+    {% set bar = rij_code_opties.update({item: draaitabel[item].geef_rij_keuzes()}) %}
+    {% set foo = kolom_soort_opties.update({item: [draaitabel[item].kolom_naam.title().lower()]}) %}
+    {% set bar = kolom_code_opties.update({item: draaitabel[item].geef_kolom_keuzes()}) %}
 {% endfor %}
 
 
@@ -176,14 +171,15 @@
 >
 
     <div class="form-group" style="margin-bottom: 20px;float: center">
-        <input class="form-control mutatie-invoer" readonly="readonly"
+        <input class="form-control mutatie-invoer"
+               readonly="readonly"
                style="color: blue;width: 600px;margin-right: 200px;text-align: center;"
                value="Voer hieronder de correcties in en klik op de knop 'Correcties verwerken'">
 
         <button class="btn btn-primary" style="margin-right: 20px;"
                 type="button"
                 title="Klik om correcties te verwerken"
-                onclick="knop_werkt_niet();">
+                onclick="bulkcorrecties_verwerken();">
                 Correcties verwerken
         </button>
 
@@ -195,13 +191,13 @@
         </button>
     </div>
 
-    {% for n in range(aantal_rijen) %}
+    {% for rij in range(aantal_rijen) %}
 
-    <div style="margin-bottom: 4px" id="{{ 'bulkcorr_' + n|string }}">
+    <div style="margin-bottom: 4px" id="{{ 'bulkcorr_' + rij|string }}">
 
-        {% for kol in kolommen %}
+        {% for kol in formulier_kolommen %}
         <div class="form-group" style="padding-right: 10px;">
-            {% if n == 0 and kol != "Check" %}
+            {% if rij == 0 and kol != "Check" %}
             <label class='form-control mutatie-invoer'
                    style="color: blue;display: block;margin-bottom: 10px;">{{ kol }}</label>
             {% endif %}
