@@ -1,3 +1,5 @@
+{% from 'macros.html' import set_debug_status %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,3 +62,6 @@
 </body>
 
 </html>
+
+{{ set_debug_status(debug_status) }}
+

@@ -1,3 +1,15 @@
+
+{% macro set_debug_status(debug_status) %}
+
+{% set debug_status = (debug_status|string).lower() %}
+<script>
+    const DEBUG_STATUS = ("{{ debug_status }}" === "true");
+    // $(document.documentElement).attr('debug_status', DEBUG_STATUS);
+</script>
+
+{% endmacro %}
+
+
 {% macro draaitabel(tabel) %}
 
 <!-- Tab content -->
