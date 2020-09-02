@@ -38,16 +38,13 @@ class Verwerking(object):
             self.contact = self.data_bestand['contact']
             self._ophalen_definitiebestand()
 
-        if not self.fouten:
             # Controle databestand met definitiebestand
             self.fouten = controle_met_defbestand(self.data_bestand, self.definitie_bestand)
 
-        # TODO Aggregeren via externe API
-        # TODO Controle moet uitgevoerd worden in een externe API
-        if not self.fouten:
+            # TODO Aggregeren via externe API
+            # TODO Controle moet uitgevoerd worden in een externe API
             self.controle_resultaten = []
 
-        if not self.fouten:
             # Zoek omschrijvingen bij de codes zodat we deze in de tabel kunnen tonen
             for naam, codelijst in self.definitie_bestand['codelijsten'].items():
                 self._codelijsten[naam] = Codelijst(codelijst['codelijst'])
