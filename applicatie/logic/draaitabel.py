@@ -6,13 +6,13 @@ from applicatie.logic.maak_matrix import pivot_table
 
 class DraaiTabel:
     def __init__(self, naam: str, data, rij_naam: str, kolom_naam: str,
-                 rij_codelijst: Codelijst, kolom_codelijst: Codelijst, waarde_naam='bedrag',
-                 waarde_type=float,
-                 alles_weergeven=False, is_bewerkbaar=False, detail_weergave=True):
+                 rij_codelijst: Codelijst, kolom_codelijst: Codelijst, waarde_naam='bedrag', waarde_type=float,
+                 grijze_cellen=[], alles_weergeven=False, is_bewerkbaar=False, detail_weergave=True):
         self.naam = naam
         self.waarde_naam = waarde_naam
         self.is_bewerkbaar = is_bewerkbaar
         self.detail_weergave = detail_weergave
+        self.grijze_cellen = grijze_cellen
 
         indices, self.tabel = pivot_table(data, aggregeer_kolommen=[rij_naam, kolom_naam],
                                           waarde_kolom=self.waarde_naam, waarde_type=waarde_type)
@@ -37,9 +37,6 @@ class DraaiTabel:
     def __getitem__(self, args):
         """Geef een specifieke waarde uit de draaitabel terug."""
         return self.tabel[args]
-
-    def is_grijze_cel(self):
-        return True
 
     def geef_rij_keuzes(self):
         """Geef keuzemogelijkheden voor rij bij een mutatie."""
@@ -96,3 +93,13 @@ class DraaiTabel:
                        + sorted(relevante_labels, key=str.lower) + omschrijving + [self.waarde_naam])
 
         return details
+
+    def is_grijze_cel(self, element):
+        # If this is a grijze cel return true
+        # if self.grijze_cellen:
+        #     for categorie in self.grijze_cellen:
+        #         for taakveld in self.grijze_cellen:
+        #             # print(taakveld)
+
+
+        return False

@@ -35,12 +35,13 @@
             </th>
             {% for kolom in tabel.kolommen %}
             <td
-                {% if tabel.is_grijze_cel() %}
+                {% if tabel.is_grijze_cel(this) %}
                     class="td grijzeCel"
                 {% else %}
                     class="td witteCel"
                 {% endif %}
-                    nowrap="true"
+
+                nowrap="true"
                 {{ tabel.rij_naam }}="{{ rij }}"
                 {{ tabel.kolom_naam }}="{{ kolom }}"
 

@@ -1,4 +1,5 @@
 from applicatie.logic.codelijst import Codelijst
+from applicatie.logic.grijze_cel import GrijzeCel
 from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
@@ -10,6 +11,7 @@ class Verwerking(object):
         # Initialiseren
         self.fouten = []
         self._codelijsten = {}
+        self._grijze_cellen = {}
 
         # Draaitabellen
         self.draaitabellen = {}
@@ -51,7 +53,12 @@ class Verwerking(object):
             for naam, codelijst in self.definitie_bestand['codelijsten'].items():
                 self._codelijsten[naam] = Codelijst(codelijst['codelijst'])
 
-            self._maken_draaitabellen(self._codelijsten, self.data_bestand['data'])
+            # Zoek grijze cellen gedefinieerd in het definitiebestand.
+            for naam, grijze_cellen in self.definitie_bestand['grijze_cellen'].items():
+                if (naam == "lasten" or naam == "baten"):
+                    self._grijze_cellen[naam] = GrijzeCel(grijze_cellen)
+
+            self._maken_draaitabellen(self._codelijsten, self._grijze_cellen, self.data_bestand['data'])
 
     def muteer(self, waarde_kant, mutatie):
         """Verwerk mutatie."""
@@ -66,7 +73,7 @@ class Verwerking(object):
         self.definitie_bestand, self.fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebestand')
         self.sjabloon_meta = self.definitie_bestand['metadata']
 
-    def _maken_draaitabellen(self, codelijsten, data):
+    def _maken_draaitabellen(self, codelijsten, grijze_cellen, data):
         """Maak alle draaitabellen."""
 
         self.draaitabellen['lasten'] = DraaiTabel(
@@ -75,7 +82,8 @@ class Verwerking(object):
             rij_naam='taakveld',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['taakveld'],
-            kolom_codelijst=codelijsten['categorie_lasten'])
+            kolom_codelijst=codelijsten['categorie_lasten'],
+            grijze_cellen=grijze_cellen['lasten'])
 
         self.draaitabellen['balans_lasten'] = DraaiTabel(
             naam='balans_lasten',
@@ -84,6 +92,7 @@ class Verwerking(object):
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
             kolom_codelijst=codelijsten['categorie_lasten'])
+            # grijze_cellen=grijze_cellen['balans_lasten'])
 
         self.draaitabellen['baten'] = DraaiTabel(
             naam='baten',
@@ -92,6 +101,7 @@ class Verwerking(object):
             kolom_naam='categorie',
             rij_codelijst=codelijsten['taakveld'],
             kolom_codelijst=codelijsten['categorie_baten'])
+            # grijze_cellen=grijze_cellen['baten'])
 
         self.draaitabellen['balans_baten'] = DraaiTabel(
             naam='balans_baten',
@@ -100,6 +110,7 @@ class Verwerking(object):
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
             kolom_codelijst=codelijsten['categorie_baten'])
+            # grijze_cellen=grijze_cellen['balans_baten'])
 
         self.draaitabellen['balans_standen'] = DraaiTabel(
             naam='balans_standen',
@@ -121,6 +132,7 @@ class Verwerking(object):
             alles_weergeven=True,
             is_bewerkbaar=True,
             detail_weergave=False)
+            # grijze_cellen=grijze_cellen['kengetallen'])
 
         self.draaitabellen['beleidsindicatoren'] = DraaiTabel(
             naam='beleidsindicatoren',
@@ -134,3 +146,4 @@ class Verwerking(object):
             alles_weergeven=True,
             is_bewerkbaar=True,
             detail_weergave=False)
+            # grijze_cellen=grijze_cellen['beleidsindicatoren'])
