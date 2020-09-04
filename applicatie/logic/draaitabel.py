@@ -38,6 +38,9 @@ class DraaiTabel:
         """Geef een specifieke waarde uit de draaitabel terug."""
         return self.tabel[args]
 
+    def is_grijze_cel(self):
+        return True
+
     def geef_rij_keuzes(self):
         """Geef keuzemogelijkheden voor rij bij een mutatie."""
         return self._rij_codelijst.geef_terminals()

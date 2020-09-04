@@ -2,11 +2,14 @@
 
 table.pvtTable tbody tr td {
 }
-.default {
+.witteCel {
     background-color: #FFFFFF;
 }
+.grijzeCel {
+    background-color: #D3D3D3;
+}
 .selected {
-    background-color: #999999;
+    background-color: yellow;
 }
 
 table.pvtTable thead tr th, table.pvtTable tbody tr th {
