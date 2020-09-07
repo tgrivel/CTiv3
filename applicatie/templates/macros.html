@@ -1,3 +1,15 @@
+
+{% macro set_javascript_debug_status(debug_status) %}
+
+{% set javascript_debug_status = (debug_status|string).lower() %}
+<script>
+    // zet javascript const DEBUG_STATUS
+    const DEBUG_STATUS = ("{{ javascript_debug_status }}" === "true");
+</script>
+
+{% endmacro %}
+
+
 {% macro draaitabel(tabel) %}
 
 <!-- Tab content -->
@@ -152,89 +164,126 @@
 
 {% macro bulkcorrecties_toevoegen(draaitabel, data, bestandsnaam, aantal_rijen) %}
 
-<!-- dit is een tijdelijke oplossing; wordt een dict als parameter -->
-{% set kolommen = {"Type": "sel"} %}
-{% set x = kolommen.update({"Rij_soort":   "sel"}) %}
-{% set x = kolommen.update({"Rij_code":    "sel"}) %}
-{% set x = kolommen.update({"Kolom_soort": "sel"}) %}
-{% set x = kolommen.update({"Kolom_code":  "sel"}) %}
-{% set x = kolommen.update({"Bedrag":      "num"}) %}
-{% set x = kolommen.update({"Opmerking":   "txt"}) %}
+{% set formulier_kolommen = ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code"] %}
+{% set formulier_kolommen = formulier_kolommen + ["Bedrag", "Opmerking", "Reset", "Check"] %}
 
-<!-- dit is een tijdelijke oplossing; wordt een dict als parameter -->
-{% set kolomkeuzes = {"Type": ["lasten", "baten"]} %}
-{% set x = kolomkeuzes.update({"Rij_soort":   ["taakveld", "balansstand"]}) %}
-{% set x = kolomkeuzes.update({"Rij_code":    ["code_1", "code_2"]}) %}
-{% set x = kolomkeuzes.update({"Kolom_soort": ["categorie", "stand_per"]}) %}
-{% set x = kolomkeuzes.update({"Kolom_code":  ["code_3", "code_4"]}) %}
-{% set x = kolomkeuzes.update({"Bedrag":      []}) %}
-{% set x = kolomkeuzes.update({"Opmerking":   []}) %}
+{% set type_opties = {"Type": ["lasten", "baten", "balans_lasten", "balans_baten", "balans_standen"]} %}
+
+{% set rij_soort_opties = {} %}
+{% set rij_code_opties = {} %}
+{% set kolom_soort_opties = {} %}
+{% set kolom_code_opties = {} %}
+
+{# haal de opties op voor de form-controls #}
+{# rij_soort, rij_code, kolom_soort, kolom_code #}
+
+{% for item in type_opties["Type"] %}
+    {% set foo = rij_soort_opties.update({item: [draaitabel[item].rij_naam.title().lower()]}) %}
+    {% set bar = rij_code_opties.update({item: draaitabel[item].geef_rij_keuzes()}) %}
+    {% set foo = kolom_soort_opties.update({item: [draaitabel[item].kolom_naam.title().lower()]}) %}
+    {% set bar = kolom_code_opties.update({item: draaitabel[item].geef_kolom_keuzes()}) %}
+{% endfor %}
+
 
 <form class="form-inline text-center muteerknoppen"
+      id="Form_bulkcorrecties"
       role="form"
       method="post"
 >
+
     <div class="form-group" style="margin-bottom: 20px;float: center">
-        <input class="form-control mutatie-invoer" readonly="readonly"
+        <input class="form-control mutatie-invoer"
+               readonly="readonly"
                style="color: blue;width: 600px;margin-right: 200px;text-align: center;"
                value="Voer hieronder de correcties in en klik op de knop 'Correcties verwerken'">
 
-        <button class="btn btn-primary" style="float: right" type="button"
+        <button class="btn btn-primary" style="margin-right: 20px;"
+                type="button"
                 title="Klik om correcties te verwerken"
-                onclick="alert('Deze knop werkt nog niet!');">
+                onclick="bulkcorrecties_verwerken();">
                 Correcties verwerken
+        </button>
+
+        <button class="btn btn-primary" style="float: right"
+                type="button"
+                title="Klik om formulier leeg te maken"
+                onclick="formulier_bulkcorrecties_leegmaken();">
+                Formulier leegmaken
         </button>
     </div>
 
-    {% for n in range(aantal_rijen) %}
+    {% for rij in range(aantal_rijen) %}
 
-    <div style="margin-bottom: 4px">
+    <div style="margin-bottom: 4px" id="{{ 'bulkcorr_' + rij|string }}">
 
-        {% for kol, type in kolommen.items() %}
-
-        <div class="form-group" style="padding-right: 10px;" id="{{ 'corr_' + n|string }}">
-            {% if n == 0 %}
+        {% for kolom in formulier_kolommen %}
+        <div class="form-group" style="padding-right: 10px;">
+            {% if rij == 0 and kolom != "Check" %}
             <label class='form-control mutatie-invoer'
-                   style="color: blue;display: block;margin-bottom: 10px;">{{ kol }}</label>
+                   style="color: blue;display: block;margin-bottom: 10px;">{{ kolom }}</label>
             {% endif %}
-            {% if type == "sel" %}
+            {% if kolom in ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code"] %}
             <select class='form-control mutatie-invoer'
                     style="min-width: 150px;"
-                    id="{{ kol.lower() }}" >
-                    <option disabled selected value>...</option>
-                    {% set lijst = kolomkeuzes[kol] %}
-                    {% for code in lijst %}
+                    id="{{ kolom.lower() }}"
+                    data-default-value="" >
+                    <option disabled selected value="">...</option>
+                    {% for code in type_opties[kolom] %}
                     <option value="{{ code }}">
                         {{ code }}
                     </option>
                     {% endfor %}
             </select>
-            {% elif type == "num" %}
+            {% elif kolom == "Bedrag" %}
             <input class="form-control mutatie-invoer"
                    style="min-width: 150px;"
-                   id="{{ kol.lower() }}"
+                   id="{{ kolom.lower() }}"
                    type="number"
                    value="0"
             />
-            {% elif type == "txt" %}
+            {% elif kolom == "Opmerking" %}
             <input class="form-control mutatie-invoer"
-                   style="min-width: 400px;"
-                   id="{{ kol.lower() }}"
+                   style="min-width: 300px;"
+                   id="{{ kolom.lower() }}"
                    type="text"
                    value="Bulkcorrectie Ocido"
             />
+            {% elif kolom == "Reset" %}
+            <button class="btn btn-primary"
+                    style="float: right" type="button"
+                    id="{{ kolom.lower() }}"
+                    title="Klik om correctieregel leeg te maken" >
+                    Wis regel
+            </button>
+            {% elif kolom == "Check" %}
+            <input type="hidden"
+                   id="{{ kolom.lower() }}"
+                   value="false"/>
             {% endif %}
         </div>
-
         {% endfor %}
-
-        <input type="hidden"
-               name="bestandsnaam"
-               value='{{ bestandsnaam }}'/>
 
     </div>
 
     {% endfor %}
+
+    <input type="hidden"
+           name="bestandsnaam"
+           value='{{ bestandsnaam }}'/>
+    <input type="hidden"
+           id="rij_soort_opties"
+           value='{{ rij_soort_opties }}'/>
+    <input type="hidden"
+           id="rij_code_opties"
+           value='{{ rij_code_opties }}'/>
+    <input type="hidden"
+           id="kolom_soort_opties"
+           value='{{ kolom_soort_opties }}'/>
+    <input type="hidden"
+           id="kolom_code_opties"
+           value='{{ kolom_code_opties }}'/>
+
 </form>
 
 {% endmacro %}
+
