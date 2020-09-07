@@ -207,48 +207,48 @@
 
     <div style="margin-bottom: 4px" id="{{ 'bulkcorr_' + rij|string }}">
 
-        {% for kol in formulier_kolommen %}
+        {% for kolom in formulier_kolommen %}
         <div class="form-group" style="padding-right: 10px;">
-            {% if rij == 0 and kol != "Check" %}
+            {% if rij == 0 and kolom != "Check" %}
             <label class='form-control mutatie-invoer'
-                   style="color: blue;display: block;margin-bottom: 10px;">{{ kol }}</label>
+                   style="color: blue;display: block;margin-bottom: 10px;">{{ kolom }}</label>
             {% endif %}
-            {% if kol in ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code"] %}
+            {% if kolom in ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code"] %}
             <select class='form-control mutatie-invoer'
                     style="min-width: 150px;"
-                    id="{{ kol.lower() }}"
+                    id="{{ kolom.lower() }}"
                     data-default-value="" >
                     <option disabled selected value="">...</option>
-                    {% for code in type_opties[kol] %}
+                    {% for code in type_opties[kolom] %}
                     <option value="{{ code }}">
                         {{ code }}
                     </option>
                     {% endfor %}
             </select>
-            {% elif kol == "Bedrag" %}
+            {% elif kolom == "Bedrag" %}
             <input class="form-control mutatie-invoer"
                    style="min-width: 150px;"
-                   id="{{ kol.lower() }}"
+                   id="{{ kolom.lower() }}"
                    type="number"
                    value="0"
             />
-            {% elif kol == "Opmerking" %}
+            {% elif kolom == "Opmerking" %}
             <input class="form-control mutatie-invoer"
                    style="min-width: 300px;"
-                   id="{{ kol.lower() }}"
+                   id="{{ kolom.lower() }}"
                    type="text"
                    value="Bulkcorrectie Ocido"
             />
-            {% elif kol == "Reset" %}
+            {% elif kolom == "Reset" %}
             <button class="btn btn-primary"
                     style="float: right" type="button"
-                    id="{{ kol.lower() }}"
+                    id="{{ kolom.lower() }}"
                     title="Klik om correctieregel leeg te maken" >
                     Wis regel
             </button>
-            {% elif kol == "Check" %}
+            {% elif kolom == "Check" %}
             <input type="hidden"
-                   id="check"
+                   id="{{ kolom.lower() }}"
                    value="false"/>
             {% endif %}
         </div>
