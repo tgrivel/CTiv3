@@ -1,5 +1,4 @@
 from applicatie.logic.codelijst import Codelijst
-from applicatie.logic.grijze_cel import GrijzeCel
 from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
@@ -54,9 +53,14 @@ class Verwerking(object):
                 self._codelijsten[naam] = Codelijst(codelijst['codelijst'])
 
             # Zoek grijze cellen gedefinieerd in het definitiebestand.
+            self._grijze_cellen['lasten'] = {}
+            self._grijze_cellen['balans_lasten'] = {}
+            self._grijze_cellen['baten'] = {}
+            self._grijze_cellen['balans_baten'] = {}
+            self._grijze_cellen['kengetallen'] = {}
+            self._grijze_cellen['beleidsindicatoren'] = {}
             for naam, grijze_cellen in self.definitie_bestand['grijze_cellen'].items():
-                if (naam == "lasten" or naam == "baten"):
-                    self._grijze_cellen[naam] = GrijzeCel(grijze_cellen)
+                self._grijze_cellen[naam] = grijze_cellen
 
             self._maken_draaitabellen(self._codelijsten, self._grijze_cellen, self.data_bestand['data'])
 
@@ -91,8 +95,8 @@ class Verwerking(object):
             rij_naam='balanscode',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
-            kolom_codelijst=codelijsten['categorie_lasten'])
-            # grijze_cellen=grijze_cellen['balans_lasten'])
+            kolom_codelijst=codelijsten['categorie_lasten'],
+            grijze_cellen=grijze_cellen['balans_lasten'])
 
         self.draaitabellen['baten'] = DraaiTabel(
             naam='baten',
@@ -100,8 +104,8 @@ class Verwerking(object):
             rij_naam='taakveld',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['taakveld'],
-            kolom_codelijst=codelijsten['categorie_baten'])
-            # grijze_cellen=grijze_cellen['baten'])
+            kolom_codelijst=codelijsten['categorie_baten'],
+            grijze_cellen=grijze_cellen['baten'])
 
         self.draaitabellen['balans_baten'] = DraaiTabel(
             naam='balans_baten',
@@ -109,8 +113,8 @@ class Verwerking(object):
             rij_naam='balanscode',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
-            kolom_codelijst=codelijsten['categorie_baten'])
-            # grijze_cellen=grijze_cellen['balans_baten'])
+            kolom_codelijst=codelijsten['categorie_baten'],
+            grijze_cellen=grijze_cellen['balans_baten'])
 
         self.draaitabellen['balans_standen'] = DraaiTabel(
             naam='balans_standen',
@@ -131,8 +135,8 @@ class Verwerking(object):
             waarde_type='str',
             alles_weergeven=True,
             is_bewerkbaar=True,
-            detail_weergave=False)
-            # grijze_cellen=grijze_cellen['kengetallen'])
+            detail_weergave=False,
+            grijze_cellen=grijze_cellen['kengetallen'])
 
         self.draaitabellen['beleidsindicatoren'] = DraaiTabel(
             naam='beleidsindicatoren',
@@ -145,5 +149,5 @@ class Verwerking(object):
             waarde_type='str',
             alles_weergeven=True,
             is_bewerkbaar=True,
-            detail_weergave=False)
-            # grijze_cellen=grijze_cellen['beleidsindicatoren'])
+            detail_weergave=False,
+            grijze_cellen=grijze_cellen['beleidsindicatoren'])

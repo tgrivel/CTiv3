@@ -35,7 +35,7 @@
             </th>
             {% for kolom in tabel.kolommen %}
             <td
-                {% if tabel.is_grijze_cel(this) %}
+                {% if tabel.is_grijze_cel(rij, kolom, tabel.rij_naam, tabel.kolom_naam) %}
                     class="td grijzeCel"
                 {% else %}
                     class="td witteCel"
