@@ -18,7 +18,8 @@ def index():
     door het verversen van het scherm.
     """
 
-    debug_status = current_app.config['DEBUG']
+    # javascript debug status
+    js_debug_status = (current_app.config['ENV'] == 'debugjavascript')
 
     if request.method == 'POST':
         reqform = request.form.to_dict()
@@ -32,13 +33,13 @@ def index():
 
         elif not request.files.get('file', None):
             fouten = ['Geen json bestand geselecteerd']
-            return render_template("index.html", errormessages=fouten, debug_status=debug_status)
+            return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
 
         else:
             browsertype = request.user_agent.browser
             if browsertype not in ['firefox', 'chrome']:
                 fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
-                return render_template("index.html", errormessages=fouten, debug_status=debug_status)
+                return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
             jsonfile = request.files['file']
             jsonfilename = jsonfile.filename
             return matrix(jsonbestand=jsonfile, jsonbestandsnaam=jsonfilename)
@@ -48,7 +49,7 @@ def index():
         browsertype = request.user_agent.browser
         if browsertype not in ['firefox', 'chrome']:
             fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
-        return render_template("index.html", errormessages=fouten, debug_status=debug_status)
+        return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
 
 
 def geef_tabnaam(waarde_kant):
@@ -81,7 +82,8 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
     Indien geen fouten, laad de pagina met een overzicht van de data.
     """
 
-    debug_status = current_app.config['DEBUG']
+    # javascript debug status
+    js_debug_status = (current_app.config['ENV'] == 'debugjavascript')
 
     verwerking = Verwerking(jsonbestand)
 
@@ -109,7 +111,7 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
     verwerking.run()
 
     if verwerking.fouten:
-        return render_template("index.html", errormessages=verwerking.fouten, debug_status=debug_status)
+        return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
 
     # Render sjabloon
     params = {
@@ -121,7 +123,7 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
         'controle_resultaten': verwerking.controle_resultaten,
         'meta': verwerking.metadata,
         'contact': verwerking.contact,
-        'debug_status': debug_status,
+        'debug_status': js_debug_status,
 
         # hebben we onderstaande nog nodig?
         'errormessage': "",

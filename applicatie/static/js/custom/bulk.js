@@ -37,10 +37,7 @@ function bulkcorrecties_verwerken() {
 
 
     if (confirm(tekst)) {
-        // Save it!
         console.log('Status: ' + DEBUG_STATUS);
-    } else {
-        // Do nothing!
     }
 };
 

@@ -30,6 +30,11 @@ class Config_Development(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'development_key'
 
 
+class Config_DebugJavascript(object):
+    APP_ENV = 'debugjavascript'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'debugjavascript_key'
+
+
 class Config_Test(object):
     APP_ENV = 'test'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'test_key'
