@@ -2,6 +2,7 @@
 {% from 'macros.html' import draaitabel, controle_resultaat, record_toevoegen, bulkcorrecties_toevoegen %}
 
 {% block content %}
+
 <style>
 
 // TODO Css moet niet hier maar in css-file komen te staan.
@@ -220,6 +221,13 @@ table {
         openTab(event, "{{ tabnaam }}");
     }); */
     {% endif %}
+
+    $(document).ready(function() {
+
+        // form-controls van bulkcorrecties reactief maken
+        initialiseer_form_controls_bulkcorrecties();
+
+    });
 
     </script>
 
