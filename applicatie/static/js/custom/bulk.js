@@ -31,13 +31,108 @@ function initialiseer_form_controls_bulkcorrecties() {
 
 function bulkcorrecties_verwerken() {
 
-    let tekst = "Weet u zeker dat u de ingevoerde correcties wilt verwerken?\r\n"
-    tekst = tekst + "Zo ja,  klik op OK\r\n"
-    tekst = tekst + "Zo nee, klik op Annuleren (Cancel)"
+    let form_bulk = $("#" + FORMULIER_BULK);
 
-    if (confirm(tekst)) {
-        console.log('Debug status: ' + DEBUG_STATUS);
+    let bulkcorrecties = form_bulk.find("div[id^='bulkcorr_']");
+
+    let formulier_correct_ingevuld = true;
+
+    let aantal_correcties = 0;
+
+    const _q = "\"";
+    const _a = "\{";
+    const _z = "\}";
+
+    // JSON string openen met {
+    let _bulk = _a;
+
+    $.each(bulkcorrecties, function(key, corr) {
+        /* verwerk alle bulkcorrecties in een JSON string */
+
+        let type = $(this).find("#type").children("option:selected").val();
+        let rij_soort = $(this).find("#rij_soort").children("option:selected").val();
+        let rij_code = $(this).find("#rij_code").children("option:selected").val();
+        let kolom_soort = $(this).find("#kolom_soort").children("option:selected").val();
+        let kolom_code = $(this).find("#kolom_code").children("option:selected").val();
+        let bedrag = $(this).find("#bedrag").val();
+        let omschrijving = $(this).find("#omschrijving").val();
+
+        if (type !== "" && formulier_correct_ingevuld) {
+
+            // rij_code en kolom_code moeten altijd ingevuld zijn
+            if (rij_code !== "" && kolom_code !== "") {
+
+                // dubbele quotes rondom strings zetten
+                type = _q + type + _q;
+                rij_soort = _q + rij_soort + _q;
+                rij_code = _q + rij_code + _q;
+                kolom_soort = _q + kolom_soort + _q;
+                kolom_code = _q + kolom_code + _q;
+                omschrijving = _q + omschrijving + _q;
+
+                aantal_correcties += 1;
+                if (aantal_correcties > 1) { _bulk += ", " };
+
+                // type item toevoegen en openen met {
+                _bulk += type + ":" + _a;
+
+                // rij item toevoegen
+                _bulk += rij_soort + ":" + rij_code + ", ";
+
+                // kolom item toevoegen
+                _bulk += kolom_soort + ":" + kolom_code + ", ";
+
+                // bedrag item toevoegen
+                _bulk += _q + "bedrag" + _q + ":" + bedrag + ", ";
+
+                // omschrijving in details element zetten
+                _bulk += _q + "details" + _q + ":" + _a;
+                _bulk += _q + "omschrijving" + _q + ":" + omschrijving;
+
+                // afsluiten item
+                _bulk += _z + _z;
+            } else {
+
+                alert("Het formulier is niet correct ingevuld.");
+                formulier_correct_ingevuld = false;
+            }
+        }
+    });
+
+    // JSON string afsluiten met }
+    _bulk += _z;
+
+    if (DEBUG_STATUS){
+        // debugging: print de string met correcties
+        console.log(_bulk);
     }
+
+    let bulkcorrecties_input_element = form_bulk.find('input[name="bulkcorrecties"]');
+
+    if (aantal_correcties > 0 && formulier_correct_ingevuld) {
+
+        let vraag = "";
+        vraag += "Weet u zeker dat u de ingevoerde correcties wilt verwerken?\r\n\r\n";
+        vraag += "Zo ja,  klik op OK\r\n";
+        vraag += "Zo nee, klik op Annuleren / Cancel";
+
+        if (confirm(vraag)) {
+
+            bulkcorrecties_input_element.val(_bulk);
+
+            // verzend formulier voor verwerking in routes.py
+            form_bulk.submit();
+
+            if (DEBUG_STATUS) {
+                // debugging: print aantal verwerkte correcties
+                console.log("Aantal verwerkte bulkcorrecties: " + aantal_correcties);
+            }
+        }
+
+    }
+
+    bulkcorrecties_input_element.val("");
+
 };
 
 
@@ -147,7 +242,7 @@ function form_control_reset_rij(corr) {
     foo = corr.find("#bedrag");
     foo.val("0");
 
-    foo = corr.find("#opmerking");
+    foo = corr.find("#omschrijving");
     foo.val("Bulkcorrectie Ocido");
 
     foo = corr.find("#check");

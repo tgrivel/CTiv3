@@ -68,6 +68,8 @@ def geef_tabnaam(waarde_kant):
         tabnaam = 'Kengetallen'
     elif waarde_kant == 'beleidsindicatoren':
         tabnaam = 'Beleidsindicatoren'
+    elif waarde_kant == 'bulkcorrecties':
+        tabnaam = 'Bulk_correcties'
     else:
         # Foutafhandeling
         print('Fout: Onbekende waarde_kant', waarde_kant)
@@ -91,20 +93,28 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
         waarde_kant = mutatie.pop('waarde_kant')
         tabnaam = geef_tabnaam(waarde_kant)
 
-        try:
-            if '.' in mutatie['bedrag']:
-                bedrag = float(mutatie['bedrag'])
-            else:
-                bedrag = int(mutatie['bedrag'])
-        except ValueError:
-            print(f"Fout: bedrag is geen numerieke waarde {mutatie['bedrag']})", file=sys.stderr)
-            bedrag = 0
+        if not waarde_kant == 'bulkcorrecties':
+            # verwerken van een enkele correctie
+            try:
+                if '.' in mutatie['bedrag']:
+                    bedrag = float(mutatie['bedrag'])
+                else:
+                    bedrag = int(mutatie['bedrag'])
+            except ValueError:
+                print(f"Fout: bedrag is geen numerieke waarde {mutatie['bedrag']})", file=sys.stderr)
+                bedrag = 0
 
-        mutatie['bedrag'] = bedrag
+            mutatie['bedrag'] = bedrag
+            # omschrijving toevoegen aan het 'details' element
+            mutatie['details'] = {"omschrijving": "Mutatie toegevoegd met Ocido."}
+            verwerking.muteer(waarde_kant, mutatie)
 
-        # omschrijving toevoegen aan het 'details' element
-        mutatie['details'] = {"omschrijving": "Mutatie toegevoegd met Ocido."}
-        verwerking.muteer(waarde_kant, mutatie)
+        else:
+            # verwerken van bulkcorrecties
+            bulkcorrecties = json.loads(mutatie['bulkcorrecties'])
+            for key, val in bulkcorrecties.items():
+                verwerking.muteer(key, val)
+
     else:
         tabnaam = None
 
