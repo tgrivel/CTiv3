@@ -112,8 +112,9 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
         else:
             # verwerken van bulkcorrecties
             bulkcorrecties = json.loads(mutatie['bulkcorrecties'])
-            for key, val in bulkcorrecties.items():
-                verwerking.muteer(key, val)
+            for correctie in bulkcorrecties.values():
+                for key, corr in correctie.items():
+                    verwerking.muteer(key, corr)
 
     else:
         tabnaam = None

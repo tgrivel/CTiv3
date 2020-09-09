@@ -39,15 +39,10 @@ function bulkcorrecties_verwerken() {
 
     let aantal_correcties = 0;
 
-    const _q = "\"";
-    const _a = "\{";
-    const _z = "\}";
-
-    // JSON string openen met {
-    let _bulk = _a;
+    let bulk = {};
 
     $.each(bulkcorrecties, function(key, corr) {
-        /* verwerk alle bulkcorrecties in een JSON string */
+        /* verwerk alle bulkcorrecties in een bulk object */
 
         let type = $(this).find("#type").children("option:selected").val();
         let rij_soort = $(this).find("#rij_soort").children("option:selected").val();
@@ -61,74 +56,52 @@ function bulkcorrecties_verwerken() {
 
             // rij_code en kolom_code moeten altijd ingevuld zijn
             if (rij_code !== "" && kolom_code !== "") {
-
-                // dubbele quotes rondom strings zetten
-                type = _q + type + _q;
-                rij_soort = _q + rij_soort + _q;
-                rij_code = _q + rij_code + _q;
-                kolom_soort = _q + kolom_soort + _q;
-                kolom_code = _q + kolom_code + _q;
-                omschrijving = _q + omschrijving + _q;
-
                 aantal_correcties += 1;
-                if (aantal_correcties > 1) { _bulk += ", " };
 
-                // type item toevoegen en openen met {
-                _bulk += type + ":" + _a;
+                // maak object voor correctieregel
+                let cor = {};
+                cor[aantal_correcties] = {};
+                cor[aantal_correcties][type] = {};
+                cor[aantal_correcties][type][rij_soort] = rij_code;
+                cor[aantal_correcties][type][kolom_soort] = kolom_code;
+                cor[aantal_correcties][type]['bedrag'] = parseFloat(bedrag);
+                cor[aantal_correcties][type]['details'] = {};
+                cor[aantal_correcties][type]['details']['omschrijving'] = omschrijving;
 
-                // rij item toevoegen
-                _bulk += rij_soort + ":" + rij_code + ", ";
+                // correctie toevoegen aan bulk
+                bulk = Object.assign(bulk, cor);
 
-                // kolom item toevoegen
-                _bulk += kolom_soort + ":" + kolom_code + ", ";
-
-                // bedrag item toevoegen
-                _bulk += _q + "bedrag" + _q + ":" + bedrag + ", ";
-
-                // omschrijving in details element zetten
-                _bulk += _q + "details" + _q + ":" + _a;
-                _bulk += _q + "omschrijving" + _q + ":" + omschrijving;
-
-                // afsluiten item
-                _bulk += _z + _z;
             } else {
-
                 alert("Het formulier is niet correct ingevuld.");
                 formulier_correct_ingevuld = false;
             }
         }
     });
 
-    // JSON string afsluiten met }
-    _bulk += _z;
-
     if (DEBUG_STATUS){
-        // debugging: print de string met correcties
-        console.log(_bulk);
+        // debugging: print string met bulkcorrecties
+        console.log(JSON.stringify(bulk));
     }
 
     let bulkcorrecties_input_element = form_bulk.find('input[name="bulkcorrecties"]');
 
     if (aantal_correcties > 0 && formulier_correct_ingevuld) {
 
-        let vraag = "";
-        vraag += "Weet u zeker dat u de ingevoerde correcties wilt verwerken?\r\n\r\n";
+        let vraag = "Weet u zeker dat u de ingevoerde correcties wilt verwerken?\r\n\r\n";
         vraag += "Zo ja,  klik op OK\r\n";
         vraag += "Zo nee, klik op Annuleren / Cancel";
 
         if (confirm(vraag)) {
-
-            bulkcorrecties_input_element.val(_bulk);
+            bulkcorrecties_input_element.val(JSON.stringify(bulk));
 
             // verzend formulier voor verwerking in routes.py
             form_bulk.submit();
 
             if (DEBUG_STATUS) {
-                // debugging: print aantal verwerkte correcties
+                // debugging: print aantal verwerkte bulkcorrecties
                 console.log("Aantal verwerkte bulkcorrecties: " + aantal_correcties);
             }
         }
-
     }
 
     bulkcorrecties_input_element.val("");
