@@ -94,11 +94,11 @@ class DraaiTabel:
 
         return details
 
-    def is_grijze_cel(self, rij, kolom, rij_naam, kolom_naam):
+    def is_grijze_cel(self, rij, kolom):
         if self.grijze_cellen:
             # Loop over alle grijze cellen.
             for grijze_cel in self.grijze_cellen:
                 # Als combinatie rij en kolom van de tabel voorkomt in grijze cellen: return True.
-                if ((grijze_cel[rij_naam] == rij) and (grijze_cel[kolom_naam] == kolom)):
+                if grijze_cel[self.rij_naam] == rij and grijze_cel[self.kolom_naam] == kolom:
                     return True
         return False
