@@ -40,16 +40,23 @@
         </tr>
         </thead>
         <tbody>
-
         {% for rij in tabel.rijen %}
         <tr>
             <th class="pvtRowLabel" rowspan="1" colspan="2">
                 {{ rij }} {{ tabel.geef_rij_omschrijving(rij) }}
             </th>
             {% for kolom in tabel.kolommen %}
-            <td class="td default" nowrap="true"
+            <td
+                {% if tabel.is_grijze_cel(rij, kolom) %}
+                    class="td grijzeCel"
+                {% else %}
+                    class="td witteCel"
+                {% endif %}
+
+                nowrap="true"
                 {{ tabel.rij_naam }}="{{ rij }}"
                 {{ tabel.kolom_naam }}="{{ kolom }}"
+
                 {% if tabel.detail_weergave %}
                 onclick="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
                 onkeydown="vul_detail(this, '{{ tabel.rij_naam }}', '{{ tabel.kolom_naam }}');"
@@ -71,6 +78,7 @@
 
 {% endmacro %}
 
+
 {% macro controle_resultaat(resultaat) %}
 <h4>Uitvoer van {{ resultaat.controle.omschrijving }}</h4>
 
@@ -88,6 +96,7 @@
 {% endif %}
 
 {% endmacro %}
+
 
 {% macro record_toevoegen(draaitabel, data, bestandsnaam) %}
 

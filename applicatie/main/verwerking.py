@@ -10,6 +10,7 @@ class Verwerking(object):
         # Initialiseren
         self.fouten = []
         self._codelijsten = {}
+        self._grijze_cellen = {}
 
         # Draaitabellen
         self.draaitabellen = {}
@@ -47,12 +48,21 @@ class Verwerking(object):
         if not self.fouten:
             self.controle_resultaten = []
 
-        if not self.fouten:
             # Zoek omschrijvingen bij de codes zodat we deze in de tabel kunnen tonen
             for naam, codelijst in self.definitie_bestand['codelijsten'].items():
                 self._codelijsten[naam] = Codelijst(codelijst['codelijst'])
 
-            self._maken_draaitabellen(self._codelijsten, self.data_bestand['data'])
+            # Zoek grijze cellen gedefinieerd in het definitiebestand.
+            self._grijze_cellen['lasten'] = {}
+            self._grijze_cellen['balans_lasten'] = {}
+            self._grijze_cellen['baten'] = {}
+            self._grijze_cellen['balans_baten'] = {}
+            self._grijze_cellen['kengetallen'] = {}
+            self._grijze_cellen['beleidsindicatoren'] = {}
+            for naam, grijze_cellen in self.definitie_bestand['grijze_cellen'].items():
+                self._grijze_cellen[naam] = grijze_cellen
+
+            self._maken_draaitabellen(self._codelijsten, self._grijze_cellen, self.data_bestand['data'])
 
     def muteer(self, waarde_kant, mutatie):
         """Verwerk mutatie."""
@@ -67,7 +77,7 @@ class Verwerking(object):
         self.definitie_bestand, self.fouten = ophalen_bestand_van_web(IV3_REPO_PATH, bestandsnaam, 'definitiebestand')
         self.sjabloon_meta = self.definitie_bestand['metadata']
 
-    def _maken_draaitabellen(self, codelijsten, data):
+    def _maken_draaitabellen(self, codelijsten, grijze_cellen, data):
         """Maak alle draaitabellen."""
 
         self.draaitabellen['lasten'] = DraaiTabel(
@@ -76,7 +86,8 @@ class Verwerking(object):
             rij_naam='taakveld',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['taakveld'],
-            kolom_codelijst=codelijsten['categorie_lasten'])
+            kolom_codelijst=codelijsten['categorie_lasten'],
+            grijze_cellen=grijze_cellen['lasten'])
 
         self.draaitabellen['balans_lasten'] = DraaiTabel(
             naam='balans_lasten',
@@ -84,7 +95,8 @@ class Verwerking(object):
             rij_naam='balanscode',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
-            kolom_codelijst=codelijsten['categorie_lasten'])
+            kolom_codelijst=codelijsten['categorie_lasten'],
+            grijze_cellen=grijze_cellen['balans_lasten'])
 
         self.draaitabellen['baten'] = DraaiTabel(
             naam='baten',
@@ -92,7 +104,8 @@ class Verwerking(object):
             rij_naam='taakveld',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['taakveld'],
-            kolom_codelijst=codelijsten['categorie_baten'])
+            kolom_codelijst=codelijsten['categorie_baten'],
+            grijze_cellen=grijze_cellen['baten'])
 
         self.draaitabellen['balans_baten'] = DraaiTabel(
             naam='balans_baten',
@@ -100,7 +113,8 @@ class Verwerking(object):
             rij_naam='balanscode',
             kolom_naam='categorie',
             rij_codelijst=codelijsten['balanscode'],
-            kolom_codelijst=codelijsten['categorie_baten'])
+            kolom_codelijst=codelijsten['categorie_baten'],
+            grijze_cellen=grijze_cellen['balans_baten'])
 
         self.draaitabellen['balans_standen'] = DraaiTabel(
             naam='balans_standen',
@@ -121,7 +135,8 @@ class Verwerking(object):
             waarde_type='str',
             alles_weergeven=True,
             is_bewerkbaar=True,
-            detail_weergave=False)
+            detail_weergave=False,
+            grijze_cellen=grijze_cellen['kengetallen'])
 
         self.draaitabellen['beleidsindicatoren'] = DraaiTabel(
             naam='beleidsindicatoren',
@@ -134,4 +149,5 @@ class Verwerking(object):
             waarde_type='str',
             alles_weergeven=True,
             is_bewerkbaar=True,
-            detail_weergave=False)
+            detail_weergave=False,
+            grijze_cellen=grijze_cellen['beleidsindicatoren'])

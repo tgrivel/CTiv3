@@ -6,13 +6,13 @@ from applicatie.logic.maak_matrix import pivot_table
 
 class DraaiTabel:
     def __init__(self, naam: str, data, rij_naam: str, kolom_naam: str,
-                 rij_codelijst: Codelijst, kolom_codelijst: Codelijst, waarde_naam='bedrag',
-                 waarde_type=float,
-                 alles_weergeven=False, is_bewerkbaar=False, detail_weergave=True):
+                 rij_codelijst: Codelijst, kolom_codelijst: Codelijst, waarde_naam='bedrag', waarde_type=float,
+                 grijze_cellen={}, alles_weergeven=False, is_bewerkbaar=False, detail_weergave=True):
         self.naam = naam
         self.waarde_naam = waarde_naam
         self.is_bewerkbaar = is_bewerkbaar
         self.detail_weergave = detail_weergave
+        self.grijze_cellen = grijze_cellen
 
         indices, self.tabel = pivot_table(data, aggregeer_kolommen=[rij_naam, kolom_naam],
                                           waarde_kolom=self.waarde_naam, waarde_type=waarde_type)
@@ -93,3 +93,12 @@ class DraaiTabel:
                        + sorted(relevante_labels, key=str.lower) + omschrijving + [self.waarde_naam])
 
         return details
+
+    def is_grijze_cel(self, rij, kolom):
+        if self.grijze_cellen:
+            # Loop over alle grijze cellen.
+            for grijze_cel in self.grijze_cellen:
+                # Als combinatie rij en kolom van de tabel voorkomt in grijze cellen: return True.
+                if grijze_cel[self.rij_naam] == rij and grijze_cel[self.kolom_naam] == kolom:
+                    return True
+        return False

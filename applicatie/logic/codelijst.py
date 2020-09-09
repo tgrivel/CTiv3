@@ -48,7 +48,7 @@ def _maak_omschrijving_tabel(codelijst):
 
 
 def _maak_hierarchie(codelijst):
-    """Maak een mapping can childcode naar parentcode."""
+    """Maak een mapping van childcode naar parentcode."""
     hierarchie = {}
 
     for item in codelijst:
