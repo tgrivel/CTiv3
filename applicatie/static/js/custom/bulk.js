@@ -150,8 +150,7 @@ function form_control_update_opties(corr, kolom, type_geselecteerd, select) {
 
     let form_bulk = $("#" + FORMULIER_BULK);
 
-    let arr_opties;
-    arr_opties = [];
+    let arr_opties = [];
 
     if (type_geselecteerd != "") {
         // haal string met opties op
@@ -218,6 +217,4 @@ function form_control_reset_rij(corr) {
     foo = corr.find("#omschrijving");
     foo.val("Bulkcorrectie Ocido");
 
-    foo = corr.find("#check");
-    foo.val(false);
 };
