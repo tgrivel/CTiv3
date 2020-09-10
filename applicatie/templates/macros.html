@@ -165,7 +165,7 @@
 {% macro bulkcorrecties_toevoegen(draaitabel, data, bestandsnaam, aantal_rijen) %}
 
 {% set formulier_kolommen = ["Type", "Rij_soort", "Rij_code", "Kolom_soort", "Kolom_code"] %}
-{% set formulier_kolommen = formulier_kolommen + ["Bedrag", "Opmerking", "Reset", "Check"] %}
+{% set formulier_kolommen = formulier_kolommen + ["Bedrag", "Omschrijving", "Reset"] %}
 
 {% set type_opties = {"Type": ["lasten", "baten", "balans_lasten", "balans_baten", "balans_standen"]} %}
 
@@ -218,7 +218,7 @@
 
         {% for kolom in formulier_kolommen %}
         <div class="form-group" style="padding-right: 10px;">
-            {% if rij == 0 and kolom != "Check" %}
+            {% if rij == 0 %}
             <label class='form-control mutatie-invoer'
                    style="color: blue;display: block;margin-bottom: 10px;">{{ kolom }}</label>
             {% endif %}
@@ -241,7 +241,7 @@
                    type="number"
                    value="0"
             />
-            {% elif kolom == "Opmerking" %}
+            {% elif kolom == "Omschrijving" %}
             <input class="form-control mutatie-invoer"
                    style="min-width: 300px;"
                    id="{{ kolom.lower() }}"
@@ -255,10 +255,6 @@
                     title="Klik om correctieregel leeg te maken" >
                     Wis regel
             </button>
-            {% elif kolom == "Check" %}
-            <input type="hidden"
-                   id="{{ kolom.lower() }}"
-                   value="false"/>
             {% endif %}
         </div>
         {% endfor %}
@@ -268,8 +264,17 @@
     {% endfor %}
 
     <input type="hidden"
+           name="data"
+           value='{{ data | tojson }}'/>
+    <input type="hidden"
            name="bestandsnaam"
            value='{{ bestandsnaam }}'/>
+    <input type="hidden"
+           name="waarde_kant"
+           value="bulkcorrecties"/>
+    <input type="hidden"
+           name="bulkcorrecties"
+           value=""/>
     <input type="hidden"
            id="rij_soort_opties"
            value='{{ rij_soort_opties }}'/>
