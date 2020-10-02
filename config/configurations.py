@@ -10,6 +10,9 @@ IV3_REPO_PATH = "https://raw.github.com/statistiekcbs/iv3_definities/master/"
 IV3_SCHEMA_FILE = "iv3_data_schema_v{}.json"
 IV3_DEF_FILE = "iv3_definities_{}_{}.json"
 
+# Bepaalt of json bestand-controle met definitiebestand extern met API call gebeurt of niet.
+EXTERNE_DEF_BESTAND_CONTROLE = True
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 

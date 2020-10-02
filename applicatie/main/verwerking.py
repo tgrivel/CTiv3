@@ -1,8 +1,8 @@
 from applicatie.logic.codelijst import Codelijst
-from applicatie.logic.controles import controle_met_defbestand
+from applicatie.logic.controles import controle_met_defbestand, controle_met_defbestand_extern
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
-from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE
+from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE, EXTERNE_DEF_BESTAND_CONTROLE
 
 
 class Verwerking(object):
@@ -29,7 +29,7 @@ class Verwerking(object):
             self.data_bestand = None
             self.fouten.append("Geen json-bestand")
 
-    def run(self):
+    def run(self, jsonbestand):
         """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
         Indien geen fouten, laad de pagina met een overzicht van de data.
         """
@@ -41,10 +41,14 @@ class Verwerking(object):
 
         if not self.fouten:
             # Controle databestand met definitiebestand
-            self.fouten = controle_met_defbestand(self.data_bestand, self.definitie_bestand)
+            if EXTERNE_DEF_BESTAND_CONTROLE:
+                print("regel 45 inside EXTERNE_DEF_BESTAND_CONTROLE if van verwerking.run()")
+                self.fouten = controle_met_defbestand_extern(jsonbestand)
+            else:
+                self.fouten = controle_met_defbestand(self.data_bestand, self.definitie_bestand)
 
         # TODO Aggregeren via externe API
-        # TODO Controle moet uitgevoerd worden in een externe API
+
         if not self.fouten:
             self.controle_resultaten = []
 

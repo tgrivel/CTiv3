@@ -19,8 +19,6 @@ def ophalen_en_controleren_databestand(jsonbestand):
         - json data bestand inlezen
         - json schema ophalen van web
         - json data controleren aan json schema
-        - json definitie bestand ophalen van web
-        - json data controleren aan het definitie bestand
     """
 
     # json bestand inlezen

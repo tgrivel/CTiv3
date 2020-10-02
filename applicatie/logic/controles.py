@@ -1,5 +1,6 @@
 from jsonschema import Draft4Validator
 import logging
+import requests
 
 _logger = logging.getLogger(__file__)
 
@@ -93,10 +94,37 @@ def geef_codechecklijst(codelijst):
     return codechecklijst
 
 
+def controle_met_defbestand_extern(json_bestand):
+    """
+    Controleer een json data bestand op basis van definitiebestand, controle wordt uitgevoerd in een externe API.
+    """
+    codefouten = []
+
+    api_url = 'https://cbs.openstate.eu/geef_totalen_uitkomst'
+
+    try:
+        response = requests.post(api_url)
+
+
+        # with open(json_bestand, 'rb') as f:
+
+            # TODO: WERKT NOG NIET
+
+            #response = requests.post(api_url, files={json_bestand: f})
+
+        print("regel 110 controle_met_defbestand_extern()")
+        print(response)
+    except FileNotFoundError:
+        print("Het geuploade json bestand bestaat niet of kan niet gevonden worden.")
+        codefouten.append("Het geuploade json bestand bestaat niet of kan niet gevonden worden.")
+        _logger.info("Het geuploade json bestand bestaat niet of kan niet gevonden worden.")
+
+    return codefouten
+
+
 def controle_met_defbestand(json_bestand, json_definities):
     """
-    Controleer een json data bestand
-    aan de hand van de codelijsten in het definitiebestand
+    Controleer een json data bestand aan de hand van de codelijsten in het definitiebestand.
     """
     codefouten = []
 

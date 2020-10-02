@@ -24,6 +24,9 @@ def index():
     if request.method == 'POST':
         reqform = request.form.to_dict()
         if (not request.files.get('file', None)) and 'data' in reqform:
+
+            # TODO vindt uit wanneer de code hier komt en waarom deze if hier is
+
             # Mutatie verwerken
             mutatie = reqform
             data = json.loads(mutatie.pop('data'))
@@ -40,9 +43,15 @@ def index():
             if browsertype not in ['firefox', 'chrome']:
                 fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
                 return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
-            jsonfile = request.files['file']
-            jsonfilename = jsonfile.filename
-            return matrix(jsonbestand=jsonfile, jsonbestandsnaam=jsonfilename)
+            uploaded_file = request.files['file']
+            uploaded_filename = uploaded_file.filename
+
+            print("regel 45: ", uploaded_filename)
+            # TODO Hij komt hier wel, maar nu komt de file opeens niet meer door de controle heen....
+
+            if uploaded_filename != '':
+                uploaded_file.save(uploaded_filename)
+            return matrix(jsonbestand=uploaded_file, jsonbestandsnaam=uploaded_filename)
 
     elif request.method == 'GET':
         fouten = []
@@ -119,7 +128,7 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
     else:
         tabnaam = None
 
-    verwerking.run()
+    verwerking.run(jsonbestand)
 
     if verwerking.fouten:
         return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
