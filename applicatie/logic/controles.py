@@ -1,6 +1,6 @@
 from jsonschema import Draft4Validator
 import logging
-import requests
+# import requests
 
 _logger = logging.getLogger(__file__)
 
