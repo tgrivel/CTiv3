@@ -23,18 +23,16 @@ def index():
 
     if request.method == 'POST':
         reqform = request.form.to_dict()
-        if (not request.files.get('file', None)) and 'data' in reqform:
-
-            # TODO vindt uit wanneer de code hier komt en waarom deze if hier is
-
+        if (not request.files.get('file')) and 'data' in reqform:
             # Mutatie verwerken
             mutatie = reqform
+
             data = json.loads(mutatie.pop('data'))
             bestandsnaam = mutatie.pop('bestandsnaam')
-            jsonbestand = io.BytesIO(json.dumps(data).encode('utf-8'))
-            return matrix(jsonbestand, bestandsnaam, mutatie)
+            uploaded_file = io.BytesIO(json.dumps(data).encode('utf-8'))
+            return matrix(uploaded_file, bestandsnaam, mutatie)
 
-        elif not request.files.get('file', None):
+        elif not request.files.get('file'):
             fouten = ['Geen json bestand geselecteerd']
             return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
 
@@ -44,14 +42,16 @@ def index():
                 fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
                 return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
             uploaded_file = request.files['file']
-            uploaded_filename = uploaded_file.filename
+            bestandsnaam = uploaded_file.filename
 
-            print("regel 45: ", uploaded_filename)
-            # TODO Hij komt hier wel, maar nu komt de file opeens niet meer door de controle heen....
 
-            if uploaded_filename != '':
-                uploaded_file.save(uploaded_filename)
-            return matrix(jsonbestand=uploaded_file, jsonbestandsnaam=uploaded_filename)
+            # TODO Hij komt hier wel, maar nu komt de file opeens niet meer door de controle heen.
+            # als save aangeroepen, file nog open?
+            # if bestandsnaam != '':
+            #     uploaded_file.save(bestandsnaam)
+
+
+            return matrix(uploaded_file, bestandsnaam)
 
     elif request.method == 'GET':
         fouten = []
