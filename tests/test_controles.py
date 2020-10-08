@@ -1,7 +1,9 @@
 from unittest import TestCase
 
 
-class Controle(TestCase):
+class TestControles(TestCase):
+    def test_controle_met_defbestand_extern(self):
+        self.assertTrue(False, "Deze test moet nog geimplementeerd worden.")
 
     def test_geef_codechecklijst(self):
         from applicatie.logic.controles import geef_codechecklijst
