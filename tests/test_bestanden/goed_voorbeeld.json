@@ -1,0 +1,82 @@
+{
+"metadata":{	
+	"overheidslaag":"Gemeente",
+	"overheidsnummer":"1234",
+	"overheidsnaam":"TheoDorp",
+	"boekjaar": 2020,
+	"periode": 1,
+	"status":"Realisatie",
+	"datum":"20200406T15:06:32+02:00",
+	"details_openbaar": true,
+	"financieel_pakket":"Centric Key2Financien",
+	"export_software":"Cognos v12.6"},
+"contact":{	
+	"naam":"Theo Grivel",
+	"telefoon":"070 337 4501",
+	"email":"t.grivel@cbs.nl"},
+"opmerkingen":[	
+	{"tekst":"Dit betreft een voorbeeld op basis van de begroting van de gemeente. Hieraan is aan toegevoegd de boeking van de verkoop van het belang in FC knudde. Deze was (terecht) niet in de begroting opgenomen, omdat de verkoop nog niet door goedgekeurd was door de aandeelhouders op moment van opstellen van de begroting."},
+	{"auteur":"T.Grivel","tekst":"Hier is ruimte voor toelichting op de levering. Bijvoorbeeld kan een gemeente/provincie/gr hier een toelichting geven op gebruikte grijze cellen."},
+	{"tekst": "cat 4 Door het CBS is aangegeven dat Slachtofferhulp als Rijk wordt gezien, dus cat. 431. Opmerkingen over cellen kunnen ook in het blok data ingevuld worden."}
+],
+"data":{
+	"lasten":[
+		{"categorie":"3.5.1","taakveld":"0.3","bedrag":23,"details":{"grootboek":"123","omschrijving":"loonkosten"}},
+		{"categorie":"4.3.3","taakveld":"0.5","bedrag":45},
+		{"categorie":"4.3.2","taakveld":"1.1","bedrag":5},
+		{"categorie":"4.4.8","taakveld":"2.3","bedrag":56},
+		{"categorie":"7.4","taakveld":"3.3","bedrag":55},
+		{"categorie":"4.3.4","taakveld":"5.2","bedrag":45},
+		{"categorie":"4.3.4","taakveld":"6.6","bedrag":11},
+		{"categorie":"4.3.9","taakveld":"8.3","bedrag":23}
+	]
+	,"balans_lasten":[
+		{"categorie":"4.4.2","balanscode":"A122","bedrag":54},
+		{"categorie":"6.1","balanscode":"A1323","bedrag":4}
+	]
+	,"baten":[
+		{"categorie":"3.5.2","taakveld":"0.1","bedrag":88},
+		{"categorie":"4.3.7","taakveld":"0.4","bedrag":61},
+		{"categorie":"4.3.7","taakveld":"1.1","bedrag":1},
+		{"categorie":"3.6","taakveld":"4.2","bedrag":45},
+		{"categorie":"4.4.6","taakveld":"5.4","bedrag":6},
+		{"categorie":"7.4","taakveld":"6.6","bedrag":55},
+		{"categorie":"3.5.2","taakveld":"7.1","bedrag":53},
+		{"categorie":"4.3.4","taakveld":"7.3","bedrag":7}
+	]
+	,"balans_baten":[
+		{"categorie":"4.4.4","balanscode":"A123","bedrag":22},
+		{"categorie":"6.1","balanscode":"A1331a","bedrag":45}
+	]
+	,"balans_standen":[
+		{"balanscode":"A122","standper":"1-1-2018","bedrag":12},
+		{"balanscode":"A123","standper":"1-1-2018","bedrag":50},
+		{"balanscode":"A1323","standper":"1-1-2018","bedrag":20},
+		{"balanscode":"A1331a","standper":"1-1-2018","bedrag":80},
+		{"balanscode":"A224","standper":"1-1-2018","bedrag":80},
+		{"balanscode":"A225b","standper":"1-1-2018","bedrag":20},
+		{"balanscode":"P12","standper":"1-1-2018","bedrag":50},
+		{"balanscode":"P136","standper":"1-1-2018","bedrag":20},
+		{"balanscode":"P29b","standper":"1-1-2018","bedrag":80},
+		{"balanscode":"A122","standper":"ultimo","bedrag":66},
+		{"balanscode":"A123","standper":"ultimo","bedrag":28},
+		{"balanscode":"A1323","standper":"ultimo","bedrag":24},
+		{"balanscode":"A1331a","standper":"ultimo","bedrag":35},
+		{"balanscode":"A224","standper":"ultimo","bedrag":71},
+		{"balanscode":"A225b","standper":"ultimo","bedrag":27},
+		{"balanscode":"P12","standper":"ultimo","bedrag":24},
+		{"balanscode":"P136","standper":"ultimo","bedrag":38},
+		{"balanscode":"P29b","standper":"ultimo","bedrag":24}
+	]
+	,"kengetallen":[
+		{"verslagperiode":"Beg_2019","kengetal":"fk.1","waarde":"56"},
+		{"verslagperiode":"Beg_2019","kengetal":"fk.3","waarde":"5,5"},
+		{"verslagperiode":"MJR_2022","kengetal":"fk.1","waarde":"0,23"}
+	]
+	,"beleidsindicatoren":[
+		{"verslagperiode":"MJR_2021","beleidsindicator":"bi.1","waarde":"123"},
+		{"verslagperiode":"Rek_2018","beleidsindicator":"bi.3","waarde":"13"},
+		{"verslagperiode":"Beg_2019","beleidsindicator":"bi.1","waarde":"23"}
+	]
+	}
+}

@@ -1,8 +1,79 @@
 from unittest import TestCase
 
+import requests
+import json
+
 
 class TestControles(TestCase):
+    def test_controle_valide_request_geeft_http200_response(self):
+        api_url = 'https://cbs.openstate.eu/geef_totalen_uitkomst'
+        bestand = "test_bestanden/goed_voorbeeld.json"
+
+        f = open(bestand, 'rb')
+        bestanden = {'file': f}
+        response = requests.post(api_url, files=bestanden)
+
+        f.close()
+
+        self.assertEqual(200, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 200.")
+
+    def test_controle_request_zonder_bestand_geeft_http500(self):
+        api_url = 'https://cbs.openstate.eu/geef_totalen_uitkomst'
+
+        response = requests.post(api_url)
+
+        self.assertEqual(500, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 500.")
+
+    def test_controle_request_met_file_anders_dan_JSON_geeft_http500_en_fouten(self):
+        api_url = 'https://cbs.openstate.eu/geef_totalen_uitkomst'
+        bestand = "test_bestanden/dummy.txt"
+        f = open(bestand, 'rb')
+        bestanden = {'file': f}
+
+        response = requests.post(api_url, files=bestanden)
+        response_json_format = response.json()
+
+        f.close()
+
+        self.assertEqual(500, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 500.")
+
+        fouten_element = response_json_format["fouten"]
+        print("fouten object: ", fouten_element)
+        self.assertDictEqual(bla, response_json_format, "Het bestand dat bij de response zat is niet zoals verwacht.")
+
+    def test_controle_request_met_fouten_in_file_geeft_http500_en_fouten(self):
+        api_url = 'https://cbs.openstate.eu/geef_totalen_uitkomst'
+        bestand = "test_bestanden/voorbeeld_geeft_schema_fouten.json"
+        f = open(bestand, 'rb')
+        bestanden = {'file': f}
+
+        response = requests.post(api_url, files=bestanden)
+        response_json_format = response.json()
+
+        f.close()
+
+        self.assertEqual(501, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 500.")
+
+        fouten_element = response_json_format["fouten"]
+        print("fouten object: ", fouten_element)
+        self.assertDictEqual(bla, response_json_format, "Het bestand dat bij de response zat is niet zoals verwacht.")
+
     def test_controle_met_defbestand_extern(self):
+        # json_bestand =
+        #
+        # controle_met_defbestand_extern()
+        #
+        # codefouten = []
+
+        # api_url = 'https://cbs.openstate.eu/geef_totalen_uitkomst'
+        #
+        # response = requests.post(api_url)
+
+        # with open(json_bestand, 'rb') as f:
+
+        # response = requests.post(api_url, files={json_bestand: f})
+
+
         self.assertTrue(False, "Deze test moet nog geimplementeerd worden.")
 
     def test_geef_codechecklijst(self):
