@@ -55,7 +55,7 @@ def laad_json_bestand(bestand):
     foutmeldingen = []
 
     # Vind een geschikte encoding
-    encodings = ['utf8', 'cp1252']
+    encodings = ['utf-8', 'cp1252']
 
     for encoding in encodings:
         try:
@@ -63,8 +63,10 @@ def laad_json_bestand(bestand):
             _logger.info(f'verwerken als {encoding}')
             break
         except UnicodeDecodeError:
+            print("regel 66 : in UnicodeDecodeError van laad_json_bestand()")
             continue  # Probeer de volgende
         except JSONDecodeError as e:
+            print("regel 69 : in JSONDecodeError van laad_json_bestand()")
             foutmeldingen.append(f"{bestand.filename} is geen json-bestand")
             foutmeldingen.append("Fout gevonden op regel {}, kolom {}".format(e.lineno, e.colno))
             break
@@ -118,6 +120,6 @@ def ophalen_bestand_van_web(url, bestandsnaam, bestandstype):
             foutmeldingen.append(foutmelding)
 
     if foutmeldingen:
-        _logger.info("Fout bij ophalen van het Iv3-definitiebestand")
+        _logger.info("Fout bij ophalen van het {} met de naam: {}".format(bestandstype, bestandsnaam))
 
     return bestand, foutmeldingen

@@ -47,8 +47,8 @@ def index():
 
             # TODO Hij komt hier wel, maar nu komt de file opeens niet meer door de controle heen.
             # als save aangeroepen, file nog open?
-            # if bestandsnaam != '':
-            #     uploaded_file.save(bestandsnaam)
+            if bestandsnaam != '':
+                uploaded_file.save(bestandsnaam)
 
 
             return matrix(uploaded_file, bestandsnaam)

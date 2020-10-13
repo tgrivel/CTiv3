@@ -1,5 +1,5 @@
 from applicatie.logic.codelijst import Codelijst
-from applicatie.logic.controles import controle_met_defbestand, controle_met_defbestand_extern
+from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
 from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE, EXTERNE_DEF_BESTAND_CONTROLE
@@ -43,7 +43,7 @@ class Verwerking(object):
             # Controle databestand met definitiebestand
             if EXTERNE_DEF_BESTAND_CONTROLE:
                 print("regel 45 inside EXTERNE_DEF_BESTAND_CONTROLE if van verwerking.run()")
-                self.fouten = controle_met_defbestand_extern(jsonbestand)
+                self.fouten = controle_externe_API_object_methode(jsonbestand)
             else:
                 self.fouten = controle_met_defbestand(self.data_bestand, self.definitie_bestand)
 
