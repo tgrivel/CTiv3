@@ -133,7 +133,7 @@ def controle_met_defbestand(json_bestand, json_definities):
 
     codechecklijst = geef_codechecklijst(cl)
 
-    foutstring = "Codefout in [data]:[{}] record #{}: {} {} komt niet voor in de codelijst voor '{}'"
+    foutstring = "Definitiefout in [data]:[{}] record #{}: {} {} komt niet voor in de codelijst uit het definitiebestand voor '{}'"
 
     # loop per rekening door de data
     for rekening, data in json_bestand['data'].items():
@@ -162,6 +162,6 @@ def controle_met_defbestand(json_bestand, json_definities):
 
     if codefouten:
         codefouten.append(
-            "Samenvatting: totaal {} fouten gevonden op basis van codelijst controle.".format(len(codefouten)))
-        _logger.info("Fouten gevonden op basis van codelijst controle met def bestand")
+            "Samenvatting: totaal {} fouten gevonden op basis van codelijst controle uit het definitiebestand.".format(len(codefouten)))
+        _logger.info("Fouten gevonden op basis van codelijst controle met definitiebestand.")
     return codefouten
