@@ -1,6 +1,8 @@
 import unittest
 
+from http import HTTPStatus
 import requests
+
 from config.configurations import OSF_API_GEEF_FOUTEN_URL, OSF_API_GEEF_TOTALEN_UITKOMST_URL
 
 
@@ -11,7 +13,8 @@ class TestOSF_GeefTotalenUitkomstURL(unittest.TestCase):
     def test_zonder_bestand_geeft_http500(self):
         response = requests.post(self.osf_url)
 
-        self.assertEqual(500, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 500.")
+        self.assertEqual(HTTPStatus.INTERNAL_SERVER_ERROR, response.status_code,
+                         "De HTTP statuscode van de response is niet gelijk aan 500: INTERNAL_SERVER_ERROR.")
 
     @unittest.skip("Test overgeslagen omdat OSF deze functionaliteit nog niet in de API aanbiedt.")
     def test_bestand_zonder_fouten_geeft_http200(self):
@@ -23,7 +26,7 @@ class TestOSF_GeefTotalenUitkomstURL(unittest.TestCase):
 
         f.close()
 
-        self.assertEqual(200, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 200.")
+        self.assertEqual(HTTPStatus.OK, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 200: Ok.")
 
     def test_bestand_anders_dan_JSON_geeft_http500_en_fout(self):
         fouten_element_referentie = \
@@ -37,7 +40,8 @@ class TestOSF_GeefTotalenUitkomstURL(unittest.TestCase):
 
         f.close()
 
-        self.assertEqual(500, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 500.")
+        self.assertEqual(HTTPStatus.INTERNAL_SERVER_ERROR, response.status_code,
+                         "De HTTP statuscode van de response is niet gelijk aan 500: INTERNAL_SERVER_ERROR.")
 
         fouten_element = response_json_format["fouten"]
 
@@ -59,7 +63,8 @@ class TestOSF_GeefTotalenUitkomstURL(unittest.TestCase):
 
         f.close()
 
-        self.assertEqual(500, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 500.")
+        self.assertEqual(HTTPStatus.INTERNAL_SERVER_ERROR, response.status_code,
+                         "De HTTP statuscode van de response is niet gelijk aan 500: INTERNAL_SERVER_ERROR.")
         self.assertEqual(fouten_element_referentie, fouten_element,
                          "Het fouten-element bij de response bevat geen definitiefout, terwijl dit wel zou moeten.")
 
@@ -78,7 +83,8 @@ class TestOSF_GeefTotalenUitkomstURL(unittest.TestCase):
 
         f.close()
 
-        self.assertEqual(500, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 500.")
+        self.assertEqual(HTTPStatus.INTERNAL_SERVER_ERROR, response.status_code,
+                         "De HTTP statuscode van de response is niet gelijk aan 500: INTERNAL_SERVER_ERROR.")
         self.assertEqual(fouten_element_referentie, fouten_element,
                          "Het fouten-element bij de response bevat geen schemafout, terwijl dit wel zou moeten.")
 
@@ -109,7 +115,8 @@ class TestOSF_GeefTotalenUitkomstURL(unittest.TestCase):
 
         f.close()
 
-        self.assertEqual(500, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 500.")
+        self.assertEqual(HTTPStatus.INTERNAL_SERVER_ERROR, response.status_code,
+                         "De HTTP statuscode van de response is niet gelijk aan 500: INTERNAL_SERVER_ERROR.")
         self.assertEqual(fouten_element_referentie, fouten_element,
                          "Het fouten-element bij de response bevat geen plausibiliteitsfout, terwijl dit wel zou moeten.")
 
