@@ -80,9 +80,10 @@ class TestOSFAPI:
             self.assertEqual(fouten_element_referentie, fouten_element,
                              "Het fouten-element in het bestand bij de response is niet zoals verwacht.")
 
-        @unittest.skip("Test overgeslagen omdat OSF deze functionaliteit nog niet in de API aanbiedt.")
         def test_controle_geef_totalen_uitkomst_voor_bestand_met_DF(self):
-            fouten_element_referentie = ["Fout: een definitiefout."]
+            fouten_element_referentie = \
+                ['Codefout in [data]:[lasten] record #0: taakveld 1.9 komt niet voor in de '"codelijst voor 'taakveld'",
+                 'Samenvatting: totaal 1 fouten gevonden op basis van codelijst controle.']
 
             bestand = "test_bestanden/iv3_bestand_definitie_fout.json"
             f = open(bestand, 'rb')
@@ -98,9 +99,10 @@ class TestOSFAPI:
             self.assertEqual(fouten_element_referentie, fouten_element,
                              "Het fouten-element bij de response bevat geen definitiefout, terwijl dit wel zou moeten.")
 
-        @unittest.skip("Test overgeslagen omdat OSF deze functionaliteit nog niet in de API aanbiedt.")
         def test_controle_geef_totalen_uitkomst_voor_bestand_met_SF(self):
-            fouten_element_referentie = ["Fout: een schemafout."]
+            fouten_element_referentie = \
+                ["Fout #1: properties, data, required : 'lasten' is a required property",
+                 "Samenvatting: totaal 1 unieke fouten gevonden op basis van schema controle."]
 
             bestand = "test_bestanden/iv3_bestand_schema_fout.json"
             f = open(bestand, 'rb')
