@@ -10,15 +10,15 @@ class TestOSF_GeefTotalenUitkomstURL(unittest.TestCase):
     def setUp(self):
         self.osf_url = OSF_API_GEEF_TOTALEN_UITKOMST_URL
 
-    def test_zonder_bestand_geeft_http500(self):
+    def test_request_zonder_bestand_geeft_http500(self):
         response = requests.post(self.osf_url)
 
         self.assertEqual(HTTPStatus.INTERNAL_SERVER_ERROR, response.status_code,
                          "De HTTP statuscode van de response is niet gelijk aan 500: INTERNAL_SERVER_ERROR.")
 
     @unittest.skip("Test overgeslagen omdat OSF deze functionaliteit nog niet in de API aanbiedt.")
-    def test_bestand_zonder_fouten_geeft_http200(self):
-        bestand = "test_bestanden/iv3_bestand_zonder_fouten_1.json"
+    def test_unicode_bestand_zonder_fouten_geeft_http200(self):
+        bestand = "test_bestanden/unicode_bestand_zonder_fouten.json"
 
         f = open(bestand, 'rb')
         bestanden = {'file': f}
@@ -27,6 +27,19 @@ class TestOSF_GeefTotalenUitkomstURL(unittest.TestCase):
         f.close()
 
         self.assertEqual(HTTPStatus.OK, response.status_code, "De HTTP statuscode van de response is niet gelijk aan 200: Ok.")
+
+    @unittest.skip("Test overgeslagen omdat OSF deze functionaliteit nog niet in de API aanbiedt.")
+    def test_iso_8859_1_bestand_zonder_fouten_geeft_http200(self):
+        bestand = "test_bestanden/iso-8859-1-bestand_zonder_fouten.json"
+
+        f = open(bestand, 'rb')
+        bestanden = {'file': f}
+        response = requests.post(self.osf_url, files=bestanden)
+
+        f.close()
+
+        self.assertEqual(HTTPStatus.OK, response.status_code,
+                         "De HTTP statuscode van de response is niet gelijk aan 200: Ok.")
 
     def test_bestand_anders_dan_JSON_geeft_http500_en_fout(self):
         fouten_element_referentie = \
@@ -103,7 +116,21 @@ class TestOSF_GeefTotalenUitkomstURL(unittest.TestCase):
               'melding': 'Gebruik juiste categorieën (6.1 en 7.5) op financiële balans. '
                          'Het gevonden percentage is 16.87846280796888, terwijl 1.0 '
                          'maximaal is toegestaan.',
-              'omschrijving': 'Controle 2 onvoldoende'}]
+              'omschrijving': 'Controle 2 onvoldoende'},
+             {'fout': 11333.0,
+              'foutcode': 'PF006',
+              'goed': 50,
+              'melding': 'Totaal lasten taakvelden is niet gelijk aan totaal baten '
+                         'taakvelden. Het gevonden verschil is 24571.0, terwijl 50 '
+                         'maximaal is toegestaan.',
+              'omschrijving': 'Controle 6 onvoldoende'},
+             {'fout': 16241.0,
+              'foutcode': 'PF008',
+              'goed': 50,
+              'melding': 'Totaal ultimo stand balans activa is niet gelijk aan totaal '
+                         'ultimo stand balans passiva.  Het gevonden verschil is 24700.0, '
+                         'terwijl 50 maximaal is toegestaan.',
+              'omschrijving': 'Controle 8 onvoldoende'}]
 
         bestand = "test_bestanden/iv3_bestand_plausibiliteits_fout.json"
         f = open(bestand, 'rb')
