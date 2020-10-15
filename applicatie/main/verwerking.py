@@ -43,7 +43,7 @@ class Verwerking(object):
             # Controle databestand met definitiebestand
             if EXTERNE_CONTROLE:
                 print("regel 45 inside EXTERNE_DEF_BESTAND_CONTROLE if van verwerking.run()")
-                self.fouten = controle_externe_API_object_methode(jsonbestand)
+                self.fouten = OSF_connectie.geef_fouten(self, json_bestand, api_url)
             else:
                 self.fouten = controle_met_defbestand(self.data_bestand, self.definitie_bestand)
 
