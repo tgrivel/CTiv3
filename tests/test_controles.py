@@ -1,11 +1,10 @@
 from unittest import TestCase
 
+from applicatie.logic.controles import geef_codechecklijst
 
-class Controle(TestCase):
 
+class TestControles(TestCase):
     def test_geef_codechecklijst(self):
-        from applicatie.logic.controles import geef_codechecklijst
-
         codelijst = {'taakveld': {'codelijst': [{'code': '0.', 'omschrijving': 'BESTUUR EN ONDERSTEUNING',
                                                  'subcodes': [{'code': '0.1', 'omschrijving': 'Bestuur'},
                                                               {'code': '0.10', 'omschrijving': 'Mutaties reserves'},
@@ -522,6 +521,3 @@ class Controle(TestCase):
                                     'dimensie_2', 'rijkoppen balans_standen tabel', 2, 'dimensies_balans_standen']}
 
         self.assertDictEqual(exp_result, result)
-
-    def test_extract_values_from_json(self):
-        from applicatie.logic.controles import extract_values_from_json
