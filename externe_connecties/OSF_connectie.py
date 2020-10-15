@@ -41,13 +41,11 @@ def OSF_aanroep(): # json_bestand, api_url):
     # return codefouten
     return response
 
-# def geef_fouten(self):
-#     # response = self.geef_response()
-#     #
-#     # response_json_format = response.json()
-#     # fouten_element = response_json_format["fouten"]
-#     #
-#     # # self.fouten = fouten_element
-#     #
-#     # # return codefouten
-#     # return fouten_element
+def geef_fouten():
+    """
+    Haalt fouten element uit response van OSF_aanroep().
+    """
+    response = OSF_aanroep()
+    response_json_format = response.json()
+    fouten_element = response_json_format["fouten"]
+    return fouten_element
