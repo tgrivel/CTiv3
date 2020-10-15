@@ -6,6 +6,7 @@ from flask import render_template, request, current_app
 
 from applicatie.main import bp
 from applicatie.main.verwerking import Verwerking
+from config.configurations import EXTERNE_CONTROLE
 
 
 @bp.route("/", methods=['GET', 'POST'])
@@ -47,8 +48,8 @@ def index():
 
             # TODO Hij komt hier wel, maar nu komt de file opeens niet meer door de controle heen.
             # als save aangeroepen, file nog open?
-            # if bestandsnaam != '':
-            #     uploaded_file.save(bestandsnaam)
+            if EXTERNE_CONTROLE and bestandsnaam != '':
+                uploaded_file.save(bestandsnaam)
 
 
             return matrix(uploaded_file, bestandsnaam)
@@ -128,7 +129,7 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
     else:
         tabnaam = None
 
-    verwerking.run(jsonbestand)
+    verwerking.run()
 
     if verwerking.fouten:
         return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)

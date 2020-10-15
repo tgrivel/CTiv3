@@ -1,7 +1,7 @@
 from applicatie.logic.codelijst import Codelijst
 from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
-from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
+from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web, laad_json_bestand
 from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE, EXTERNE_CONTROLE
 from externe_connecties.OSF_connectie import geef_fouten
 
@@ -23,14 +23,20 @@ class Verwerking(object):
         self.definitie_bestand = None
         self.sjabloon_meta = None
 
-        # json data bestand ophalen en evt. fouten teruggeven
         if jsonbestand:
-            self.data_bestand, self.fouten = ophalen_en_controleren_databestand(jsonbestand)
+            if EXTERNE_CONTROLE:
+                # json bestand inlezen
+                self.data_bestand, self.fouten = laad_json_bestand(jsonbestand)
+                print("regel 30 inside EXTERNE_CONTROLE if van verwerking")
+                self.fouten = geef_fouten(jsonbestand)
+            else:
+                # json data bestand ophalen en schema controles uitvoeren
+                self.data_bestand, self.fouten = ophalen_en_controleren_databestand(jsonbestand)
         else:
             self.data_bestand = None
             self.fouten.append("Geen json-bestand")
 
-    def run(self, jsonbestand):
+    def run(self):
         """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
         Indien geen fouten, laad de pagina met een overzicht van de data.
         """
@@ -41,11 +47,8 @@ class Verwerking(object):
             self._ophalen_definitiebestand()
 
         if not self.fouten:
-            # Controle databestand met definitiebestand
-            if EXTERNE_CONTROLE:
-                print("regel 46 inside EXTERNE_CONTROLE if van verwerking.run()")
-                self.fouten = geef_fouten(het_input_bestand)
-            else:
+            if not EXTERNE_CONTROLE:
+                # Controle databestand met definitiebestand
                 self.fouten = controle_met_defbestand(self.data_bestand, self.definitie_bestand)
 
         # TODO Aggregeren via externe API

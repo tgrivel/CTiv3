@@ -6,7 +6,7 @@ from externe_connecties.OSF_connectie import geef_fouten
 
 class TestOSF_connectie(TestCase):
     @patch('externe_connecties.OSF_connectie.OSF_aanroep')
-    def test_geef_fouten(self, mock_OSF_aanroep, mock_json_bestand):
+    def test_geef_fouten(self, mock_OSF_aanroep):
         fouten_element_referentie = \
             {'fout': 123, 'foutcode': 'PF006', 'melding': 'een melding', 'omschrijving': 'een omschrijving'}
         response_referentie = {'fouten': fouten_element_referentie}
