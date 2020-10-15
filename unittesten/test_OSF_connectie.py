@@ -1,13 +1,12 @@
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
-from externe_connecties.OSF_connectie import OSF_aanroep, geef_fouten
+from externe_connecties.OSF_connectie import geef_fouten
 
 
 class TestOSF_connectie(TestCase):
     @patch('externe_connecties.OSF_connectie.OSF_aanroep')
-    # @patch('externe_connecties.OSF_connectie.requests.post')
-    def test_stuur_bestand_voor_controle(self, mock_OSF_aanroep):
+    def test_geef_fouten(self, mock_OSF_aanroep, mock_json_bestand):
         fouten_element_referentie = \
             {'fout': 123, 'foutcode': 'PF006', 'melding': 'een melding', 'omschrijving': 'een omschrijving'}
         response_referentie = {'fouten': fouten_element_referentie}
@@ -15,12 +14,9 @@ class TestOSF_connectie(TestCase):
         mock_OSF_aanroep.return_value = Mock()
         mock_OSF_aanroep.return_value.json.return_value = response_referentie
 
-        # json_bestand = fake_bestand
-        # api_url = mock_server
+        mock_json_bestand = Mock()
 
-        # osf_connectie = OSF_connectie()
-        # fouten = osf_connectie.stuur_bestand_voor_controle(json_bestand, api_url)
-        fouten = geef_fouten()
+        fouten = geef_fouten(mock_json_bestand)
 
         self.assertTrue(mock_OSF_aanroep.called)
         self.assertEqual(fouten_element_referentie, fouten, 'Het fouten element is niet zoals verwacht.')

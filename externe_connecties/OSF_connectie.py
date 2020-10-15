@@ -1,7 +1,9 @@
+from config.configurations import OSF_API_GEEF_TOTALEN_UITKOMST_URL
+
 import requests
 
 
-def OSF_aanroep(): # json_bestand, api_url):
+def OSF_aanroep(json_bestand):
     """
     Regelt de aanroep naar de externe API van Open State Foundation (OSF).
     Zend JSON bestand naar OSF API waar controle plaatsvindt en die JSON bestand met fouten element terug stuurt.
@@ -11,16 +13,15 @@ def OSF_aanroep(): # json_bestand, api_url):
 
 
     # json_bestand =
-    api_url = 'https://cbs.openstate.eu/geef_totalen_uitkomst'
 
 
 
-    # f = open(json_bestand, 'rb')
-    # bestanden = {'file': f}
+    f = open(json_bestand, 'rb')
+    bestanden = {'file': f}
 
     # try:
-    # response = requests.post(api_url, files=bestanden)
-    response = requests.post(api_url)
+    response = requests.post(OSF_API_GEEF_TOTALEN_UITKOMST_URL, files=bestanden)
+    # response = requests.post(OSF_API_GEEF_TOTALEN_UITKOMST_URL)
 
 
 
@@ -34,18 +35,18 @@ def OSF_aanroep(): # json_bestand, api_url):
     #     codefouten.append("Het geuploade json bestand bestaat niet of kan niet gevonden worden.")
     #     _logger.info("Het geuploade json bestand bestaat niet of kan niet gevonden worden.")
 
-    # f.close()
+    f.close()
 
     # self.fouten = fouten_element
 
     # return codefouten
     return response
 
-def geef_fouten():
+def geef_fouten(json_bestand):
     """
-    Haalt fouten element uit response van OSF_aanroep().
+    Haalt fouten element uit response van OSF_aanroep(json_bestand).
     """
-    response = OSF_aanroep()
+    response = OSF_aanroep(json_bestand)
     response_json_format = response.json()
     fouten_element = response_json_format["fouten"]
     return fouten_element

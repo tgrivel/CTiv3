@@ -3,6 +3,7 @@ from applicatie.logic.controles import controle_met_defbestand
 from applicatie.logic.draaitabel import DraaiTabel
 from applicatie.logic.inlezen import ophalen_en_controleren_databestand, ophalen_bestand_van_web
 from config.configurations import IV3_REPO_PATH, IV3_DEF_FILE, EXTERNE_CONTROLE
+from externe_connecties.OSF_connectie import geef_fouten
 
 
 class Verwerking(object):
@@ -42,8 +43,8 @@ class Verwerking(object):
         if not self.fouten:
             # Controle databestand met definitiebestand
             if EXTERNE_CONTROLE:
-                print("regel 45 inside EXTERNE_DEF_BESTAND_CONTROLE if van verwerking.run()")
-                self.fouten = OSF_connectie.geef_fouten(self, json_bestand, api_url)
+                print("regel 46 inside EXTERNE_CONTROLE if van verwerking.run()")
+                self.fouten = geef_fouten(het_input_bestand)
             else:
                 self.fouten = controle_met_defbestand(self.data_bestand, self.definitie_bestand)
 
