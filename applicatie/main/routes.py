@@ -1,21 +1,24 @@
 import io
 import json
 import sys
+import logging
 
 from flask import render_template, request, current_app
 
 from applicatie.main import bp
 from applicatie.main.verwerking import Verwerking
 from config.configurations import EXTERNE_CONTROLE
+from externe_connecties.iv3_definitie_connectie import geef_gebruikersvriendelijke_foutmeldingen
+
+
+_logger = logging.getLogger(__file__)
 
 
 @bp.route("/", methods=['GET', 'POST'])
 def index():
-
-    """ Hoofdpagina. We controleren het type van de browser
-    en of er een bestand is geselecteerd.
-    Ook is hier de logica ondergebracht voor het
-    verwerken van een mutatie zodat deze zichtbaar wordt
+    """
+    Hoofdpagina. We controleren het type van de browser en of er een bestand is geselecteerd.
+    Ook is hier de logica ondergebracht voor het verwerken van een mutatie zodat deze zichtbaar wordt
     door het verversen van het scherm.
     """
 
@@ -43,17 +46,10 @@ def index():
                 fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
                 return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
             uploaded_file = request.files['file']
-
-
-
-
             bestandsnaam = uploaded_file.filename
-
-
 
             if EXTERNE_CONTROLE and bestandsnaam != '':
                 uploaded_file.save(bestandsnaam)
-
 
             return matrix(uploaded_file)
 
@@ -66,7 +62,9 @@ def index():
 
 
 def geef_tabnaam(waarde_kant):
-    # Automatisch open bijbehorende tab
+    """
+    Automatisch open bijbehorende tab.
+    """
     if waarde_kant == 'lasten':
         tabnaam = 'LastenLR'
     elif waarde_kant == 'baten':
@@ -93,17 +91,29 @@ def geef_tabnaam(waarde_kant):
 # opmerking: we staan alleen de POST-methode toe, anders krijg je een fout.
 @bp.route("/matrix", methods=['POST'])
 def matrix(jsonbestand, mutatie=None):
-    """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
+    """
+    Haal het JSON-bestand op en geef evt. foutmeldingen terug.
     Indien geen fouten, laad de pagina met een overzicht van de data.
     """
-
     # javascript debug status
     js_debug_status = (current_app.config['ENV'] == 'debugjavascript')
 
     verwerking = Verwerking(jsonbestand)
 
-    if verwerking.fouten:
+    if "Geen json-bestand" in verwerking.fouten:
         return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
+    if verwerking.fouten:
+        if EXTERNE_CONTROLE:
+            vriendelijke_fouten, fouten_bij_ophalen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.fouten)
+            if fouten_bij_ophalen:
+                _logger.info("Fout bij ophalen van het fouten.json bestand uit de iv3_definitie repository.")
+                return render_template("index.html",
+                                       errormessages=["Interne fout bij inlezen fouten.json,"
+                                                                    " contacteer alstublieft team Overheidsfinancien."],
+                                       debug_status=js_debug_status)
+            return render_template("index.html", errormessages=vriendelijke_fouten, debug_status=js_debug_status)
+        else:
+            return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
 
     if mutatie and not verwerking.fouten:
         waarde_kant = mutatie.pop('waarde_kant')

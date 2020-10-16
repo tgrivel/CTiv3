@@ -31,12 +31,10 @@ class Verwerking(object):
 
 
 
-
                 # TODO UNCOMMENT ONDERSTAANDE 2 REGELS ZODRA JSON ENCODING ISSUES VOOR BESTANDEN ZIJN OPGELOST:
                 # if not self.fouten:
                 #     self.fouten = geef_fouten(jsonbestand.filename)
                 self.fouten = geef_fouten(jsonbestand.filename) # OVERSCHRIJFT FOUTEN UIT laad_json_bestand(), HAAL DIT WEG.
-
 
 
 
