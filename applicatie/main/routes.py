@@ -31,7 +31,7 @@ def index():
             data = json.loads(mutatie.pop('data'))
             bestandsnaam = mutatie.pop('bestandsnaam')
             uploaded_file = io.BytesIO(json.dumps(data).encode('utf-8'))
-            return matrix(uploaded_file, bestandsnaam, mutatie)
+            return matrix(uploaded_file, mutatie)
 
         elif not request.files.get('file'):
             fouten = ['Geen json bestand geselecteerd']
@@ -43,16 +43,19 @@ def index():
                 fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
                 return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
             uploaded_file = request.files['file']
+
+
+
+
             bestandsnaam = uploaded_file.filename
 
 
-            # TODO Hij komt hier wel, maar nu komt de file opeens niet meer door de controle heen.
-            # als save aangeroepen, file nog open?
+
             if EXTERNE_CONTROLE and bestandsnaam != '':
                 uploaded_file.save(bestandsnaam)
 
 
-            return matrix(uploaded_file, bestandsnaam)
+            return matrix(uploaded_file)
 
     elif request.method == 'GET':
         fouten = []
@@ -89,7 +92,7 @@ def geef_tabnaam(waarde_kant):
 
 # opmerking: we staan alleen de POST-methode toe, anders krijg je een fout.
 @bp.route("/matrix", methods=['POST'])
-def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
+def matrix(jsonbestand, mutatie=None):
     """ Haal het JSON-bestand op en geef evt. foutmeldingen terug
     Indien geen fouten, laad de pagina met een overzicht van de data.
     """
@@ -136,7 +139,7 @@ def matrix(jsonbestand, jsonbestandsnaam, mutatie=None):
 
     # Render sjabloon
     params = {
-        'bestandsnaam': jsonbestandsnaam,
+        'bestandsnaam': jsonbestand.filename,
         'tabnaam': tabnaam,
         'data': verwerking.data_bestand,
         'sjabloon': verwerking.sjabloon_meta,

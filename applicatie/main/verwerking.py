@@ -28,7 +28,7 @@ class Verwerking(object):
                 # json bestand inlezen
                 self.data_bestand, self.fouten = laad_json_bestand(jsonbestand)
                 print("regel 30 inside EXTERNE_CONTROLE if van verwerking")
-                self.fouten = geef_fouten(jsonbestand)
+                self.fouten = geef_fouten(jsonbestand.filename)
             else:
                 # json data bestand ophalen en schema controles uitvoeren
                 self.data_bestand, self.fouten = ophalen_en_controleren_databestand(jsonbestand)

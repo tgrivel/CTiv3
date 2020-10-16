@@ -11,7 +11,7 @@ IV3_SCHEMA_FILE = "iv3_data_schema_v{}.json"
 IV3_DEF_FILE = "iv3_definities_{}_{}.json"
 
 # JSON bestand-controle gebeurt extern via Open State Foundation (OSF) API aanroep of niet.
-EXTERNE_CONTROLE = False
+EXTERNE_CONTROLE = True
 
 OSF_API_GEEF_TOTALEN_UITKOMST_URL = 'https://cbs.openstate.eu/geef_totalen_uitkomst'
 OSF_API_GEEF_FOUTEN_URL = 'https://cbs.openstate.eu/geef_fouten'
