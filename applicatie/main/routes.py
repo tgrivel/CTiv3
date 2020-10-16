@@ -102,6 +102,9 @@ def matrix(jsonbestand, mutatie=None):
 
     verwerking = Verwerking(jsonbestand)
 
+    if verwerking.fouten:
+        return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
+
     if mutatie and not verwerking.fouten:
         waarde_kant = mutatie.pop('waarde_kant')
         tabnaam = geef_tabnaam(waarde_kant)

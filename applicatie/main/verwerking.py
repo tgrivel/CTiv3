@@ -27,8 +27,20 @@ class Verwerking(object):
             if EXTERNE_CONTROLE:
                 # json bestand inlezen
                 self.data_bestand, self.fouten = laad_json_bestand(jsonbestand)
-                print("regel 30 inside EXTERNE_CONTROLE if van verwerking")
-                self.fouten = geef_fouten(jsonbestand.filename)
+
+
+
+
+
+                # TODO UNCOMMENT ONDERSTAANDE 2 REGELS ZODRA JSON ENCODING ISSUES VOOR BESTANDEN ZIJN OPGELOST:
+                # if not self.fouten:
+                #     self.fouten = geef_fouten(jsonbestand.filename)
+                self.fouten = geef_fouten(jsonbestand.filename) # OVERSCHRIJFT FOUTEN UIT laad_json_bestand(), HAAL DIT WEG.
+
+
+
+
+
             else:
                 # json data bestand ophalen en schema controles uitvoeren
                 self.data_bestand, self.fouten = ophalen_en_controleren_databestand(jsonbestand)
