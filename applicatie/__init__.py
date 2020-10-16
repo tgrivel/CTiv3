@@ -1,11 +1,9 @@
-from flask import Flask
 import os
+from flask import Flask
 
 
 def create_app(config=None):
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    static_folder = os.path.join(basedir, 'applicatie', 'static')
-    app = Flask(__name__, instance_relative_config=True, static_folder=static_folder)
+    app = Flask(__name__, instance_relative_config=True)
 
     if config is None:
         # read config file from the instance folder
