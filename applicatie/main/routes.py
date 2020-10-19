@@ -5,6 +5,7 @@ import logging
 
 from flask import render_template, request, current_app
 
+from applicatie.main.CustomExceptions import OSFAanroepError
 from applicatie.main import bp
 from applicatie.main.verwerking import Verwerking
 from config.configurations import EXTERNE_CONTROLE
@@ -98,7 +99,12 @@ def matrix(jsonbestand, mutatie=None):
     # javascript debug status
     js_debug_status = (current_app.config['ENV'] == 'debugjavascript')
 
-    verwerking = Verwerking(jsonbestand)
+    try:
+        verwerking = Verwerking(jsonbestand)
+    except OSFAanroepError:
+        errormessages = ['Er is een fout opgetreden bij de controle van het bestand,'
+                         ' probeert u het opnieuw of contacteer team Overheidsfinancien.']
+        return render_template("index.html", errormessages=errormessages, debug_status=js_debug_status)
 
     if "Geen json-bestand" in verwerking.fouten:
         return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
