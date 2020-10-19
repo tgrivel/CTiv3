@@ -11,8 +11,8 @@ def geef_gebruikersvriendelijke_foutmeldingen(fouten):
     Haal gebruikers vriendelijke vertalingen uit fouten.json voor fouten.
     """
     vriendelijke_fouten = []
-    vertalingen, fouten_bij_ophalen = ophalen_bestand_van_web(IV3_REPO_PATH, 'fouten.json', 'foutenbestand')
-    fouten_overzicht = vertalingen.get("fouten_overzicht")
+    inhoud, fouten_bij_ophalen = ophalen_bestand_van_web(IV3_REPO_PATH, 'fouten.json', 'foutenbestand')
+    fouten_overzicht = inhoud.get("fouten_overzicht")
 
     # loop over fouten komende uit de controle uitgevoerd door OSF.
     for fout in fouten:

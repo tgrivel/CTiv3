@@ -8,15 +8,11 @@ from applicatie.main.CustomExceptions import OSFAanroepError
 _logger = logging.getLogger(__file__)
 
 
-def OSF_aanroep(jsonbestandsnaam):
-    """
-    Regelt de aanroep naar de externe API van Open State Foundation (OSF).
-    Zend JSON bestand naar OSF API waar controle plaatsvindt en die JSON bestand met fouten element terug stuurt.
-    """
+def osf_aanroep(jsonbestandsnaam):
+    """Zend json-bestand naar OSF-api en ontvang gecontroleerd resultaat met fouten."""
     try:
         bestanden = {'file': open(jsonbestandsnaam)}
         response = requests.post(OSF_API_GEEF_FOUTEN_URL, files=bestanden)
-        # response.raise_for_status() # Raise exceptions in case of HTTP errors.
     except FileNotFoundError as e:
         _logger.info("Het geuploade JSON bestand geeft een exception: Exception: {}".format(e))
         raise OSFAanroepError
@@ -25,11 +21,10 @@ def OSF_aanroep(jsonbestandsnaam):
         raise OSFAanroepError
     return response
 
+
 def geef_fouten(jsonbestandsnaam):
-    """
-    Haalt fouten element uit response van OSF_aanroep(json_bestand).
-    """
-    response = OSF_aanroep(jsonbestandsnaam)
+    """Haalt fouten element uit response van osf_aanroep()."""
+    response = osf_aanroep(jsonbestandsnaam)
     response_json_format = response.json()
     fouten_element = response_json_format["fouten"]
     return fouten_element
