@@ -24,8 +24,5 @@ class Test_iv3_definitie_connectie(TestCase):
         resultaat = geef_gebruikersvriendelijke_foutmeldingen(fouten_afkomstig_van_osf)
 
         self.assertTrue(mock_ophalen_bestand_van_web.called)
-
-        self.assertListEqual([], resultaat[1],
-                             'Het resultaat van geef_gebruikersvriendelijke_foutmeldingen() is niet zoals verwacht.')
-        self.assertEqual(referentie_resultaat, resultaat[0],
+        self.assertEqual(referentie_resultaat, resultaat,
                          'Het resultaat van geef_gebruikersvriendelijke_foutmeldingen() is niet zoals verwacht.')

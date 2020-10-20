@@ -38,14 +38,14 @@ def index():
             return matrix(uploaded_file, mutatie)
 
         elif not request.files.get('file'):
-            fouten = ['Geen json bestand geselecteerd']
-            return render_template("index.html", errormessages=fouten, debug_status=js_debug_status, versienummer=VERSIE)
+            foutmeldingen = ['Geen json bestand geselecteerd']
+            return geef_index_met_foutmeldingen(foutmeldingen, js_debug_status)
 
         else:
             browsertype = request.user_agent.browser
             if browsertype not in ['firefox', 'chrome']:
-                fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
-                return render_template("index.html", errormessages=fouten, debug_status=js_debug_status, versienummer=VERSIE)
+                foutmeldingen = ['Deze website werkt alleen met Firefox en Chrome browsers']
+                return geef_index_met_foutmeldingen(foutmeldingen, js_debug_status)
             uploaded_file = request.files['file']
             bestandsnaam = uploaded_file.filename
 
@@ -55,11 +55,11 @@ def index():
             return matrix(uploaded_file)
 
     elif request.method == 'GET':
-        fouten = []
+        foutmeldingen = []
         browsertype = request.user_agent.browser
         if browsertype not in ['firefox', 'chrome']:
-            fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
-        return render_template("index.html", errormessages=fouten, debug_status=js_debug_status, versienummer=VERSIE)
+            foutmeldingen = ['Deze website werkt alleen met Firefox en Chrome browsers']
+        return geef_index_met_foutmeldingen(foutmeldingen, js_debug_status)
 
 
 def geef_tabnaam(waarde_kant):
@@ -102,18 +102,13 @@ def matrix(jsonbestand, mutatie=None):
     try:
         verwerking = Verwerking(jsonbestand)
     except OSFAanroepError:
-        errormessages = ['Er is een fout opgetreden bij de controle van het bestand,'
+        foutmeldingen = ['Er is een fout opgetreden bij de controle van het bestand,'
                          ' probeert u het opnieuw of contacteer team Overheidsfinancien.']
-        return render_template("index.html", errormessages=errormessages, debug_status=js_debug_status, versienummer=VERSIE)
+        return geef_index_met_foutmeldingen(foutmeldingen, js_debug_status)
 
-    if "Geen json-bestand" in verwerking.fouten:
-        return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status, versienummer=VERSIE)
     if verwerking.fouten:
-        if EXTERNE_CONTROLE:
-            foutmeldingen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.fouten)
-            return render_template("index.html", errormessages=foutmeldingen, debug_status=js_debug_status, versienummer=VERSIE)
-        else:
-            return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status, versienummer=VERSIE)
+        foutmeldingen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.fouten)
+        return geef_index_met_foutmeldingen(foutmeldingen, js_debug_status)
 
     if mutatie and not verwerking.fouten:
         waarde_kant = mutatie.pop('waarde_kant')
@@ -148,7 +143,7 @@ def matrix(jsonbestand, mutatie=None):
     verwerking.run()
 
     if verwerking.fouten:
-        return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status, versienummer=VERSIE)
+        return geef_index_met_foutmeldingen(verwerking.fouten, js_debug_status)
 
     # Render sjabloon
     params = {
@@ -167,3 +162,7 @@ def matrix(jsonbestand, mutatie=None):
     }
 
     return render_template("matrix.html", **params)
+
+
+def geef_index_met_foutmeldingen(foutmeldingen, js_debug_status):
+    return render_template("index.html", errormessages=foutmeldingen, debug_status=js_debug_status, versienummer=VERSIE)

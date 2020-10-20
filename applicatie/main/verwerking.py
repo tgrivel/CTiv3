@@ -28,16 +28,11 @@ class Verwerking(object):
                 # json bestand inlezen
                 self.data_bestand, self.fouten = laad_json_bestand(jsonbestand)
 
-
-
-
-                # TODO UNCOMMENT ONDERSTAANDE 2 REGELS ZODRA JSON ENCODING ISSUES VOOR BESTANDEN ZIJN OPGELOST:
                 # if not self.fouten:
                 #     self.fouten = geef_fouten(jsonbestand.filename)
-                self.fouten = geef_fouten(jsonbestand.filename) # OVERSCHRIJFT FOUTEN UIT laad_json_bestand(), HAAL DIT WEG.
-
-
-
+                self.fouten = geef_fouten(jsonbestand.filename) # TODO OVERSCHRIJFT self.fouten uit laad_json_bestand(),
+                # dit omdat ik geen vat kreeg op de output van laad_json_bestand(), misschien kan refactoring voor een goede
+                # exception handling zorgen van laad_json_bestand().
 
             else:
                 # json data bestand ophalen en schema controles uitvoeren
