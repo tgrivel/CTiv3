@@ -13,7 +13,8 @@ class Test_iv3_definitie_connectie(TestCase):
              'omschrijving': 'een omschrijving'}]
         inhoud_referentie = {"fouten_overzicht": fouten_element_referentie}
 
-        referentie_resultaat = ["fouttype: plausibiliteitsfout, nummer: 006: een melding met als extra info de velden: onderdeel 1 en een extra info veld: goed."]
+        referentie_resultaat = ["fouttype: plausibiliteitsfout, nummer: 006:"
+                                " een melding met als extra info de velden: onderdeel 1 en een extra info veld: goed."]
 
         mock_ophalen_bestand_van_web.return_value = Mock()
         mock_ophalen_bestand_van_web.return_value = (inhoud_referentie, [])

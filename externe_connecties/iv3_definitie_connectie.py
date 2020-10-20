@@ -10,8 +10,10 @@ def geef_gebruikersvriendelijke_foutmeldingen(fouten):
     """
     Haal gebruikers vriendelijke vertalingen uit fouten.json voor fouten.
     """
-    vriendelijke_fouten = []
-    inhoud, fouten_bij_ophalen = ophalen_bestand_van_web(IV3_REPO_PATH, 'fouten.json', 'foutenbestand')
+    inhoud, foutmeldingen = ophalen_bestand_van_web(IV3_REPO_PATH, 'fouten.json', 'foutenbestand')
+    if foutmeldingen:
+        return foutmeldingen
+
     fouten_overzicht = inhoud.get("fouten_overzicht")
 
     # loop over fouten komende uit de controle uitgevoerd door OSF.
@@ -28,21 +30,21 @@ def geef_gebruikersvriendelijke_foutmeldingen(fouten):
                 melding = referentie_fout.get("melding")
                 melding_met_extra_info = _voeg_extra_info_toe(melding, fout)
 
-                vriendelijke_fouten.append("fouttype: " + _vertaal_foutcode_in_fouttype(referentie_foutcode) +
+                foutmeldingen.append("fouttype: " + _vertaal_foutcode_in_fouttype(referentie_foutcode) +
                                            ", nummer: " + _vertaal_foutcode_in_foutnummer(referentie_foutcode) +
                                            ": " + melding_met_extra_info)
                 break
         if not fout_gevonden:
             _logger.info(
                 "Er is een foutcode teruggegeven door de OSF API die niet voorkomt in het fouten.json bestand.")
-            vriendelijke_fouten.append("Er zit een onbekende fout in het bestand,"
+            foutmeldingen.append("Er zit een onbekende fout in het bestand,"
                                        " contacteer alstublieft het team Overheidsfinancien.")
-    return vriendelijke_fouten, fouten_bij_ophalen
+    return foutmeldingen
 
 
 def _vertaal_foutcode_in_fouttype(foutcode):
-    vertaling = {"SF": "schemafout", "DF": "definitiefout", "PF": "plausibiliteitsfout"}
-    return vertaling.get(foutcode[:2])
+    fouttypes = {"SF": "schemafout", "DF": "definitiefout", "PF": "plausibiliteitsfout"}
+    return fouttypes.get(foutcode[:2])
 
 
 def _vertaal_foutcode_in_foutnummer(foutcode):
@@ -58,8 +60,8 @@ def _voeg_extra_info_toe(melding, fout_boodschap):
     goed = fout_boodschap.get("goed")
     extra = fout_boodschap.get("extra")
     onderdeel = fout_boodschap.get("onderdeel")
-    vertaling = {"<fout>": fout, "<goed>": goed, "<extra>": extra, "<onderdeel>": onderdeel}
-    for key, value in vertaling.items():
+    extra_info = {"<fout>": fout, "<goed>": goed, "<extra>": extra, "<onderdeel>": onderdeel}
+    for key, value in extra_info.items():
         if value != None:
             # vind plek in melding om extra info in te vullen.
             index = melding.find(key)

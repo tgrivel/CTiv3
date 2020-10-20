@@ -118,6 +118,7 @@ def ophalen_bestand_van_web(url, bestandsnaam, bestandstype):
             foutmeldingen.append(foutmelding)
 
     if foutmeldingen:
+        foutmeldingen.append("Contacteer alstublieft team Overheidsfinancien.")
         _logger.info("Fout bij ophalen van het {} met de naam: {}".format(bestandstype, bestandsnaam))
 
     return bestand, foutmeldingen

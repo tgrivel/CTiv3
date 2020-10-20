@@ -110,14 +110,8 @@ def matrix(jsonbestand, mutatie=None):
         return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
     if verwerking.fouten:
         if EXTERNE_CONTROLE:
-            vriendelijke_fouten, fouten_bij_ophalen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.fouten)
-            if fouten_bij_ophalen:
-                _logger.info("Fout bij ophalen van het fouten.json bestand uit de iv3_definitie repository.")
-                return render_template("index.html",
-                                       errormessages=["Interne fout bij inlezen fouten.json,"
-                                                                    " contacteer alstublieft team Overheidsfinancien."],
-                                       debug_status=js_debug_status)
-            return render_template("index.html", errormessages=vriendelijke_fouten, debug_status=js_debug_status)
+            foutmeldingen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.fouten)
+            return render_template("index.html", errormessages=foutmeldingen, debug_status=js_debug_status)
         else:
             return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
 
