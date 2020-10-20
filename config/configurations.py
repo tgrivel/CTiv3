@@ -4,6 +4,8 @@
 import os
 from dotenv import load_dotenv
 
+# Versienummer volgt semver: https://semver.org/.
+VERSIE = '2.1.0'
 
 # Nieuwe REPO voor schema en definitiebestand:
 IV3_REPO_PATH = "https://raw.github.com/statistiekcbs/iv3_definities/master/"

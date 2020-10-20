@@ -2,13 +2,13 @@ from config.configurations import OSF_API_GEEF_FOUTEN_URL
 
 import requests
 import logging
-from applicatie.main.CustomExceptions import OSFAanroepError
+from applicatie.main.custom_exceptions import OSFAanroepError
 
 
 _logger = logging.getLogger(__file__)
 
 
-def osf_aanroep(jsonbestandsnaam):
+def _osf_aanroep(jsonbestandsnaam):
     """Zend json-bestand naar OSF-api en ontvang gecontroleerd resultaat met fouten."""
     try:
         bestanden = {'file': open(jsonbestandsnaam)}
@@ -23,8 +23,8 @@ def osf_aanroep(jsonbestandsnaam):
 
 
 def geef_fouten(jsonbestandsnaam):
-    """Haalt fouten element uit response van osf_aanroep()."""
-    response = osf_aanroep(jsonbestandsnaam)
+    """Haalt fouten element uit response van _osf_aanroep()."""
+    response = _osf_aanroep(jsonbestandsnaam)
     response_json_format = response.json()
     fouten_element = response_json_format["fouten"]
     return fouten_element

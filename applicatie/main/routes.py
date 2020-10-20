@@ -5,10 +5,10 @@ import logging
 
 from flask import render_template, request, current_app
 
-from applicatie.main.CustomExceptions import OSFAanroepError
+from applicatie.main.custom_exceptions import OSFAanroepError
 from applicatie.main import bp
 from applicatie.main.verwerking import Verwerking
-from config.configurations import EXTERNE_CONTROLE
+from config.configurations import EXTERNE_CONTROLE, VERSIE
 from externe_connecties.iv3_definitie_connectie import geef_gebruikersvriendelijke_foutmeldingen
 
 
@@ -39,13 +39,13 @@ def index():
 
         elif not request.files.get('file'):
             fouten = ['Geen json bestand geselecteerd']
-            return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
+            return render_template("index.html", errormessages=fouten, debug_status=js_debug_status, versienummer=VERSIE)
 
         else:
             browsertype = request.user_agent.browser
             if browsertype not in ['firefox', 'chrome']:
                 fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
-                return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
+                return render_template("index.html", errormessages=fouten, debug_status=js_debug_status, versienummer=VERSIE)
             uploaded_file = request.files['file']
             bestandsnaam = uploaded_file.filename
 
@@ -59,7 +59,7 @@ def index():
         browsertype = request.user_agent.browser
         if browsertype not in ['firefox', 'chrome']:
             fouten = ['Deze website werkt alleen met Firefox en Chrome browsers']
-        return render_template("index.html", errormessages=fouten, debug_status=js_debug_status)
+        return render_template("index.html", errormessages=fouten, debug_status=js_debug_status, versienummer=VERSIE)
 
 
 def geef_tabnaam(waarde_kant):
@@ -104,16 +104,16 @@ def matrix(jsonbestand, mutatie=None):
     except OSFAanroepError:
         errormessages = ['Er is een fout opgetreden bij de controle van het bestand,'
                          ' probeert u het opnieuw of contacteer team Overheidsfinancien.']
-        return render_template("index.html", errormessages=errormessages, debug_status=js_debug_status)
+        return render_template("index.html", errormessages=errormessages, debug_status=js_debug_status, versienummer=VERSIE)
 
     if "Geen json-bestand" in verwerking.fouten:
-        return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
+        return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status, versienummer=VERSIE)
     if verwerking.fouten:
         if EXTERNE_CONTROLE:
             foutmeldingen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.fouten)
-            return render_template("index.html", errormessages=foutmeldingen, debug_status=js_debug_status)
+            return render_template("index.html", errormessages=foutmeldingen, debug_status=js_debug_status, versienummer=VERSIE)
         else:
-            return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
+            return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status, versienummer=VERSIE)
 
     if mutatie and not verwerking.fouten:
         waarde_kant = mutatie.pop('waarde_kant')
@@ -148,7 +148,7 @@ def matrix(jsonbestand, mutatie=None):
     verwerking.run()
 
     if verwerking.fouten:
-        return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status)
+        return render_template("index.html", errormessages=verwerking.fouten, debug_status=js_debug_status, versienummer=VERSIE)
 
     # Render sjabloon
     params = {
