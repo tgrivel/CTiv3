@@ -10,6 +10,7 @@ class Verwerking(object):
     def __init__(self, jsonbestand):
         # Initialiseren
         self.fouten = []
+        self.controle_fouten = [] # Afkomstig van controles uitgevoerd door OSF.
         self._codelijsten = {}
         self._grijze_cellen = {}
 
@@ -28,12 +29,7 @@ class Verwerking(object):
                 # json bestand inlezen
                 self.data_bestand, self.fouten = laad_json_bestand(jsonbestand)
 
-                # if not self.fouten:
-                #     self.fouten = geef_fouten(jsonbestand.filename)
-                self.fouten = geef_fouten(jsonbestand.filename) # TODO OVERSCHRIJFT self.fouten uit laad_json_bestand(),
-                # dit omdat ik geen vat kreeg op de output van laad_json_bestand(), misschien kan refactoring voor een goede
-                # exception handling zorgen van laad_json_bestand().
-
+                self.controle_fouten = geef_fouten(jsonbestand.filename)
             else:
                 # json data bestand ophalen en schema controles uitvoeren
                 self.data_bestand, self.fouten = ophalen_en_controleren_databestand(jsonbestand)

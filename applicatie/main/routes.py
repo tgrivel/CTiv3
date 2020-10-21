@@ -106,8 +106,14 @@ def matrix(jsonbestand, mutatie=None):
                          ' probeert u het opnieuw of contacteer team Overheidsfinancien.']
         return geef_index_met_foutmeldingen(foutmeldingen, js_debug_status)
 
+    foutmeldingen = []
+    if verwerking.controle_fouten:
+        # Fouten geconstateerd door OSF.
+        foutmeldingen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.controle_fouten)
     if verwerking.fouten:
-        foutmeldingen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.fouten)
+        # Fouten geconstateerd door onszelf toevoegen.
+        foutmeldingen.extend(verwerking.fouten)
+    if foutmeldingen:
         return geef_index_met_foutmeldingen(foutmeldingen, js_debug_status)
 
     if mutatie and not verwerking.fouten:

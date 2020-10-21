@@ -17,10 +17,6 @@ def geef_gebruikersvriendelijke_foutmeldingen(fouten):
     fouten_overzicht = inhoud.get("fouten_overzicht")
 
     for fout in fouten:
-        if type(fout) == str:
-            # Als de fout een string is wordt deze gewoon getoond.
-            foutmeldingen.append(fout)
-            continue
         # Als fout een dict is komt hij van OSF controle en moet hij enkele bewerkingen ondergaan voor we hem tonen:
         fout_gevonden = False
         fout_uit_controle = fout.get("foutcode")
