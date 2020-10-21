@@ -1,0 +1,2 @@
+class OSFAanroepError(Exception):
+    pass

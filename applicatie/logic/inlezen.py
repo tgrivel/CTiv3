@@ -19,8 +19,6 @@ def ophalen_en_controleren_databestand(jsonbestand):
         - json data bestand inlezen
         - json schema ophalen van web
         - json data controleren aan json schema
-        - json definitie bestand ophalen van web
-        - json data controleren aan het definitie bestand
     """
 
     # json bestand inlezen
@@ -57,7 +55,7 @@ def laad_json_bestand(bestand):
     foutmeldingen = []
 
     # Vind een geschikte encoding
-    encodings = ['utf8', 'cp1252']
+    encodings = ['utf-8', 'cp1252']
 
     for encoding in encodings:
         try:
@@ -120,6 +118,7 @@ def ophalen_bestand_van_web(url, bestandsnaam, bestandstype):
             foutmeldingen.append(foutmelding)
 
     if foutmeldingen:
-        _logger.info("Fout bij ophalen van het Iv3-definitiebestand")
+        foutmeldingen.append("Contacteer alstublieft team Overheidsfinancien.")
+        _logger.info("Fout bij ophalen van het {} met de naam: {}".format(bestandstype, bestandsnaam))
 
     return bestand, foutmeldingen
