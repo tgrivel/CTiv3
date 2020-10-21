@@ -9,7 +9,7 @@ from applicatie.main.custom_exceptions import OSFAanroepError
 from applicatie.main import bp
 from applicatie.main.verwerking import Verwerking
 from config.configurations import EXTERNE_CONTROLE, VERSIE
-from externe_connecties.iv3_definitie_connectie import geef_gebruikersvriendelijke_foutmeldingen
+from applicatie.logic.foutmeldingen import geef_gebruikersvriendelijke_foutmeldingen
 
 
 _logger = logging.getLogger(__file__)
@@ -109,7 +109,8 @@ def matrix(jsonbestand, mutatie=None):
     foutmeldingen = []
     if verwerking.controle_fouten:
         # Fouten geconstateerd door OSF.
-        foutmeldingen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.controle_fouten)
+        foutmeldingen = geef_gebruikersvriendelijke_foutmeldingen(verwerking.controle_fouten,
+                                                                  verwerking.fouten_overzicht)
     if verwerking.fouten:
         # Fouten geconstateerd door onszelf toevoegen.
         foutmeldingen.extend(verwerking.fouten)

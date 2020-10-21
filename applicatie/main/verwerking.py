@@ -23,6 +23,13 @@ class Verwerking(object):
         self.contact = None
         self.definitie_bestand = None
         self.sjabloon_meta = None
+        self.fouten_overzicht = []
+
+        fouten_bestand, foutmeldingen = ophalen_bestand_van_web(IV3_REPO_PATH, 'fouten.json', 'foutenbestand')
+        if foutmeldingen:
+            self.fouten.extend(foutmeldingen)
+        else:
+            self.fouten_overzicht = fouten_bestand.get("fouten_overzicht")
 
         if jsonbestand:
             if EXTERNE_CONTROLE:

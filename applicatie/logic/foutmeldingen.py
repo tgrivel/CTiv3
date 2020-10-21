@@ -1,26 +1,18 @@
-from applicatie.logic.inlezen import ophalen_bestand_van_web
-from config.configurations import IV3_REPO_PATH
 import logging
 
 
 _logger = logging.getLogger(__file__)
 
 
-def geef_gebruikersvriendelijke_foutmeldingen(fouten):
+def geef_gebruikersvriendelijke_foutmeldingen(fouten, fouten_overzicht):
     """
-    Haal gebruikers vriendelijke vertalingen uit fouten.json voor fouten.
+    Vind bij elke foutcode een gebruikersvriendelijke foutmelding uit fouten_overzicht.
     """
-    inhoud, foutmeldingen = ophalen_bestand_van_web(IV3_REPO_PATH, 'fouten.json', 'foutenbestand')
-    if foutmeldingen:
-        return foutmeldingen
-
-    fouten_overzicht = inhoud.get("fouten_overzicht")
-
+    foutmeldingen = []
     for fout in fouten:
-        # Als fout een dict is komt hij van OSF controle en moet hij enkele bewerkingen ondergaan voor we hem tonen:
         fout_gevonden = False
         fout_uit_controle = fout.get("foutcode")
-        # vind juiste fouten-info uit fouten.json.
+        # vind juiste fouten-info uit fouten_overzicht.
         for referentie_fout in fouten_overzicht:
             referentie_foutcode = referentie_fout.get("foutcode")
             if referentie_foutcode == fout_uit_controle:
